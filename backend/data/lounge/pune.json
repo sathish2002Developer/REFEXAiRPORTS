@@ -1,0 +1,85 @@
+{
+  "id": "pune",
+  "name": "Pune Airport Lounge",
+  "slug": "Pune",
+  "route": "/pune-airport-lounge",
+  "heroTitle": "Pune Airport Lounge",
+  "heroSubtitle": "Pune International Airport (PNQ)",
+  "heroTagline": "Experience premium comfort and exceptional hospitality before your flight",
+  "heroBackground": "https://readdy.ai/api/search-image?query=Luxury%20airport%20lounge%20interior%20with%20comfortable%20leather%20seating%2C%20panoramic%20runway%20views%2C%20elegant%20modern%20design%2C%20ambient%20warm%20lighting%2C%20premium%20dining%20area%2C%20sophisticated%20business%20traveler%20atmosphere%2C%20high-end%20hospitality%20setting&width=1920&height=500&seq=pune-lounge-hero&orientation=landscape",
+  "overviewTitle": "Welcome to Pune Airport Lounge",
+  "overviewPara1": "The Pune Airport Lounge by Refex Airports offers a premium pre-flight experience in a sophisticated and relaxing environment. Designed for the discerning traveler, the lounge provides a peaceful retreat from the bustling terminal, with world-class amenities and exceptional hospitality.",
+  "overviewPara2": "Located in the Departure Hall after security check, the lounge spans 4,000 square feet and can accommodate up to 80 guests. Whether you are traveling for business or leisure, our lounge ensures your journey begins with comfort and style.",
+  "hoursTitle": "Operating Hours",
+  "hoursDesc": "5:00 AM - 11:00 PM daily, aligned with flight schedules",
+  "capacityTitle": "Capacity",
+  "capacityDesc": "80 guests maximum, with comfortable seating and dedicated zones",
+  "amenitiesTitle": "Lounge Amenities",
+  "amenities": [
+    {
+      "icon": "ri-wifi-line",
+      "title": "High-Speed WiFi",
+      "description": "Complimentary high-speed internet access throughout the lounge"
+    },
+    {
+      "icon": "ri-restaurant-line",
+      "title": "Premium Dining",
+      "description": "Curated buffet with Indian and international cuisine, live cooking stations"
+    },
+    {
+      "icon": "ri-cup-line",
+      "title": "Beverage Bar",
+      "description": "Full-service bar with premium spirits, wines, beers, and specialty beverages"
+    },
+    {
+      "icon": "ri-computer-line",
+      "title": "Business Center",
+      "description": "Workstations with computers, printing, and scanning facilities"
+    },
+    {
+      "icon": "ri-drop-line",
+      "title": "Shower Facilities",
+      "description": "Private shower suites with premium toiletries and fresh towels"
+    },
+    {
+      "icon": "ri-rest-time-line",
+      "title": "Resting Area",
+      "description": "Quiet zones with reclining chairs for relaxation between flights"
+    },
+    {
+      "icon": "ri-tv-line",
+      "title": "Entertainment Zone",
+      "description": "LED TVs with news, sports, and entertainment channels"
+    },
+    {
+      "icon": "ri-wheelchair-line",
+      "title": "Accessibility",
+      "description": "Fully accessible facility with dedicated assistance for special needs"
+    }
+  ],
+  "accessTitle": "Access & Pricing",
+  "accessOptions": [
+    {
+      "type": "Business Class",
+      "desc": "Complimentary access for business and first-class passengers of partner airlines",
+      "icon": "ri-vip-crown-line"
+    },
+    {
+      "type": "Credit Card",
+      "desc": "Access for premium credit card holders (American Express Platinum, HDFC Infinia, etc.)",
+      "icon": "ri-bank-card-line"
+    },
+    {
+      "type": "Priority Pass",
+      "desc": "Accepted for Priority Pass, LoungeKey, and DragonPass members",
+      "icon": "ri-pass-valid-line"
+    },
+    {
+      "type": "Walk-in",
+      "desc": "Walk-in access available at ₹2,000 + taxes per person",
+      "icon": "ri-user-add-line"
+    }
+  ],
+  "infoTitle": "Important Information",
+  "infoDesc": "Maximum stay is 3 hours. Children under 2 years enter free. Smart casual dress code applies. The lounge reserves the right to refuse entry. Please present a valid boarding pass and access credential at reception."
+}

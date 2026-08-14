@@ -1,0 +1,8 @@
+{
+  "email": "admin@refexairports.com",
+  "password": "admin123",
+  "first_name": "CMS",
+  "last_name": "Admin",
+  "mobile_number": "0000000000",
+  "_comment": "Local/demo only. Seeded on backend start and via npm run seed:cms-admin. Change password in production."
+}

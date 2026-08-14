@@ -1,0 +1,80 @@
+{
+  "id": "trichy",
+  "name": "Trichy Airport Lounge",
+  "slug": "Trichy",
+  "route": "/trichy-airport-lounge",
+  "heroTitle": "Trichy Airport Lounge",
+  "heroSubtitle": "Tiruchirappalli International Airport (TRZ)",
+  "heroTagline": "Relax in comfort with authentic Tamil hospitality before your journey",
+  "heroBackground": "https://readdy.ai/api/search-image?query=Elegant%20airport%20lounge%20interior%20with%20comfortable%20modern%20seating%2C%20Tamil%20cultural%20design%20accents%2C%20warm%20ambient%20lighting%2C%20premium%20travel%20atmosphere%2C%20clean%20sophisticated%20design%20with%20local%20artistic%20touches&width=1920&height=500&seq=trichy-lounge-hero&orientation=landscape",
+  "overviewTitle": "Welcome to Trichy Airport Lounge",
+  "overviewPara1": "The Trichy Airport Lounge by Refex Airports offers a comfortable and welcoming pre-flight experience, combining modern amenities with the warmth of Tamil hospitality. It is the perfect place to unwind before your domestic or international flight.",
+  "overviewPara2": "Located in the Departure Hall, the lounge spans 2,200 square feet and can accommodate up to 50 guests. Featuring contemporary design with touches of Tamil cultural elements, it provides a refreshing start to your journey.",
+  "hoursTitle": "Operating Hours",
+  "hoursDesc": "5:30 AM - 10:30 PM daily, aligned with flight schedules",
+  "capacityTitle": "Capacity",
+  "capacityDesc": "50 guests maximum, with comfortable seating and refreshment areas",
+  "amenitiesTitle": "Lounge Amenities",
+  "amenities": [
+    {
+      "icon": "ri-wifi-line",
+      "title": "High-Speed WiFi",
+      "description": "Complimentary high-speed internet access throughout the lounge"
+    },
+    {
+      "icon": "ri-restaurant-line",
+      "title": "South Indian Dining",
+      "description": "Fresh South Indian cuisine including Tamil Nadu specialties and international fare"
+    },
+    {
+      "icon": "ri-cup-line",
+      "title": "Filter Coffee Bar",
+      "description": "Traditional South Indian filter coffee, tea, and premium beverages"
+    },
+    {
+      "icon": "ri-computer-line",
+      "title": "Work Stations",
+      "description": "Dedicated workspace with computers and charging points"
+    },
+    {
+      "icon": "ri-rest-time-line",
+      "title": "Quiet Zone",
+      "description": "Comfortable reclining chairs for rest between flights"
+    },
+    {
+      "icon": "ri-tv-line",
+      "title": "Entertainment",
+      "description": "LED TVs with regional and international channels"
+    },
+    {
+      "icon": "ri-wheelchair-line",
+      "title": "Accessibility",
+      "description": "Fully accessible facility with dedicated assistance"
+    }
+  ],
+  "accessTitle": "Access & Pricing",
+  "accessOptions": [
+    {
+      "type": "Business Class",
+      "desc": "Complimentary access for business class passengers of partner airlines",
+      "icon": "ri-vip-crown-line"
+    },
+    {
+      "type": "Credit Card",
+      "desc": "Access for premium credit card holders of participating banks",
+      "icon": "ri-bank-card-line"
+    },
+    {
+      "type": "Priority Pass",
+      "desc": "Accepted for Priority Pass and DragonPass members",
+      "icon": "ri-pass-valid-line"
+    },
+    {
+      "type": "Walk-in",
+      "desc": "Walk-in access available at ₹1,500 + taxes per person",
+      "icon": "ri-user-add-line"
+    }
+  ],
+  "infoTitle": "Important Information",
+  "infoDesc": "Maximum stay is 3 hours. Children under 2 years enter free. Smart casual dress code applies. The lounge reserves the right to refuse entry. Please present a valid boarding pass and access credential at reception."
+}

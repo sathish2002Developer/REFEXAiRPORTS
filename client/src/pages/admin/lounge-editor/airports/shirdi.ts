@@ -1,0 +1,40 @@
+import type { AirportLoungeData } from '../loungeTypes';
+
+const shirdi: AirportLoungeData = {
+  id: 'shirdi',
+  name: 'Shirdi Airport Lounge',
+  slug: 'Shirdi',
+  route: '/shirdi-airport-lounge',
+  heroTitle: 'Shirdi Airport Lounge',
+  heroSubtitle: 'Shirdi International Airport (SAG)',
+  heroTagline: 'A serene sanctuary for pilgrims and travelers before their journey',
+  heroBackground: 'https://readdy.ai/api/search-image?query=Serene%20airport%20lounge%20interior%20with%20spiritual%20ambiance%2C%20warm%20peaceful%20lighting%2C%20comfortable%20modern%20seating%2C%20subtle%20Indian%20devotional%20design%20elements%2C%20clean%20sophisticated%20travel%20space%20with%20calming%20atmosphere&width=1920&height=500&seq=shirdi-lounge-hero&orientation=landscape',
+  overviewTitle: 'Welcome to Shirdi Airport Lounge',
+  overviewPara1: 'The Shirdi Airport Lounge by Refex Airports offers a uniquely serene pre-flight experience, designed with the spiritual character of Shirdi in mind. This tranquil space provides a peaceful retreat for pilgrims and travelers alike, with amenities that cater to the needs of the millions who visit the sacred town annually.',
+  overviewPara2: 'Located in the Departure Hall, the lounge spans 2,500 square feet and can accommodate up to 55 guests. The design incorporates elements of spirituality and calm, creating the perfect environment to reflect and relax before your journey.',
+  hoursTitle: 'Operating Hours',
+  hoursDesc: '6:00 AM - 10:00 PM daily, aligned with flight schedules',
+  capacityTitle: 'Capacity',
+  capacityDesc: '55 guests maximum, with meditation zone and comfortable seating',
+  amenitiesTitle: 'Lounge Amenities',
+  amenities: [
+    { icon: 'ri-wifi-line', title: 'High-Speed WiFi', description: 'Complimentary high-speed internet access throughout the lounge' },
+    { icon: 'ri-restaurant-line', title: 'Satvik Dining', description: 'Pure vegetarian Satvik cuisine and Maharashtrian specialties' },
+    { icon: 'ri-cup-line', title: 'Beverage Service', description: 'Premium teas, coffee, and non-alcoholic specialty beverages' },
+    { icon: 'ri-computer-line', title: 'Business Corner', description: 'Workstations with computers and charging facilities' },
+    { icon: 'ri-rest-time-line', title: 'Meditation Zone', description: 'Quiet meditation area for peaceful reflection before your flight' },
+    { icon: 'ri-tv-line', title: 'Entertainment', description: 'LED TVs with devotional and entertainment channels' },
+    { icon: 'ri-wheelchair-line', title: 'Accessibility', description: 'Fully accessible facility with dedicated assistance for elderly pilgrims' },
+  ],
+  accessTitle: 'Access & Pricing',
+  accessOptions: [
+    { type: 'Business Class', desc: 'Complimentary access for business class passengers of partner airlines', icon: 'ri-vip-crown-line' },
+    { type: 'Credit Card', desc: 'Access for premium credit card holders of participating banks', icon: 'ri-bank-card-line' },
+    { type: 'Priority Pass', desc: 'Accepted for Priority Pass and DragonPass members', icon: 'ri-pass-valid-line' },
+    { type: 'Walk-in', desc: 'Walk-in access available at ₹1,200 + taxes per person', icon: 'ri-user-add-line' },
+  ],
+  infoTitle: 'Important Information',
+  infoDesc: 'Maximum stay is 3 hours. Children under 2 years enter free. The lounge maintains a serene, spiritual atmosphere. Smart casual dress code applies. Please present a valid boarding pass and access credential at reception.',
+};
+
+export default shirdi;

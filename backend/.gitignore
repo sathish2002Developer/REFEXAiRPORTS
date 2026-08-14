@@ -1,0 +1,39 @@
+# dependencies
+node_modules/
+**/node_modules/
+
+# uploaded files (CMS images). Keep empty folders via .gitkeep
+uploads/
+uploads/**
+!uploads/**/.gitkeep
+
+# testing
+coverage
+
+# production
+.next
+.swc
+_static
+out
+dist
+build
+
+# environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# misc
+.DS_Store
+.vercel
+.netlify
+.unimportedrc.json
+tsconfig.tsbuildinfo
+.vscode
+.idea
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
