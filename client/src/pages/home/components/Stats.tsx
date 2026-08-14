@@ -130,12 +130,12 @@ export default function Stats({ data }: { data?: { title?: string; items?: Array
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8 lg:gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 sm:gap-8 lg:gap-10">
           {stats.map((stat, index) => (
             <div
-              key={stat.label}
+              key={`${stat.label}-${index}`}
               className="group flex flex-col"
-              data-aos={animationDirections[index]}
+              data-aos={animationDirections[index % animationDirections.length]}
               data-aos-delay={stat.delay}
             >
               <div className="w-full aspect-[4/5] overflow-hidden rounded-[20px]">

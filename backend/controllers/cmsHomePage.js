@@ -1,7 +1,6 @@
 const { CmsHomePage } = require("../models");
 const { responseStatus } = require("../helpers/response");
 const { archiveCurrentRevision } = require("../helpers/cmsRevisionHelper");
-const { deepMerge } = require("../helpers/cmsJson");
 const { defaultHomePayload, mergeHomePayload } = require("../helpers/cmsHomePageDefaults");
 
 async function getOrCreateRow() {
@@ -52,7 +51,9 @@ const patchAdminHomePage = async (req, res) => {
     }
 
     await archiveCurrentRevision("home", req);
-    row.payload = mergeHomePayload(deepMerge(row.payload || {}, incoming));
+    const next = mergeHomePayload(row.payload || {}, incoming);
+    row.set("payload", JSON.parse(JSON.stringify(next)));
+    row.changed("payload", true);
     await row.save();
     return responseStatus(res, 200, "Home page saved", serializeRow(row));
   } catch (e) {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import AdminLayout from '@/components/feature/AdminLayout';
+import { adminToast } from '@/lib/adminToast';
 
 // Mock CMS sections for each page type
 const mockSections: Record<string, Array<{ key: string; label: string; type: string; value: string }>> = {
@@ -54,6 +55,7 @@ export default function AdminPageEditor() {
     setTimeout(() => {
       setSaving(false);
       setSaved(true);
+      adminToast.saved();
       setTimeout(() => setSaved(false), 3000);
     }, 1000);
   };

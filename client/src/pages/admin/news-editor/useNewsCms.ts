@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { cmsAdminPatch, cmsGet } from '@/lib/api';
 import { toNewsDraft, type NewsDraft } from './cmsDraft';
 import type { HighlightItem, NewsItem, StoryItem } from './newsData';
+import { adminToast } from '@/lib/adminToast';
 
 const clone = (obj: NewsDraft): NewsDraft => JSON.parse(JSON.stringify(obj));
 
@@ -59,10 +60,12 @@ export function useNewsCms() {
       newsItems: [...p.newsItems, { title: '', date: '', description: '', image: '', link: '' }],
     }));
     mark();
+    adminToast.added();
   };
   const removeNews = (i: number) => {
     setDraft((p) => ({ ...p, newsItems: p.newsItems.filter((_, n) => n !== i) }));
     mark();
+    adminToast.deleted();
   };
 
   const updateStory = (i: number, field: keyof StoryItem, value: string) => {
@@ -79,10 +82,12 @@ export function useNewsCms() {
       stories: [...p.stories, { title: '', subtitle: '', description: '', image: '' }],
     }));
     mark();
+    adminToast.added();
   };
   const removeStory = (i: number) => {
     setDraft((p) => ({ ...p, stories: p.stories.filter((_, n) => n !== i) }));
     mark();
+    adminToast.deleted();
   };
 
   const updateHighlight = (i: number, field: keyof HighlightItem, value: string) => {
@@ -99,10 +104,12 @@ export function useNewsCms() {
       highlights: [...p.highlights, { title: '', description: '', image: '', date: '', icon: 'ri-star-line' }],
     }));
     mark();
+    adminToast.added();
   };
   const removeHighlight = (i: number) => {
     setDraft((p) => ({ ...p, highlights: p.highlights.filter((_, n) => n !== i) }));
     mark();
+    adminToast.deleted();
   };
 
   const handleSave = async () => {
@@ -112,9 +119,11 @@ export function useNewsCms() {
       const data = await cmsAdminPatch<Record<string, any>>('news', draft);
       setDraft(toNewsDraft(data));
       setSaved(true);
+      adminToast.saved();
       setTimeout(() => setSaved(false), 3000);
     } catch (err: any) {
       setError(err.message || 'Failed to save');
+      adminToast.error(err.message || 'Failed to save');
     } finally {
       setSaving(false);
     }

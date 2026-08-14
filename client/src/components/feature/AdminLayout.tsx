@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import AdminToaster from '@/components/feature/AdminToaster';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ const sidebarLinks = [
   { path: '/admin/dashboard', label: 'Dashboard', icon: 'ri-dashboard-line' },
   { path: '/admin/pages', label: 'Pages', icon: 'ri-pages-line' },
   { path: '/admin/navbar-editor', label: 'Navbar', icon: 'ri-menu-line' },
+  { path: '/admin/navbar-editor?tab=footer', label: 'Footer', icon: 'ri-layout-bottom-line' },
   { path: '/admin/content', label: 'Content', icon: 'ri-article-line' },
   { path: '/admin/media', label: 'Media', icon: 'ri-image-line' },
   { path: '/admin/settings', label: 'Settings', icon: 'ri-settings-3-line' },
@@ -32,7 +34,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     navigate('/admin/login');
   };
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    const [pathname, query] = path.split('?');
+    if (location.pathname !== pathname) return false;
+    const wantTab = new URLSearchParams(query || '').get('tab');
+    const currentTab = new URLSearchParams(location.search).get('tab');
+    if (pathname === '/admin/navbar-editor') {
+      if (wantTab === 'footer') return currentTab === 'footer';
+      return currentTab !== 'footer';
+    }
+    return true;
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
@@ -191,6 +203,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           {children}
         </main>
       </div>
+      <AdminToaster />
     </div>
   );
 }

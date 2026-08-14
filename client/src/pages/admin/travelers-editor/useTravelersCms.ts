@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { cmsAdminPatch, cmsGet } from '@/lib/api';
 import { travelersAirports } from './travelersData';
 import { toTravelersDraft, type TravelersDraft } from './cmsDraft';
+import { adminToast } from '@/lib/adminToast';
 
 const clone = (obj: TravelersDraft): TravelersDraft => JSON.parse(JSON.stringify(obj));
 
@@ -32,25 +33,25 @@ export function useTravelersCms() {
   const updateBrand = (i: number, field: keyof TravelersDraft['brands'][number], value: string) => {
     setDraft((p) => { const brands = clone(p).brands; brands[i] = { ...brands[i], [field]: value }; return { ...p, brands }; }); setSaved(false);
   };
-  const addBrand = () => { setDraft((p) => ({ ...p, brands: [...p.brands, { name: '', description: '', category: '', location: '', logo: '' }] })); setSaved(false); };
-  const removeBrand = (i: number) => { setDraft((p) => ({ ...p, brands: p.brands.filter((_, n) => n !== i) })); setSaved(false); };
+  const addBrand = () => { setDraft((p) => ({ ...p, brands: [...p.brands, { name: '', description: '', category: '', location: '', logo: '' }] })); setSaved(false); adminToast.added(); };
+  const removeBrand = (i: number) => { setDraft((p) => ({ ...p, brands: p.brands.filter((_, n) => n !== i) })); setSaved(false); adminToast.deleted(); };
   const updateTerminal = (i: number, field: 'name' | 'count', value: string) => {
     setDraft((p) => { const terminals = clone(p).terminals; terminals[i] = { ...terminals[i], [field]: field === 'count' ? Number(value) || 0 : value } as any; return { ...p, terminals }; }); setSaved(false);
   };
-  const addTerminal = () => { setDraft((p) => ({ ...p, terminals: [...p.terminals, { name: '', count: 0 }] })); setSaved(false); };
-  const removeTerminal = (i: number) => { setDraft((p) => ({ ...p, terminals: p.terminals.filter((_, n) => n !== i) })); setSaved(false); };
+  const addTerminal = () => { setDraft((p) => ({ ...p, terminals: [...p.terminals, { name: '', count: 0 }] })); setSaved(false); adminToast.added(); };
+  const removeTerminal = (i: number) => { setDraft((p) => ({ ...p, terminals: p.terminals.filter((_, n) => n !== i) })); setSaved(false); adminToast.deleted(); };
   const updateFaq = (i: number, field: keyof TravelersDraft['faqs'][number], value: string) => {
     setDraft((p) => { const faqs = clone(p).faqs; faqs[i] = { ...faqs[i], [field]: value }; return { ...p, faqs }; }); setSaved(false);
   };
-  const addFaq = () => { setDraft((p) => ({ ...p, faqs: [...p.faqs, { question: '', answer: '' }] })); setSaved(false); };
-  const removeFaq = (i: number) => { setDraft((p) => ({ ...p, faqs: p.faqs.filter((_, n) => n !== i) })); setSaved(false); };
+  const addFaq = () => { setDraft((p) => ({ ...p, faqs: [...p.faqs, { question: '', answer: '' }] })); setSaved(false); adminToast.added(); };
+  const removeFaq = (i: number) => { setDraft((p) => ({ ...p, faqs: p.faqs.filter((_, n) => n !== i) })); setSaved(false); adminToast.deleted(); };
 
   const handleSave = async () => {
     setSaving(true); setError('');
     try {
       const data = await cmsAdminPatch<Record<string, any>>(`travelers/${airportId}`, { ...currentAirport, ...draft });
-      setDraft(toTravelersDraft(data)); setSaved(true); setTimeout(() => setSaved(false), 3000);
-    } catch (err: any) { setError(err.message || 'Failed to save'); }
+      setDraft(toTravelersDraft(data)); setSaved(true); adminToast.saved(); setTimeout(() => setSaved(false), 3000);
+    } catch (err: any) { setError(err.message || 'Failed to save'); adminToast.error(err.message || 'Failed to save'); }
     finally { setSaving(false); }
   };
 

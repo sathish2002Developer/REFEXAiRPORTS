@@ -1,6 +1,62 @@
 import { useState, FormEvent } from 'react';
 import CmsHtml from '@/components/feature/CmsHtml';
 
+type ContactLocation = {
+  name?: string;
+  subtitle?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+};
+
+const DEFAULT_LOCATIONS: ContactLocation[] = [
+  {
+    name: 'Pune International Airport (PNQ)',
+    subtitle: 'Lohegaon, Pune, Maharashtra',
+    phone: '+91 95388 82531',
+    email: 'debamita.n@refex.co.in',
+    address:
+      'Unit no.304, UrbanWrk, 3rd Floor, Aeromall, 333, Domestic, Airport Road, Pune International Airport Area, Lohegaon, Pune - 411032, Maharashtra.',
+  },
+  {
+    name: 'Srinagar International Airport (SXR)',
+    subtitle: 'Humhama, Srinagar, Jammu & Kashmir',
+    phone: '+91 91497 68998',
+    email: 'showkatahmad.m@refex.co.in',
+    address: 'Srinagar International Airport, Ground floor, Humhama-Srinagar 190007',
+  },
+  {
+    name: 'Tiruchirappalli International Airport (TRZ)',
+    subtitle: 'Tiruchirappalli, Tamil Nadu',
+    phone: '+91 95388 82531',
+    email: 'debamita.n@refex.co.in',
+    address: 'Tiruchirappalli International Airport, Trichy - 620007, Tamil Nadu.',
+  },
+  {
+    name: 'Aurangabad Airport (IXU)',
+    subtitle: 'Chikalthana, Aurangabad, Maharashtra',
+    phone: '+91 95388 82531',
+    email: 'debamita.n@refex.co.in',
+    address: 'Aurangabad Airport, Chikalthana, Aurangabad - 431007, Maharashtra.',
+  },
+  {
+    name: 'Shirdi International Airport (SAG)',
+    subtitle: 'Kakadi, Shirdi, Maharashtra',
+    phone: '+91 95388 82531',
+    email: 'debamita.n@refex.co.in',
+    address: 'Shirdi International Airport, Kakadi, Shirdi - 423109, Maharashtra.',
+  },
+];
+
+function hasLocationContent(loc: ContactLocation) {
+  return Boolean(loc.name || loc.subtitle || loc.phone || loc.email || loc.address);
+}
+
+function locationLabel(loc: ContactLocation, index: number) {
+  if (loc.name) return loc.name.replace(/\s*\([^)]*\)\s*$/, '').trim() || loc.name;
+  return `Location ${index + 1}`;
+}
+
 export default function Contact({
   data,
 }: {
@@ -45,6 +101,11 @@ export default function Contact({
   const isFormValid = () => {
     return formData.businessName && formData.contactPerson && formData.email && formData.phone;
   };
+
+  const locations = (Array.isArray(data?.locations) ? data.locations : DEFAULT_LOCATIONS).filter(
+    hasLocationContent
+  );
+  const formLocationOptions = locations.map((loc, index) => locationLabel(loc, index));
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -101,57 +162,21 @@ export default function Contact({
               className="text-gray-600 text-lg mb-12"
             />
 
-            {(data?.locations?.length
-              ? data.locations
-              : [
-                  {
-                    name: 'Pune International Airport (PNQ)',
-                    subtitle: 'Lohegaon, Pune, Maharashtra',
-                    phone: '+91 95388 82531',
-                    email: 'debamita.n@refex.co.in',
-                    address:
-                      'Unit no.304, UrbanWrk, 3rd Floor, Aeromall, 333, Domestic, Airport Road, Pune International Airport Area, Lohegaon, Pune - 411032, Maharashtra.',
-                  },
-                  {
-                    name: 'Srinagar International Airport (SXR)',
-                    subtitle: 'Humhama, Srinagar, Jammu & Kashmir',
-                    phone: '+91 91497 68998',
-                    email: 'showkatahmad.m@refex.co.in',
-                    address: 'Srinagar International Airport, Ground floor, Humhama-Srinagar 190007',
-                  },
-                  {
-                    name: 'Tiruchirappalli International Airport (TRZ)',
-                    subtitle: 'Tiruchirappalli, Tamil Nadu',
-                    phone: '+91 95388 82531',
-                    email: 'debamita.n@refex.co.in',
-                    address: 'Tiruchirappalli International Airport, Trichy - 620007, Tamil Nadu.',
-                  },
-                  {
-                    name: 'Aurangabad Airport (IXU)',
-                    subtitle: 'Chikalthana, Aurangabad, Maharashtra',
-                    phone: '+91 95388 82531',
-                    email: 'debamita.n@refex.co.in',
-                    address: 'Aurangabad Airport, Chikalthana, Aurangabad - 431007, Maharashtra.',
-                  },
-                  {
-                    name: 'Shirdi International Airport (SAG)',
-                    subtitle: 'Kakadi, Shirdi, Maharashtra',
-                    phone: '+91 95388 82531',
-                    email: 'debamita.n@refex.co.in',
-                    address: 'Shirdi International Airport, Kakadi, Shirdi - 423109, Maharashtra.',
-                  },
-                ]
-            ).map((loc, index) => (
-              <div key={loc.name || index} className={index === 4 ? 'mb-8' : 'mb-10'} data-aos="fade-up" data-aos-delay={String(100 + index * 50)}>
-                <h3 className="text-xl font-semibold mb-4 flex items-center">
-                  <i className="ri-plane-line text-[#7bbf45] mr-2"></i>
-                  {loc.name}
-                </h3>
-                {loc.subtitle && <p className="text-sm text-gray-500 mb-3">{loc.subtitle}</p>}
+            {locations.map((loc, index) => (
+              <div key={`${loc.name || 'loc'}-${index}`} className="mb-10" data-aos="fade-up" data-aos-delay={String(100 + index * 50)}>
+                {(loc.name || loc.subtitle) && (
+                  <>
+                    <h3 className="text-xl font-semibold mb-4 flex items-center">
+                      <i className="ri-plane-line text-[#7bbf45] mr-2 text-2xl leading-none"></i>
+                      {loc.name}
+                    </h3>
+                    {loc.subtitle && <p className="text-sm text-gray-500 mb-3">{loc.subtitle}</p>}
+                  </>
+                )}
                 <div className="space-y-3">
                   {loc.phone && (
                     <div className="flex items-center">
-                      <i className="fas fa-phone text-[#7bbf45] w-5"></i>
+                      <i className="ri-phone-line text-[#7bbf45] text-lg w-5"></i>
                       <a href={`tel:${loc.phone.replace(/\s/g, '')}`} className="ml-3 text-gray-700 hover:text-[#7bbf45] cursor-pointer">
                         {loc.phone}
                       </a>
@@ -159,7 +184,7 @@ export default function Contact({
                   )}
                   {loc.email && (
                     <div className="flex items-center">
-                      <i className="fas fa-envelope text-[#7bbf45] w-5"></i>
+                      <i className="ri-mail-line text-[#7bbf45] text-lg w-5"></i>
                       <a href={`mailto:${loc.email}`} className="ml-3 text-gray-700 hover:text-[#7bbf45] cursor-pointer">
                         {loc.email}
                       </a>
@@ -167,7 +192,7 @@ export default function Contact({
                   )}
                   {loc.address && (
                     <div className="flex items-start">
-                      <i className="fas fa-map-marker-alt text-[#7bbf45] w-5 mt-1"></i>
+                      <i className="ri-map-pin-line text-[#7bbf45] text-lg w-5 mt-0.5"></i>
                       <div className="ml-3 text-gray-700 text-sm leading-relaxed">{loc.address}</div>
                     </div>
                   )}
@@ -182,7 +207,7 @@ export default function Contact({
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-[#7bbf45] hover:text-white transition-colors cursor-pointer"
               >
-                <i className="fab fa-linkedin"></i>
+                <i className="ri-linkedin-fill"></i>
               </a>
               <a
                 href="https://twitter.com/GroupRefex"
@@ -198,7 +223,7 @@ export default function Contact({
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-[#7bbf45] hover:text-white transition-colors cursor-pointer"
               >
-                <i className="fab fa-facebook"></i>
+                <i className="ri-facebook-fill"></i>
               </a>
               <a
                 href="https://www.instagram.com/refexgroup/"
@@ -206,7 +231,7 @@ export default function Contact({
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-[#7bbf45] hover:text-white transition-colors cursor-pointer"
               >
-                <i className="fab fa-instagram"></i>
+                <i className="ri-instagram-line"></i>
               </a>
             </div>
           </div>
@@ -263,56 +288,18 @@ export default function Contact({
               <div>
                 <p className="text-sm font-medium text-gray-700 mb-3">Select Location</p>
                 <div className="space-y-2">
-                  <label className="flex items-center cursor-pointer">
-                    <input
-                      className="mr-3 text-[#7bbf45] focus:ring-[#7bbf45]"
-                      type="checkbox"
-                      checked={formData.locations.includes('Pune Airport')}
-                      onChange={() => handleCheckboxChange('locations', 'Pune Airport')}
-                      name="location"
-                    />
-                    Pune Airport
-                  </label>
-                  <label className="flex items-center cursor-pointer">
-                    <input
-                      className="mr-3 text-[#7bbf45] focus:ring-[#7bbf45]"
-                      type="checkbox"
-                      checked={formData.locations.includes('Srinagar Airport')}
-                      onChange={() => handleCheckboxChange('locations', 'Srinagar Airport')}
-                      name="location"
-                    />
-                    Srinagar Airport
-                  </label>
-                  <label className="flex items-center cursor-pointer">
-                    <input
-                      className="mr-3 text-[#7bbf45] focus:ring-[#7bbf45]"
-                      type="checkbox"
-                      checked={formData.locations.includes('Trichy Airport')}
-                      onChange={() => handleCheckboxChange('locations', 'Trichy Airport')}
-                      name="location"
-                    />
-                    Trichy Airport
-                  </label>
-                  <label className="flex items-center cursor-pointer">
-                    <input
-                      className="mr-3 text-[#7bbf45] focus:ring-[#7bbf45]"
-                      type="checkbox"
-                      checked={formData.locations.includes('Aurangabad Airport')}
-                      onChange={() => handleCheckboxChange('locations', 'Aurangabad Airport')}
-                      name="location"
-                    />
-                    Aurangabad Airport
-                  </label>
-                  <label className="flex items-center cursor-pointer">
-                    <input
-                      className="mr-3 text-[#7bbf45] focus:ring-[#7bbf45]"
-                      type="checkbox"
-                      checked={formData.locations.includes('Shirdi Airport')}
-                      onChange={() => handleCheckboxChange('locations', 'Shirdi Airport')}
-                      name="location"
-                    />
-                    Shirdi Airport
-                  </label>
+                  {formLocationOptions.map((label) => (
+                    <label key={label} className="flex items-center cursor-pointer">
+                      <input
+                        className="mr-3 text-[#7bbf45] focus:ring-[#7bbf45]"
+                        type="checkbox"
+                        checked={formData.locations.includes(label)}
+                        onChange={() => handleCheckboxChange('locations', label)}
+                        name="location"
+                      />
+                      {label}
+                    </label>
+                  ))}
                 </div>
               </div>
               <div>

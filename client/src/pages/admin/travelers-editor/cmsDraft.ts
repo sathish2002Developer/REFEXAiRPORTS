@@ -1,5 +1,5 @@
-import type { AirportTravelersData } from '../travelersData';
-import { travelersAirports } from '../travelersData';
+import type { AirportTravelersData } from './travelersData';
+import { travelersAirports } from './travelersData';
 
 export type TravelersDraft = Pick<
   AirportTravelersData,

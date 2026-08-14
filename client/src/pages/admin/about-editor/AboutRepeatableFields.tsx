@@ -1,5 +1,6 @@
 import CmsImageField from '@/components/feature/CmsImageField';
 import CmsRichTextField from '@/components/feature/CmsRichTextField';
+import { adminToast } from '@/lib/adminToast';
 
 const inputCls =
   'w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#2879b1]/20 focus:border-[#2879b1]';
@@ -9,11 +10,29 @@ function AddBtn({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={() => {
+        onClick();
+        adminToast.added();
+      }}
       className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-[#2879b1] bg-[#2879b1]/10 hover:bg-[#2879b1]/20 rounded-lg cursor-pointer"
     >
       <i className="ri-add-line"></i>
       {label}
+    </button>
+  );
+}
+
+function DeleteBtn({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        onClick();
+        adminToast.deleted();
+      }}
+      className="text-xs text-red-600 cursor-pointer whitespace-nowrap"
+    >
+      Delete
     </button>
   );
 }
@@ -46,9 +65,7 @@ export function CmsStringList({
             value={item}
             onChange={(e) => onChange(items.map((row, n) => (n === i ? e.target.value : row)))}
           />
-          <button type="button" onClick={() => onChange(items.filter((_, n) => n !== i))} className="text-xs text-red-600 cursor-pointer whitespace-nowrap">
-            Delete
-          </button>
+          <DeleteBtn onClick={() => onChange(items.filter((_, n) => n !== i))} />
         </div>
       ))}
     </div>
@@ -77,7 +94,7 @@ export function CmsValuesList({
         <div key={i} className="border border-slate-200 rounded-xl p-4 space-y-3">
           <div className="flex justify-between">
             <span className="text-sm font-semibold">Value {i + 1}{v.name ? ` — ${v.name}` : ''}</span>
-            <button type="button" onClick={() => onChange(values.filter((_, n) => n !== i))} className="text-xs text-red-600 cursor-pointer">Delete</button>
+            <DeleteBtn onClick={() => onChange(values.filter((_, n) => n !== i))} />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div><label className={labelCls}>Letter</label><input className={inputCls} value={v.letter} onChange={(e) => update(i, { letter: e.target.value })} /></div>
@@ -112,7 +129,7 @@ export function CmsFocusCardsList({
         <div key={i} className="border border-slate-200 rounded-xl p-4 space-y-3">
           <div className="flex justify-between">
             <span className="text-sm font-semibold">Card {i + 1}{card.title ? ` — ${card.title}` : ''}</span>
-            <button type="button" onClick={() => onChange(cards.filter((_, n) => n !== i))} className="text-xs text-red-600 cursor-pointer">Delete</button>
+            <DeleteBtn onClick={() => onChange(cards.filter((_, n) => n !== i))} />
           </div>
           <div><label className={labelCls}>Title</label><input className={inputCls} value={card.title} onChange={(e) => update(i, { title: e.target.value })} /></div>
           <CmsStringList title="Items" addLabel="Add item" items={card.items || []} onChange={(items) => update(i, { items })} />
@@ -154,7 +171,7 @@ export function CmsKeyAreasList({
         <div key={i} className="border border-slate-200 rounded-xl p-4 space-y-3">
           <div className="flex justify-between">
             <span className="text-sm font-semibold">Area {i + 1}{k.title ? ` — ${k.title}` : ''}</span>
-            <button type="button" onClick={() => onChange(keys.filter((_, n) => n !== i))} className="text-xs text-red-600 cursor-pointer">Delete</button>
+            <DeleteBtn onClick={() => onChange(keys.filter((_, n) => n !== i))} />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div><label className={labelCls}>Title</label><input className={inputCls} value={k.title} onChange={(e) => update(i, { title: e.target.value })} /></div>
@@ -196,7 +213,7 @@ export function CmsPeopleList({
         <div key={i} className="border border-slate-200 rounded-xl overflow-hidden">
           <div className="px-4 py-3 bg-slate-50 flex justify-between">
             <span className="text-sm font-semibold">{i + 1}. {p.name || 'Untitled'}</span>
-            <button type="button" onClick={() => onChange(people.filter((_, n) => n !== i))} className="text-xs text-red-600 cursor-pointer">Delete</button>
+            <DeleteBtn onClick={() => onChange(people.filter((_, n) => n !== i))} />
           </div>
           <div className="p-4 space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -234,7 +251,7 @@ export function CmsImageUrlList({
         <div key={i} className="border border-slate-200 rounded-xl p-4 space-y-2">
           <div className="flex justify-between">
             <span className="text-sm font-semibold">Image {i + 1}</span>
-            <button type="button" onClick={() => onChange(images.filter((_, n) => n !== i))} className="text-xs text-red-600 cursor-pointer">Delete</button>
+            <DeleteBtn onClick={() => onChange(images.filter((_, n) => n !== i))} />
           </div>
           <CmsImageField value={url} onChange={(next) => onChange(images.map((row, n) => (n === i ? next : row)))} />
         </div>

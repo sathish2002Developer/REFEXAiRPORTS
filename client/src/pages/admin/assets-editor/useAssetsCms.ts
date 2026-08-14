@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { cmsAdminPatch, cmsGet } from '@/lib/api';
 import { assetsAirports } from './assetsData';
+import { adminToast } from '@/lib/adminToast';
 
 export function useAssetsCms() {
   const [airportId, setAirportId] = useState(assetsAirports[0].id);
@@ -32,8 +33,8 @@ export function useAssetsCms() {
     try {
       const data = await cmsAdminPatch<Record<string, any>>(`assets/${airportId}`, { ...currentAirport, values });
       setValues({ ...currentAirport.values, ...(data.values || {}) });
-      setSaved(true); setTimeout(() => setSaved(false), 3000);
-    } catch (err: any) { setError(err.message || 'Failed to save'); }
+      setSaved(true); adminToast.saved(); setTimeout(() => setSaved(false), 3000);
+    } catch (err: any) { setError(err.message || 'Failed to save'); adminToast.error(err.message || 'Failed to save'); }
     finally { setSaving(false); }
   };
 

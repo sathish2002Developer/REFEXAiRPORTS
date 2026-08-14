@@ -17,6 +17,7 @@ import {
   type CmsKeyArea,
   type CmsPerson,
 } from './AboutRepeatableFields';
+import { adminToast } from '@/lib/adminToast';
 
 interface SectionField {
   key: string;
@@ -257,9 +258,11 @@ export default function AdminAboutEditorPage() {
       const { updated_at: _updated, ...cms } = savedPayload;
       applyCms(cms);
       setSaved(true);
+      adminToast.saved();
       setTimeout(() => setSaved(false), 3000);
     } catch (err: any) {
       setError(err.message || 'Failed to save');
+      adminToast.error(err.message || 'Failed to save');
     } finally {
       setSaving(false);
     }

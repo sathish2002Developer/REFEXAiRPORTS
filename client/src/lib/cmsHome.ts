@@ -20,12 +20,6 @@ export function flattenHome(payload: Record<string, any> = {}): Record<string, s
 
   const stats = payload.stats || {};
   fields.stats_title = str(stats.title);
-  (stats.items || []).forEach((item: any, i: number) => {
-    const n = i + 1;
-    fields[`stat${n}_count`] = str(item.countDisplay ?? item.count);
-    fields[`stat${n}_label`] = str(item.label);
-    fields[`stat${n}_img`] = str(item.image);
-  });
 
   const wwa = payload.whoWeAre || {};
   fields.wwa_title = str(wwa.title);
@@ -77,16 +71,6 @@ export function flattenHome(payload: Record<string, any> = {}): Record<string, s
   fields.contact_title = str(contact.title);
   fields.contact_subtitle = str(contact.subtitle);
   fields.contact_form_title = str(contact.formTitle);
-  const locKeys = ["pune", "srinagar", "trichy", "aurangabad", "shirdi"];
-  (contact.locations || []).forEach((loc: any, i: number) => {
-    const key = locKeys[i];
-    if (!key) return;
-    fields[`${key}_name`] = str(loc.name);
-    fields[`${key}_subtitle`] = str(loc.subtitle);
-    fields[`${key}_phone`] = str(loc.phone);
-    fields[`${key}_email`] = str(loc.email);
-    fields[`${key}_address`] = str(loc.address);
-  });
 
   return fields;
 }
@@ -102,16 +86,15 @@ export function applyHomeFields(payload: Record<string, any>, fields: Record<str
 
   next.stats = next.stats || { items: [] };
   next.stats.title = fields.stats_title ?? next.stats.title;
-  next.stats.items = Array.isArray(next.stats.items) ? next.stats.items : [];
-  for (let i = 0; i < 5; i++) {
-    const n = i + 1;
-    const item = { ...(next.stats.items[i] || {}) };
-    if (fields[`stat${n}_count`] !== undefined) {
-      Object.assign(item, parseStatCount(fields[`stat${n}_count`]));
-    }
-    if (fields[`stat${n}_label`] !== undefined) item.label = fields[`stat${n}_label`];
-    if (fields[`stat${n}_img`] !== undefined) item.image = fields[`stat${n}_img`];
-    next.stats.items[i] = item;
+  if (Array.isArray(payload.stats?.items)) {
+    next.stats.items = payload.stats.items.map((item: any) => {
+      const parsed = parseStatCount(str(item?.countDisplay ?? item?.count));
+      return {
+        ...parsed,
+        label: str(item?.label),
+        image: str(item?.image),
+      };
+    });
   }
 
   next.whoWeAre = next.whoWeAre || {};
@@ -189,17 +172,15 @@ export function applyHomeFields(payload: Record<string, any>, fields: Record<str
   next.contact.title = fields.contact_title ?? next.contact.title;
   next.contact.subtitle = fields.contact_subtitle ?? next.contact.subtitle;
   next.contact.formTitle = fields.contact_form_title ?? next.contact.formTitle;
-  next.contact.locations = Array.isArray(next.contact.locations) ? next.contact.locations : [];
-  const locKeys = ["pune", "srinagar", "trichy", "aurangabad", "shirdi"];
-  locKeys.forEach((key, i) => {
-    const loc = { ...(next.contact.locations[i] || {}) };
-    if (fields[`${key}_name`] !== undefined) loc.name = fields[`${key}_name`];
-    if (fields[`${key}_subtitle`] !== undefined) loc.subtitle = fields[`${key}_subtitle`];
-    if (fields[`${key}_phone`] !== undefined) loc.phone = fields[`${key}_phone`];
-    if (fields[`${key}_email`] !== undefined) loc.email = fields[`${key}_email`];
-    if (fields[`${key}_address`] !== undefined) loc.address = fields[`${key}_address`];
-    next.contact.locations[i] = loc;
-  });
+  if (Array.isArray(payload.contact?.locations)) {
+    next.contact.locations = payload.contact.locations.map((loc: any) => ({
+      name: str(loc?.name),
+      subtitle: str(loc?.subtitle),
+      phone: str(loc?.phone),
+      email: str(loc?.email),
+      address: str(loc?.address),
+    }));
+  }
 
   return next;
 }

@@ -1,5 +1,6 @@
 import CmsImageField from '@/components/feature/CmsImageField';
 import CmsRichTextField from '@/components/feature/CmsRichTextField';
+import { adminToast } from '@/lib/adminToast';
 
 export type CmsStoryItem = {
   tag: string;
@@ -21,10 +22,12 @@ export default function CmsStoriesList({
 
   const addStory = () => {
     onChange([...stories, { tag: '', title: '', description: '', image: '' }]);
+    adminToast.added();
   };
 
   const removeStory = (index: number) => {
     onChange(stories.filter((_, i) => i !== index));
+    adminToast.deleted();
   };
 
   return (

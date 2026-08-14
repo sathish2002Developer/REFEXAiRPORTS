@@ -1,4 +1,5 @@
 import CmsImageField from '@/components/feature/CmsImageField';
+import { adminToast } from '@/lib/adminToast';
 
 export type CmsBrandPartner = {
   name: string;
@@ -19,10 +20,12 @@ export default function CmsBrandPartnersList({
 
   const addBrand = () => {
     onChange([...brands, { name: '', image: '', url: '' }]);
+    adminToast.added();
   };
 
   const removeBrand = (index: number) => {
     onChange(brands.filter((_, i) => i !== index));
+    adminToast.deleted();
   };
 
   return (

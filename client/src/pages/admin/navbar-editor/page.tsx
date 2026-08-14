@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import AdminLayout from '@/components/feature/AdminLayout';
 import CmsImageField from '@/components/feature/CmsImageField';
 import NavbarMenuFields from './NavbarMenuFields';
+import FooterFields from './FooterFields';
 import { cmsGet, cmsAdminPatch } from '@/lib/api';
 import { DEFAULT_NAVBAR, normalizeNavbar, type NavbarCms } from '@/lib/cmsNavbar';
+import { DEFAULT_FOOTER, normalizeFooter, type FooterCms } from '@/lib/cmsFooter';
+import { adminToast } from '@/lib/adminToast';
 
 export default function AdminNavbarEditorPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get('tab') === 'footer' ? 'footer' : 'navbar';
   const [navbar, setNavbar] = useState<NavbarCms>(DEFAULT_NAVBAR);
-  const [footer, setFooter] = useState<Record<string, any>>({});
+  const [footer, setFooter] = useState<FooterCms>(DEFAULT_FOOTER);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -16,14 +21,14 @@ export default function AdminNavbarEditorPage() {
 
   useEffect(() => {
     let cancelled = false;
-    cmsGet<{ navbar?: unknown; footer?: Record<string, any> }>('site-chrome')
+    cmsGet<{ navbar?: unknown; footer?: unknown }>('site-chrome')
       .then((data) => {
         if (cancelled) return;
         setNavbar(normalizeNavbar(data?.navbar));
-        setFooter(data?.footer && typeof data.footer === 'object' ? data.footer : {});
+        setFooter(normalizeFooter(data?.footer));
       })
       .catch((err) => {
-        if (!cancelled) setError(err.message || 'Failed to load navbar CMS');
+        if (!cancelled) setError(err.message || 'Failed to load CMS');
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -42,16 +47,18 @@ export default function AdminNavbarEditorPage() {
     setSaving(true);
     setError('');
     try {
-      const savedPayload = await cmsAdminPatch<{ navbar?: unknown; footer?: Record<string, any> }>(
+      const savedPayload = await cmsAdminPatch<{ navbar?: unknown; footer?: unknown }>(
         'site-chrome',
         { navbar, footer }
       );
       setNavbar(normalizeNavbar(savedPayload?.navbar));
-      if (savedPayload?.footer) setFooter(savedPayload.footer);
+      setFooter(normalizeFooter(savedPayload?.footer));
       setSaved(true);
+      adminToast.saved();
       setTimeout(() => setSaved(false), 3000);
     } catch (err: any) {
       setError(err.message || 'Failed to save');
+      adminToast.error(err.message || 'Failed to save');
     } finally {
       setSaving(false);
     }
@@ -66,7 +73,7 @@ export default function AdminNavbarEditorPage() {
               Pages
             </Link>
             <i className="ri-arrow-right-s-line"></i>
-            <span className="text-slate-800 font-medium">Navbar Editor</span>
+            <span className="text-slate-800 font-medium">Navbar & Footer</span>
           </div>
           <div className="flex items-center gap-3">
             {error && (
@@ -102,62 +109,117 @@ export default function AdminNavbarEditorPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 p-5 mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-[#2879b1]/10 rounded-xl flex items-center justify-center">
-              <i className="ri-menu-line text-[#2879b1] text-xl"></i>
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-slate-900">Navbar</h1>
-              <p className="text-sm text-slate-500">Change menu names and types. The website header updates after save.</p>
-            </div>
-          </div>
+        <div className="flex gap-2 mb-6">
+          <button
+            type="button"
+            onClick={() => setSearchParams({})}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer ${
+              tab === 'navbar' ? 'bg-[#2879b1] text-white' : 'bg-white text-slate-600 border border-slate-200'
+            }`}
+          >
+            <i className="ri-menu-line"></i>
+            Navbar
+          </button>
+          <button
+            type="button"
+            onClick={() => setSearchParams({ tab: 'footer' })}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer ${
+              tab === 'footer' ? 'bg-[#2879b1] text-white' : 'bg-white text-slate-600 border border-slate-200'
+            }`}
+          >
+            <i className="ri-layout-bottom-line"></i>
+            Footer
+          </button>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
-          <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-            <h2 className="text-lg font-semibold text-slate-800">Logo</h2>
-          </div>
-          <div className="p-6 space-y-4">
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Logo image</label>
-              <CmsImageField
-                value={navbar.logo_url}
-                onChange={(logo_url) => {
-                  setNavbar((p) => ({ ...p, logo_url }));
-                  markDirty();
-                }}
-              />
+        {tab === 'navbar' && (
+          <>
+            <div className="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-[#2879b1]/10 rounded-xl flex items-center justify-center">
+                  <i className="ri-menu-line text-[#2879b1] text-xl"></i>
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-slate-900">Navbar</h1>
+                  <p className="text-sm text-slate-500">Change menu names and types. The website header updates after save.</p>
+                </div>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Logo alt text</label>
-              <input
-                type="text"
-                value={navbar.logo_alt}
-                onChange={(e) => {
-                  setNavbar((p) => ({ ...p, logo_alt: e.target.value }));
-                  markDirty();
-                }}
-                className="w-full max-w-md px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2879b1]/20 focus:border-[#2879b1]"
-              />
-            </div>
-          </div>
-        </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-            <h2 className="text-lg font-semibold text-slate-800">Menus</h2>
-          </div>
-          <div className="p-6">
-            <NavbarMenuFields
-              items={navbar.nav_links}
-              onChange={(nav_links) => {
-                setNavbar((p) => ({ ...p, nav_links }));
-                markDirty();
-              }}
-            />
-          </div>
-        </div>
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
+              <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                <h2 className="text-lg font-semibold text-slate-800">Logo</h2>
+              </div>
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Logo image</label>
+                  <CmsImageField
+                    value={navbar.logo_url}
+                    onChange={(logo_url) => {
+                      setNavbar((p) => ({ ...p, logo_url }));
+                      markDirty();
+                    }}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Logo alt text</label>
+                  <input
+                    type="text"
+                    value={navbar.logo_alt}
+                    onChange={(e) => {
+                      setNavbar((p) => ({ ...p, logo_alt: e.target.value }));
+                      markDirty();
+                    }}
+                    className="w-full max-w-md px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2879b1]/20 focus:border-[#2879b1]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                <h2 className="text-lg font-semibold text-slate-800">Menus</h2>
+              </div>
+              <div className="p-6">
+                <NavbarMenuFields
+                  items={navbar.nav_links}
+                  onChange={(nav_links) => {
+                    setNavbar((p) => ({ ...p, nav_links }));
+                    markDirty();
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+
+        {tab === 'footer' && (
+          <>
+            <div className="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-[#2879b1]/10 rounded-xl flex items-center justify-center">
+                  <i className="ri-layout-bottom-line text-[#2879b1] text-xl"></i>
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-slate-900">Footer</h1>
+                  <p className="text-sm text-slate-500">Edit logo, tagline, quick links, and CTA. The website footer updates after save.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+              <div className="p-6">
+                <FooterFields
+                  footer={footer}
+                  onChange={(next) => {
+                    setFooter(next);
+                    markDirty();
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
 
         <div className="mt-8 flex justify-end">
           <button

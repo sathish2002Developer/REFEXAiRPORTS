@@ -191,36 +191,75 @@ app.all("/api/*", (req, res) => {
   return status.responseStatus(res, 404, "Endpoint Not Found");
 });
 
-// Serve static files from the 'client/dist' directory
-app.use(express.static(path.join(__dirname, "./dist")));
+// Serve the Vite client build from ../client/out
+const clientOutDir = path.join(__dirname, "../client/out");
+app.use(express.static(clientOutDir));
 app.use(history());
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./dist", "index.html"));
+  res.sendFile(path.join(clientOutDir, "index.html"));
 });
 
 // set port
-const PORT =  3009;
+const PORT = 3055;
 
-ensureDatabaseExists()
-  .then(() => cleanupWallTables(sequelize))
-  .then(() => prepareLoginHistoriesForMysqlSync(sequelize))
-  .then(() => prepareInvestorMenuItemsForMysqlSync(sequelize))
-  .then(() => prepareCmsSingletonTablesForMysqlSync(sequelize))
-  .then(() => prepareCmsRevisionsForMysqlSync(sequelize))
-  .then(() => sequelize.sync({ alter: true }))
-  .then(() => seedHomeAboutCms({ force: false }))
-  .then(() => seedTravelersAssetsCms({ force: false }))
-  .then(() => seedLoungeCms({ force: false }))
-  .then(() => seedSiteChromeCms({ force: false }))
-  .then(() => seedNewsCms({ force: false }))
-  .then(() => ensureCmsAdminFromSample())
-  .then(() => {
-    console.log("Database synced successfully");
-    app.listen(PORT, () => {
+function startHttpServer() {
+  return new Promise((resolve, reject) => {
+    const server = app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}.`);
+      resolve(server);
     });
-  })
-  .catch((err) => {
-    console.error("Error syncing database:", err);
+    server.on("error", (err) => {
+      if (err.code === "EADDRINUSE") {
+        console.error(`Port ${PORT} is already in use. Stop the other process or change PORT.`);
+      }
+      reject(err);
+    });
   });
+}
+
+async function bootDatabase() {
+  console.log("Ensuring database exists...");
+  await ensureDatabaseExists();
+  console.log("Connecting to MySQL...");
+  await sequelize.authenticate();
+  console.log("MySQL connected.");
+
+  await cleanupWallTables(sequelize);
+  await prepareLoginHistoriesForMysqlSync(sequelize);
+  await prepareInvestorMenuItemsForMysqlSync(sequelize);
+  await prepareCmsSingletonTablesForMysqlSync(sequelize);
+  await prepareCmsRevisionsForMysqlSync(sequelize);
+
+  // Do not use { alter: true } on boot — it can hang for a long time on MySQL.
+  console.log("Syncing tables...");
+  await sequelize.sync();
+  console.log("Database synced successfully");
+
+  console.log("Seeding CMS (missing rows only)...");
+  await seedHomeAboutCms({ force: false });
+  await seedTravelersAssetsCms({ force: false });
+  await seedLoungeCms({ force: false });
+  await seedSiteChromeCms({ force: false });
+  await seedNewsCms({ force: false });
+  await ensureCmsAdminFromSample();
+  console.log("CMS seed finished.");
+}
+
+async function main() {
+  console.log("Starting Refex API...");
+  try {
+    await startHttpServer();
+  } catch (err) {
+    console.error("Failed to bind HTTP port:", err);
+    process.exit(1);
+  }
+
+  try {
+    await bootDatabase();
+  } catch (err) {
+    console.error("Database/CMS startup error (HTTP server is still running):", err);
+  }
+}
+
+main();

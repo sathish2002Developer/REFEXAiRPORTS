@@ -88,6 +88,20 @@ function defaultPayload() {
     footer: {
       logo_url: DEFAULT_LOGO,
       logo_alt: "Refex Airports",
+      tagline: "Bringing World-Class\nRetail to Pune Airport.",
+      quick_links_title: "Quick Links",
+      links: [
+        { label: "Home", to: "/" },
+        { label: "About Us", to: "/about" },
+        { label: "Our Assets", to: "#" },
+        { label: "For Travelers", to: "#" },
+        { label: "News & Updates", to: "/news" },
+        { label: "Partner with Us", to: "#contact" },
+      ],
+      cta_title: "Let's Elevate Your Retail Business Together",
+      cta_button: "Enquire now",
+      cta_to: "#contact",
+      copyright: "© 2024 Refex Airports & Transports",
       line_left: "Bringing World-Class Retail to Airports.",
       line_right: "© Refex Airports",
     },
@@ -154,6 +168,14 @@ function mergePayload(dbPayload, incoming) {
     : next.navbar.nav_links;
   const n = (Array.isArray(source) ? source : []).map(sanitizeNavItem).filter(Boolean);
   next.navbar.nav_links = n.length > 0 ? n : defaultPayload().navbar.nav_links;
+
+  next.footer = next.footer || {};
+  if (Array.isArray(incoming?.footer?.links)) {
+    next.footer.links = incoming.footer.links.map(sanitizeChild).filter(Boolean);
+  } else if (Array.isArray(next.footer.links)) {
+    next.footer.links = next.footer.links.map(sanitizeChild).filter(Boolean);
+  }
+
   return next;
 }
 
@@ -231,7 +253,9 @@ const patchAdminSiteChrome = async (req, res) => {
     }
 
     await archiveCurrentRevision("site-chrome", req);
-    row.payload = mergePayload(row.payload || {}, incoming);
+    const next = mergePayload(row.payload || {}, incoming);
+    row.set("payload", JSON.parse(JSON.stringify(next)));
+    row.changed("payload", true);
     await row.save();
 
     const out = serializePayload(row.payload, req);

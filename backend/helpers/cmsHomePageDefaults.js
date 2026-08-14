@@ -251,9 +251,96 @@ function defaultHomePayload() {
   };
 }
 
-function mergeHomePayload(current) {
+function str(v, fallback = "") {
+  return v === undefined || v === null ? fallback : String(v);
+}
+
+function sanitizeStoryItems(list) {
+  if (!Array.isArray(list)) return null;
+  return list
+    .filter((item) => item && typeof item === "object")
+    .map((item) => ({
+      tag: str(item.tag),
+      title: str(item.title),
+      description: str(item.description),
+      image: str(item.image),
+    }));
+}
+
+function sanitizeStatItems(list) {
+  if (!Array.isArray(list)) return null;
+  return list
+    .filter((item) => item && typeof item === "object")
+    .map((item) => {
+      const parsed = parseStatCount(str(item.countDisplay ?? item.count));
+      return {
+        ...parsed,
+        label: str(item.label),
+        image: str(item.image),
+      };
+    });
+}
+
+function sanitizeBrandItems(list) {
+  if (!Array.isArray(list)) return null;
+  return list
+    .filter((item) => item && typeof item === "object")
+    .map((item) => ({
+      name: str(item.name),
+      image: str(item.image),
+      url: str(item.url),
+    }));
+}
+
+function sanitizeContactLocations(list) {
+  if (!Array.isArray(list)) return null;
+  return list
+    .filter((item) => item && typeof item === "object")
+    .map((item) => ({
+      name: str(item.name),
+      subtitle: str(item.subtitle),
+      phone: str(item.phone),
+      email: str(item.email),
+      address: str(item.address),
+    }));
+}
+
+function mergeHomePayload(current, incoming) {
   const { deepMerge } = require("./cmsJson");
-  return deepMerge(defaultHomePayload(), current && typeof current === "object" ? current : {});
+  let next = deepMerge(defaultHomePayload(), current && typeof current === "object" ? current : {});
+  if (incoming && typeof incoming === "object") {
+    next = deepMerge(next, incoming);
+  }
+
+  const storySrc = incoming?.stories?.items ?? next.stories?.items;
+  const stories = sanitizeStoryItems(storySrc);
+  if (stories) {
+    next.stories = next.stories || {};
+    next.stories.items = stories;
+  }
+
+  const statSrc = incoming?.stats?.items ?? next.stats?.items;
+  const stats = sanitizeStatItems(statSrc);
+  if (stats) {
+    next.stats = next.stats || {};
+    next.stats.items = stats;
+  }
+
+  const brandSrc = incoming?.brandPartners?.brands ?? next.brandPartners?.brands;
+  const brands = sanitizeBrandItems(brandSrc);
+  if (brands) {
+    next.brandPartners = next.brandPartners || {};
+    next.brandPartners.brands = brands;
+  }
+
+  const locSrc = incoming?.contact?.locations ?? next.contact?.locations;
+  const locations = sanitizeContactLocations(locSrc);
+  if (locations) {
+    next.contact = next.contact || {};
+    next.contact.locations = locations;
+  }
+
+  return next;
 }
 
 module.exports = { defaultHomePayload, mergeHomePayload };

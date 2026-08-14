@@ -1,4 +1,5 @@
 import AdminLayout from '@/components/feature/AdminLayout';
+import { adminToast } from '@/lib/adminToast';
 
 export default function AdminSettingsPage() {
   return (
@@ -51,7 +52,11 @@ export default function AdminSettingsPage() {
         </div>
 
         <div className="flex justify-end">
-          <button className="flex items-center gap-2 px-6 py-3 bg-[#2879b1] hover:bg-[#20618e] text-white font-semibold rounded-lg transition-all cursor-pointer">
+          <button
+            type="button"
+            onClick={() => adminToast.saved()}
+            className="flex items-center gap-2 px-6 py-3 bg-[#2879b1] hover:bg-[#20618e] text-white font-semibold rounded-lg transition-all cursor-pointer"
+          >
             <i className="ri-save-line"></i>
             Save Settings
           </button>

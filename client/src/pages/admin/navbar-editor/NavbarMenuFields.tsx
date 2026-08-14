@@ -1,5 +1,6 @@
 import type { NavChild, NavGroup, NavItem, NavItemType } from "@/lib/cmsNavbar";
 import { emptyNavItem } from "@/lib/cmsNavbar";
+import { adminToast } from "@/lib/adminToast";
 
 const inputCls =
   "w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#2879b1]/20 focus:border-[#2879b1]";
@@ -48,7 +49,10 @@ export default function NavbarMenuFields({
         </p>
         <button
           type="button"
-          onClick={() => onChange([...items, emptyNavItem("link")])}
+          onClick={() => {
+            onChange([...items, emptyNavItem("link")]);
+            adminToast.added();
+          }}
           className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-[#2879b1] bg-[#2879b1]/10 hover:bg-[#2879b1]/20 rounded-lg cursor-pointer"
         >
           <i className="ri-add-line"></i>
@@ -78,7 +82,10 @@ export default function NavbarMenuFields({
               </button>
               <button
                 type="button"
-                onClick={() => onChange(items.filter((_, i) => i !== index))}
+                onClick={() => {
+                  onChange(items.filter((_, i) => i !== index));
+                  adminToast.deleted();
+                }}
                 className="text-xs font-medium text-red-600 cursor-pointer"
               >
                 Delete
@@ -149,7 +156,10 @@ function ChildrenEditor({
         <p className="text-xs font-semibold text-slate-600">Dropdown items</p>
         <button
           type="button"
-          onClick={() => onChange([...childrenItems, { label: "", to: "" }])}
+          onClick={() => {
+            onChange([...childrenItems, { label: "", to: "" }]);
+            adminToast.added();
+          }}
           className="text-xs font-medium text-[#2879b1] cursor-pointer"
         >
           Add item
@@ -159,7 +169,14 @@ function ChildrenEditor({
         <div key={i} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2">
           <input className={inputCls} placeholder="Name" value={child.label} onChange={(e) => update(i, { label: e.target.value })} />
           <input className={inputCls} placeholder="/path" value={child.to} onChange={(e) => update(i, { to: e.target.value })} />
-          <button type="button" onClick={() => onChange(childrenItems.filter((_, n) => n !== i))} className="text-xs text-red-600 cursor-pointer">
+          <button
+            type="button"
+            onClick={() => {
+              onChange(childrenItems.filter((_, n) => n !== i));
+              adminToast.deleted();
+            }}
+            className="text-xs text-red-600 cursor-pointer"
+          >
             Remove
           </button>
         </div>
@@ -184,7 +201,10 @@ function GroupsEditor({
         <p className="text-xs font-semibold text-slate-600">Nested groups (e.g. Retail, Lounge)</p>
         <button
           type="button"
-          onClick={() => onChange([...groups, { label: "New group", children: [] }])}
+          onClick={() => {
+            onChange([...groups, { label: "New group", children: [] }]);
+            adminToast.added();
+          }}
           className="text-xs font-medium text-[#2879b1] cursor-pointer"
         >
           Add group
@@ -194,7 +214,14 @@ function GroupsEditor({
         <div key={gi} className="border border-slate-100 rounded-lg p-3 space-y-2">
           <div className="flex items-center gap-2">
             <input className={inputCls} placeholder="Group name" value={group.label} onChange={(e) => updateGroup(gi, { label: e.target.value })} />
-            <button type="button" onClick={() => onChange(groups.filter((_, n) => n !== gi))} className="text-xs text-red-600 cursor-pointer whitespace-nowrap">
+            <button
+              type="button"
+              onClick={() => {
+                onChange(groups.filter((_, n) => n !== gi));
+                adminToast.deleted();
+              }}
+              className="text-xs text-red-600 cursor-pointer whitespace-nowrap"
+            >
               Delete group
             </button>
           </div>

@@ -3,6 +3,7 @@ import AdminLayout from '@/components/feature/AdminLayout';
 
 const allPages = [
   { name: 'Navbar', slug: '/navbar', sections: 1, status: 'published', editor: '/admin/navbar-editor' },
+  { name: 'Footer', slug: '/footer', sections: 1, status: 'published', editor: '/admin/navbar-editor?tab=footer' },
   { name: 'Home', slug: '/', sections: 12, status: 'published', editor: '/admin/home-editor' },
   { name: 'About Us', slug: '/about', sections: 8, status: 'published', editor: '/admin/about-editor' },
   { name: 'News & Updates', slug: '/news', sections: 6, status: 'published', editor: '/admin/news-editor' },

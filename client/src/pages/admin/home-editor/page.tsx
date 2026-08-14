@@ -7,6 +7,9 @@ import CmsImageField from '@/components/feature/CmsImageField';
 import CmsRichTextField from '@/components/feature/CmsRichTextField';
 import CmsBrandPartnersList, { type CmsBrandPartner } from '@/components/feature/CmsBrandPartnersList';
 import CmsStoriesList, { type CmsStoryItem } from '@/components/feature/CmsStoriesList';
+import CmsStatsList, { type CmsStatItem } from '@/components/feature/CmsStatsList';
+import CmsContactLocationsList, { type CmsContactLocation } from '@/components/feature/CmsContactLocationsList';
+import { adminToast } from '@/lib/adminToast';
 
 interface SectionField {
   key: string;
@@ -41,21 +44,6 @@ const homeSections: ContentSection[] = [
     icon: 'ri-bar-chart-box-line',
     fields: [
       { key: 'stats_title', label: 'Section Title', type: 'text', value: 'Our Impact in Numbers' },
-      { key: 'stat1_count', label: 'Stat 1 — Count', type: 'text', value: '2' },
-      { key: 'stat1_label', label: 'Stat 1 — Label', type: 'text', value: 'Airports with Active Retail Zones' },
-      { key: 'stat1_img', label: 'Stat 1 — Image URL', type: 'image', value: '' },
-      { key: 'stat2_count', label: 'Stat 2 — Count', type: 'text', value: '15M+' },
-      { key: 'stat2_label', label: 'Stat 2 — Label', type: 'text', value: 'Annual Passengers in Addressable Zones' },
-      { key: 'stat2_img', label: 'Stat 2 — Image URL', type: 'image', value: '' },
-      { key: 'stat3_count', label: 'Stat 3 — Count', type: 'text', value: '70+' },
-      { key: 'stat3_label', label: 'Stat 3 — Label', type: 'text', value: 'Retail Outlets Supported' },
-      { key: 'stat3_img', label: 'Stat 3 — Image URL', type: 'image', value: '' },
-      { key: 'stat4_count', label: 'Stat 4 — Count', type: 'text', value: '50+' },
-      { key: 'stat4_label', label: 'Stat 4 — Label', type: 'text', value: 'Brand Partnerships Across Terminals' },
-      { key: 'stat4_img', label: 'Stat 4 — Image URL', type: 'image', value: '' },
-      { key: 'stat5_count', label: 'Stat 5 — Count', type: 'text', value: '15K+' },
-      { key: 'stat5_label', label: 'Stat 5 — Label', type: 'text', value: 'sq. ft. of Retail Space Curated' },
-      { key: 'stat5_img', label: 'Stat 5 — Image URL', type: 'image', value: '' },
     ],
   },
   {
@@ -159,31 +147,6 @@ const homeSections: ContentSection[] = [
       { key: 'contact_title', label: 'Section Title', type: 'text', value: 'Contact us' },
       { key: 'contact_subtitle', label: 'Subtitle', type: 'richtext', value: 'Your journey to retail excellence begins here. Drop us a message and we\'ll guide the way.' },
       { key: 'contact_form_title', label: 'Form Title', type: 'text', value: "Let's Elevate Your Retail Business Together" },
-      { key: 'pune_name', label: 'Pune — Name', type: 'text', value: 'Pune International Airport (PNQ)' },
-      { key: 'pune_subtitle', label: 'Pune — Subtitle', type: 'text', value: 'Lohegaon, Pune, Maharashtra' },
-      { key: 'pune_phone', label: 'Pune — Phone', type: 'text', value: '+91 95388 82531' },
-      { key: 'pune_email', label: 'Pune — Email', type: 'text', value: 'debamita.n@refex.co.in' },
-      { key: 'pune_address', label: 'Pune — Address', type: 'textarea', value: 'Unit no.304, UrbanWrk, 3rd Floor, Aeromall, 333, Domestic, Airport Road, Pune International Airport Area, Lohegaon, Pune - 411032, Maharashtra.' },
-      { key: 'srinagar_name', label: 'Srinagar — Name', type: 'text', value: 'Srinagar International Airport (SXR)' },
-      { key: 'srinagar_subtitle', label: 'Srinagar — Subtitle', type: 'text', value: 'Humhama, Srinagar, Jammu & Kashmir' },
-      { key: 'srinagar_phone', label: 'Srinagar — Phone', type: 'text', value: '+91 91497 68998' },
-      { key: 'srinagar_email', label: 'Srinagar — Email', type: 'text', value: 'showkatahmad.m@refex.co.in' },
-      { key: 'srinagar_address', label: 'Srinagar — Address', type: 'textarea', value: 'Srinagar International Airport, Ground floor, Humhama-Srinagar 190007' },
-      { key: 'trichy_name', label: 'Trichy — Name', type: 'text', value: 'Tiruchirappalli International Airport (TRZ)' },
-      { key: 'trichy_subtitle', label: 'Trichy — Subtitle', type: 'text', value: 'Tiruchirappalli, Tamil Nadu' },
-      { key: 'trichy_phone', label: 'Trichy — Phone', type: 'text', value: '+91 95388 82531' },
-      { key: 'trichy_email', label: 'Trichy — Email', type: 'text', value: 'debamita.n@refex.co.in' },
-      { key: 'trichy_address', label: 'Trichy — Address', type: 'textarea', value: 'Tiruchirappalli International Airport, Trichy - 620007, Tamil Nadu.' },
-      { key: 'aurangabad_name', label: 'Aurangabad — Name', type: 'text', value: 'Aurangabad Airport (IXU)' },
-      { key: 'aurangabad_subtitle', label: 'Aurangabad — Subtitle', type: 'text', value: 'Chikalthana, Aurangabad, Maharashtra' },
-      { key: 'aurangabad_phone', label: 'Aurangabad — Phone', type: 'text', value: '+91 95388 82531' },
-      { key: 'aurangabad_email', label: 'Aurangabad — Email', type: 'text', value: 'debamita.n@refex.co.in' },
-      { key: 'aurangabad_address', label: 'Aurangabad — Address', type: 'textarea', value: 'Aurangabad Airport, Chikalthana, Aurangabad - 431007, Maharashtra.' },
-      { key: 'shirdi_name', label: 'Shirdi — Name', type: 'text', value: 'Shirdi International Airport (SAG)' },
-      { key: 'shirdi_subtitle', label: 'Shirdi — Subtitle', type: 'text', value: 'Kakadi, Shirdi, Maharashtra' },
-      { key: 'shirdi_phone', label: 'Shirdi — Phone', type: 'text', value: '+91 95388 82531' },
-      { key: 'shirdi_email', label: 'Shirdi — Email', type: 'text', value: 'debamita.n@refex.co.in' },
-      { key: 'shirdi_address', label: 'Shirdi — Address', type: 'textarea', value: 'Shirdi International Airport, Kakadi, Shirdi - 423109, Maharashtra.' },
     ],
   },
 ];
@@ -207,11 +170,33 @@ function normalizeStories(list: unknown): CmsStoryItem[] {
   }));
 }
 
+function normalizeLocations(list: unknown): CmsContactLocation[] {
+  if (!Array.isArray(list)) return [];
+  return list.map((item: any) => ({
+    name: String(item?.name || ''),
+    subtitle: String(item?.subtitle || ''),
+    phone: String(item?.phone || ''),
+    email: String(item?.email || ''),
+    address: String(item?.address || ''),
+  }));
+}
+
+function normalizeStats(list: unknown): CmsStatItem[] {
+  if (!Array.isArray(list)) return [];
+  return list.map((item: any) => ({
+    countDisplay: String(item?.countDisplay ?? `${item?.count ?? ''}${item?.suffix ?? ''}`),
+    label: String(item?.label || ''),
+    image: String(item?.image || ''),
+  }));
+}
+
 export default function AdminHomeEditorPage() {
   const [activeSection, setActiveSection] = useState<string>('hero');
   const [payload, setPayload] = useState<Record<string, any>>({});
   const [brands, setBrands] = useState<CmsBrandPartner[]>([]);
   const [stories, setStories] = useState<CmsStoryItem[]>([]);
+  const [stats, setStats] = useState<CmsStatItem[]>([]);
+  const [locations, setLocations] = useState<CmsContactLocation[]>([]);
   const [values, setValues] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
     homeSections.forEach((section) => {
@@ -236,6 +221,8 @@ export default function AdminHomeEditorPage() {
         setValues((prev) => ({ ...prev, ...flattenHome(cms) }));
         setBrands(normalizeBrands(cms.brandPartners?.brands));
         setStories(normalizeStories(cms.stories?.items));
+        setStats(normalizeStats(cms.stats?.items));
+        setLocations(normalizeLocations(cms.contact?.locations));
       })
       .catch((err) => {
         if (!cancelled) setError(err.message || 'Failed to load home CMS');
@@ -266,6 +253,18 @@ export default function AdminHomeEditorPage() {
     setError('');
   };
 
+  const handleStatsChange = (next: CmsStatItem[]) => {
+    setStats(next);
+    setSaved(false);
+    setError('');
+  };
+
+  const handleLocationsChange = (next: CmsContactLocation[]) => {
+    setLocations(next);
+    setSaved(false);
+    setError('');
+  };
+
   const handleSave = async () => {
     setSaving(true);
     setError('');
@@ -275,6 +274,8 @@ export default function AdminHomeEditorPage() {
           ...payload,
           brandPartners: { ...(payload.brandPartners || {}), brands },
           stories: { ...(payload.stories || {}), items: stories },
+          stats: { ...(payload.stats || {}), items: stats },
+          contact: { ...(payload.contact || {}), locations },
         },
         values
       );
@@ -284,10 +285,14 @@ export default function AdminHomeEditorPage() {
       setValues((prev) => ({ ...prev, ...flattenHome(cms) }));
       setBrands(normalizeBrands(cms.brandPartners?.brands));
       setStories(normalizeStories(cms.stories?.items));
+      setStats(normalizeStats(cms.stats?.items));
+      setLocations(normalizeLocations(cms.contact?.locations));
       setSaved(true);
+      adminToast.saved();
       setTimeout(() => setSaved(false), 3000);
     } catch (err: any) {
       setError(err.message || 'Failed to save');
+      adminToast.error(err.message || 'Failed to save');
     } finally {
       setSaving(false);
     }
@@ -380,7 +385,11 @@ export default function AdminHomeEditorPage() {
                 ? brands.length + section.fields.length
                 : section.id === 'stories'
                   ? stories.length + section.fields.length
-                  : section.fields.length}
+                  : section.id === 'stats'
+                    ? stats.length + section.fields.length
+                    : section.id === 'contact'
+                      ? locations.length + section.fields.length
+                      : section.fields.length}
               </span>
             </button>
           ))}
@@ -433,6 +442,11 @@ export default function AdminHomeEditorPage() {
                 )}
               </div>
             ))}
+            {activeSection === 'stats' && (
+              <div className="border border-slate-100 rounded-lg p-4">
+                <CmsStatsList items={stats} onChange={handleStatsChange} />
+              </div>
+            )}
             {activeSection === 'brands' && (
               <div className="border border-slate-100 rounded-lg p-4">
                 <CmsBrandPartnersList brands={brands} onChange={handleBrandsChange} />
@@ -441,6 +455,11 @@ export default function AdminHomeEditorPage() {
             {activeSection === 'stories' && (
               <div className="border border-slate-100 rounded-lg p-4">
                 <CmsStoriesList stories={stories} onChange={handleStoriesChange} />
+              </div>
+            )}
+            {activeSection === 'contact' && (
+              <div className="border border-slate-100 rounded-lg p-4">
+                <CmsContactLocationsList locations={locations} onChange={handleLocationsChange} />
               </div>
             )}
           </div>

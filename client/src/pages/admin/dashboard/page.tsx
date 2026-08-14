@@ -50,6 +50,13 @@ export default function AdminDashboardPage() {
               Edit Navbar
             </Link>
             <Link
+              to="/admin/navbar-editor?tab=footer"
+              className="flex items-center gap-3 px-4 py-3 rounded-lg bg-slate-50 hover:bg-[#2879b1]/10 hover:text-[#2879b1] transition-all text-slate-700 font-medium"
+            >
+              <i className="ri-layout-bottom-line text-xl"></i>
+              Edit Footer
+            </Link>
+            <Link
               to="/admin/home-editor"
               className="flex items-center gap-3 px-4 py-3 rounded-lg bg-slate-50 hover:bg-[#2879b1]/10 hover:text-[#2879b1] transition-all text-slate-700 font-medium"
             >

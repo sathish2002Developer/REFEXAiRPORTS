@@ -1,0 +1,2 @@
+import{j as i}from"./index-DeTvNArH.js";import{l as e,s as m}from"./cmsHtml-QwIfP41w.js";function a({html:r,className:s="",as:t="div"}){const l=r||"";return l?e(l)?i.jsx(t,{className:`cms-rich [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5 [&_a]:text-[#2879b1] [&_a]:underline ${s}`,dangerouslySetInnerHTML:{__html:m(l)}}):i.jsx(t,{className:s,children:l}):null}export{a as C};
+//# sourceMappingURL=CmsHtml-MbTzA-CL.js.map
