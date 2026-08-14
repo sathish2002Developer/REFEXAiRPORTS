@@ -47,11 +47,11 @@ export default function AboutPage() {
         <div id="vision-mission">
           <VisionMission data={cms?.visionMission} />
         </div>
-        <FocusArea data={cms?.focusArea} />
-        <ThreePillars data={cms?.threePillars} />
+        {/* <FocusArea data={cms?.focusArea} /> */}
+        {/* <ThreePillars data={cms?.threePillars} /> */}
         <OurFocus data={cms?.ourFocus} />
-        <LeadershipTeam data={cms?.leadership} />
-        <RefexGroup data={cms?.refexGroup} />
+        {/* <LeadershipTeam data={cms?.leadership} /> */}
+        {/* <RefexGroup data={cms?.refexGroup} /> */}
         <BackedByCompany data={cms?.backedBy} />
       </main>
       <Footer />

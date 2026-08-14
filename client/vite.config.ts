@@ -79,9 +79,9 @@ export default defineConfig({
     port: 3000,
     host: "0.0.0.0",
     proxy: {
-      "/api": { target: "http://localhost:3009", changeOrigin: true },
-      "/auth": { target: "http://localhost:3009", changeOrigin: true },
-      "/uploads": { target: "http://localhost:3009", changeOrigin: true },
+      "/api": { target: "http://127.0.0.1:3055", changeOrigin: true },
+      "/auth": { target: "http://127.0.0.1:3055", changeOrigin: true },
+      "/uploads": { target: "http://127.0.0.1:3055", changeOrigin: true },
     },
   },
 });
