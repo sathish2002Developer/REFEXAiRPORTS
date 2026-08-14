@@ -1,14 +1,16 @@
 const mysql = require("mysql2/promise");
+const { getDbConfig, describeDbTarget } = require("./dbConfig");
 
 async function ensureDatabaseExists() {
-  const env = process.env.NODE_ENV || "development";
-  const cfg = require("../config/config.json")[env];
+  const cfg = getDbConfig();
   if (!cfg?.database) {
-    throw new Error("Database name missing from config.json");
+    throw new Error("Database name missing from config.json / DB_NAME");
   }
 
+  console.log("MySQL target:", describeDbTarget(cfg));
+
   const conn = await mysql.createConnection({
-    host: cfg.host || "localhost",
+    host: cfg.host || "127.0.0.1",
     port: cfg.port || 3306,
     user: cfg.username,
     password: cfg.password,
