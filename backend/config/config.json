@@ -1,43 +1,41 @@
 {
   "development": {
-    "username": "root",
-    "password": "RefexAdmin@",
-    "database": "refex_airport",
-    "host": "localhost",
-    "port": 3306,
-    "dialect": "mysql",
-    "logging": false,
-    "dialectOptions": {
-      "connectTimeout": 10000
-    },
-    "pool": {
-      "max": 10,
-      "min": 0,
-      "acquire": 30000,
-      "idle": 10000
-    },
-    "define": {
-      "underscored": true
-    }
+      "username": "root",
+      "password": "rootpassword",
+      "database": "refex_airport",
+      "host": "mysql",
+      "port": 3306,
+      "dialect": "mysql",
+      "logging": false,
+      "define": {
+          "underscored": true
+      }
   },
   "test": {
-    "username": "root",
-    "password": "RefexAdmin@",
-    "database": "refex_airport",
-    "host": "localhost",
-    "port": 3306,
-    "dialect": "mysql"
+      "username": "root",
+      "password": "rootpassword",
+      "database": "refex_airport",
+      "host": "mysql",
+      "port": 3306,
+      "dialect": "mysql",
+      "logging": false
   },
   "production": {
-    "username": "root",
-    "password": "RefexAdmin@",
-    "database": "refex_airport",
-    "host": "localhost",
-    "port": 3306,
-    "dialect": "mysql",
-    "logging": false,
-    "define": {
-      "underscored": true
-    }
+      "username": "root",
+      "password": "rootpassword",
+      "database": "refex_airport",
+      "host": "mysql",
+      "port": 3306,
+      "dialect": "mysql",
+      "logging": false,
+      "pool": {
+          "max": 10,
+          "min": 0,
+          "acquire": 30000,
+          "idle": 10000
+      },
+      "define": {
+          "underscored": true
+      }
   }
 }
