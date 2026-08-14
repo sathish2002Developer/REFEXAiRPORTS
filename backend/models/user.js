@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       first_name: DataTypes.STRING(85),
       last_name: DataTypes.STRING(85),
+      name: DataTypes.STRING(170),
       mobile_number: DataTypes.STRING(20),
       email: DataTypes.STRING(100),
       password: DataTypes.STRING,
@@ -60,7 +61,10 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "User",
+      tableName: "users",
+      freezeTableName: true,
       paranoid: true,
+      underscored: true,
       createdAt: "created_at",
       updatedAt: "modified_at",
       deletedAt: "deleted_at",

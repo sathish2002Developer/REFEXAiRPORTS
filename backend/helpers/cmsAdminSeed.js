@@ -37,6 +37,7 @@ async function ensureCmsAdminFromSample() {
     defaults: {
       first_name,
       last_name,
+      name: `${first_name} ${last_name}`.trim(),
       mobile_number,
       password: hashed,
       user_type: "Admin",
@@ -48,6 +49,7 @@ async function ensureCmsAdminFromSample() {
     await user.update({
       first_name,
       last_name,
+      name: `${first_name} ${last_name}`.trim(),
       mobile_number,
       password: hashed,
       user_type: "Admin",

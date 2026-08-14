@@ -87,6 +87,7 @@ const usersController = {
       const user = {
         first_name: firstName,
         last_name: lastName,
+        name: `${String(firstName || "").trim()} ${String(lastName || "").trim()}`.trim(),
         mobile_number: mobileNumber,
         email,
         password,
@@ -161,6 +162,7 @@ const usersController = {
       const user = {
         first_name: firstName,
         last_name: lastName,
+        name: `${String(firstName || "").trim()} ${String(lastName || "").trim()}`.trim(),
         mobile_number: mobileNumber,
         email,
         user_type: userType,

@@ -11,6 +11,7 @@
 require("dotenv").config();
 const { sequelize } = require("../models");
 const { ensureDatabaseExists } = require("../helpers/ensureDatabase");
+const { prepareUsersTableForMysqlSync } = require("../helpers/usersTableSyncFix");
 const { ensureCmsAdminFromSample } = require("../helpers/cmsAdminSeed");
 const { seedHomeAboutCms } = require("./seed_home_about_cms");
 const { seedTravelersAssetsCms } = require("./seed_travelers_assets_cms");
@@ -28,6 +29,7 @@ async function seedAllCms({ force = false } = {}) {
 
   await ensureDatabaseExists();
   await sequelize.authenticate();
+  await prepareUsersTableForMysqlSync(sequelize);
   await sequelize.sync();
 
   console.log("\n[1/6] Home + About");

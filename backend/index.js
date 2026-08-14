@@ -14,6 +14,7 @@ const { seedSiteChromeCms } = require("./scripts/seed_site_chrome_cms");
 const { seedNewsCms } = require("./scripts/seed_news_cms");
 const { cleanupWallTables } = require("./helpers/wallDbCleanup");
 const { prepareLoginHistoriesForMysqlSync } = require("./helpers/loginHistoriesSyncFix");
+const { prepareUsersTableForMysqlSync } = require("./helpers/usersTableSyncFix");
 const {
   prepareInvestorMenuItemsForMysqlSync,
 } = require("./helpers/investorMenuItemsSyncFix");
@@ -227,6 +228,7 @@ async function bootDatabase() {
 
   await cleanupWallTables(sequelize);
   await prepareLoginHistoriesForMysqlSync(sequelize);
+  await prepareUsersTableForMysqlSync(sequelize);
   await prepareInvestorMenuItemsForMysqlSync(sequelize);
   await prepareCmsSingletonTablesForMysqlSync(sequelize);
   await prepareCmsRevisionsForMysqlSync(sequelize);

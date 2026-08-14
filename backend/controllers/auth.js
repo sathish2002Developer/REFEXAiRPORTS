@@ -74,9 +74,12 @@ const authController = {
       if (existing) {
         return Response.responseStatus(res, 409, "Email already exists");
       }
+      const first = String(firstName || "Admin").trim() || "Admin";
+      const last = String(lastName || "User").trim() || "User";
       const createdUser = await User.create({
-        first_name: String(firstName || "Admin").trim() || "Admin",
-        last_name: String(lastName || "User").trim() || "User",
+        first_name: first,
+        last_name: last,
+        name: `${first} ${last}`.trim(),
         mobile_number: String(mobileNumber || "0000000000").trim() || "0000000000",
         email: normalizedEmail,
         password: bcrypt.hashSync(String(password), saltRounds),
