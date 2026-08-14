@@ -69,3 +69,54 @@ export async function adminLogin(email: string, password: string) {
   localStorage.setItem("admin_token", token);
   return json;
 }
+
+export async function adminRegister(payload: {
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+}) {
+  const res = await fetch(apiUrl("/auth/register"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  return parseApiJson(res);
+}
+
+export async function adminListUsers() {
+  const res = await fetch(apiUrl("/api/admin/users"), {
+    headers: { Authorization: `Bearer ${adminToken()}` },
+  });
+  const json = await parseApiJson(res);
+  return (json.data || []) as Array<{
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    user_type: string;
+    is_active: boolean;
+  }>;
+}
+
+export async function adminCreateUser(payload: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  mobileNumber?: string;
+}) {
+  const res = await fetch(apiUrl("/api/admin/users"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${adminToken()}`,
+    },
+    body: JSON.stringify({
+      ...payload,
+      mobileNumber: payload.mobileNumber || "0000000000",
+      userType: "Admin",
+    }),
+  });
+  return parseApiJson(res);
+}

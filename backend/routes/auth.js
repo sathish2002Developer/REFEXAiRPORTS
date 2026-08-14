@@ -2,12 +2,13 @@ const router = require("express").Router();
 const authController = require("../controllers/auth");
 const authMiddleware = require("../middlewares/auth");
 const {
-  createUserSchema,
   validateLogin,
+  registerSchema,
 } = require("../middlewares/userValidator");
 const { SuperAdmin } = require("../utils/userTypes");
 
 router.post("/login", validateLogin, authController.login);
+router.post("/register", registerSchema, authController.register);
 router.post("/logout", authMiddleware.authCheck, authController.logout);
 // router.post("/register",createUserSchema,authController.register);
 // router.get("/verify_email/:token",authController.verifyMail);

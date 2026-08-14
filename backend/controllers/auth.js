@@ -53,6 +53,49 @@ const authController = {
       });
     }
   },
+  register: async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return Response.responseStatus(res, 400, "Validation Failed", errors);
+      }
+      const {
+        firstName = "Admin",
+        lastName = "User",
+        email,
+        mobileNumber = "0000000000",
+        password,
+      } = req.body;
+      const normalizedEmail = String(email || "").trim().toLowerCase();
+      if (!normalizedEmail || !password) {
+        return Response.responseStatus(res, 400, "Email and password are required");
+      }
+      const existing = await User.findOne({ where: { email: normalizedEmail } });
+      if (existing) {
+        return Response.responseStatus(res, 409, "Email already exists");
+      }
+      const createdUser = await User.create({
+        first_name: String(firstName || "Admin").trim() || "Admin",
+        last_name: String(lastName || "User").trim() || "User",
+        mobile_number: String(mobileNumber || "0000000000").trim() || "0000000000",
+        email: normalizedEmail,
+        password: bcrypt.hashSync(String(password), saltRounds),
+        user_type: "Admin",
+        is_active: true,
+      });
+      return Response.responseStatus(res, 201, "User added successfully. You can sign in now.", {
+        id: createdUser.id,
+        email: createdUser.email,
+        first_name: createdUser.first_name,
+        last_name: createdUser.last_name,
+      });
+    } catch (error) {
+      console.error("register:", error);
+      return Response.responseStatus(res, 500, "Failed to add user", {
+        error: error.message,
+      });
+    }
+  },
   logout: async (req, res) => {
     try {
       const data = req.userData;

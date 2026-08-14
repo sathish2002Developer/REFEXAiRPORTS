@@ -12,12 +12,11 @@ const validation = {
       .isEmail()
       .withMessage("Must be a valid email")
       .normalizeEmail(),
-    // check("password")
-    //   .exists()
-    //   .withMessage("Password is required")
-    //   .notEmpty()
-    //   .isLength({ min: 6 })
-    //   .withMessage("Password must contain at least 6 characters"),
+    check("password")
+      .exists()
+      .withMessage("Password is required")
+      .isLength({ min: 6 })
+      .withMessage("Password must contain at least 6 characters"),
     check("userType")
       .optional()
       .isIn([Type.SuperAdmin, Type.Admin, Type.User])
@@ -67,6 +66,21 @@ const validation = {
       .withMessage("Password is required")
       .notEmpty()
       .withMessage("Password must be filled"),
+  ],
+  registerSchema: [
+    check("email")
+      .exists()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Must be a valid email")
+      .normalizeEmail(),
+    check("password")
+      .exists()
+      .withMessage("Password is required")
+      .isLength({ min: 6 })
+      .withMessage("Password must contain at least 6 characters"),
+    check("firstName").optional({ checkFalsy: true }).isString(),
+    check("lastName").optional({ checkFalsy: true }).isString(),
   ],
 };
 
