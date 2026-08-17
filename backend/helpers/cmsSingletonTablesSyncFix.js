@@ -12,6 +12,7 @@ const TABLES_TRIM_BEFORE_ALTER_SYNC = [
   "cms_assets_page",
   "cms_lounge_page",
   "cms_news_page",
+  "cms_partner_page",
   "cms_wall_page",
   "cms_vision_page",
   "cms_site_chrome",

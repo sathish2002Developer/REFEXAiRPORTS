@@ -1,6 +1,6 @@
 const { CmsLoungePage } = require("../models");
 const { responseStatus } = require("../helpers/response");
-const { deepMerge } = require("../helpers/cmsJson");
+const { deepMerge, persistJsonColumn } = require("../helpers/cmsJson");
 const {
   isKnownAirport,
   normalizeAirportKey,
@@ -73,8 +73,8 @@ const patchAdminLoungePage = async (req, res) => {
       return responseStatus(res, 400, "Invalid JSON payload");
     }
 
-    row.payload = mergeLoungePayload(row.airport_key, deepMerge(row.payload || {}, incoming));
-    await row.save();
+    const next = mergeLoungePayload(row.airport_key, deepMerge(row.payload || {}, incoming));
+    await persistJsonColumn(row, "payload", next);
     return responseStatus(res, 200, "Lounge page saved", serializeRow(row));
   } catch (e) {
     console.error("patchAdminLoungePage:", e);

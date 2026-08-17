@@ -7,6 +7,7 @@ const allPages = [
   { name: 'Home', slug: '/', sections: 12, status: 'published', editor: '/admin/home-editor' },
   { name: 'About Us', slug: '/about', sections: 8, status: 'published', editor: '/admin/about-editor' },
   { name: 'News & Updates', slug: '/news', sections: 6, status: 'published', editor: '/admin/news-editor' },
+  { name: 'Partner with Us', slug: '/partner-with-us', sections: 3, status: 'published', editor: '/admin/partner-editor' },
   { name: 'Pune Airport — Travelers', slug: '/pune-airport', sections: 14, status: 'published', editor: '/admin/travelers-editor' },
   { name: 'Pune Airport — Retail', slug: '/pune-airport-assets', sections: 10, status: 'published', editor: '/admin/assets-editor' },
   { name: 'Pune Airport — Lounge', slug: '/pune-airport-lounge', sections: 8, status: 'published', editor: '/admin/lounge-editor' },

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Header from '../../components/feature/Header';
@@ -11,12 +11,11 @@ import BackedByCompany from './components/BackedByCompany';
 import OurFocus from './components/OurFocus';
 import FocusArea from './components/FocusArea';
 import ThreePillars from './components/ThreePillars';
-import LeadershipTeam from './components/LeadershipTeam';
 import RefexGroup from './components/RefexGroup';
-import { cmsGet } from '@/lib/api';
+import { useCms } from '@/lib/useCms';
 
 export default function AboutPage() {
-  const [cms, setCms] = useState<Record<string, any> | null>(null);
+  const cms = useCms('about');
 
   useEffect(() => {
     AOS.init({
@@ -25,14 +24,6 @@ export default function AboutPage() {
       once: true,
       offset: 100,
     });
-    cmsGet<Record<string, any>>('about')
-      .then((data) => {
-        const { updated_at: _u, ...payload } = data;
-        setCms(payload);
-      })
-      .catch(() => {
-        setCms(null);
-      });
   }, []);
 
   return (
@@ -49,9 +40,12 @@ export default function AboutPage() {
         </div>
         {/* <FocusArea data={cms?.focusArea} /> */}
         {/* <ThreePillars data={cms?.threePillars} /> */}
-        <OurFocus data={cms?.ourFocus} />
-        {/* <LeadershipTeam data={cms?.leadership} /> */}
-        {/* <RefexGroup data={cms?.refexGroup} /> */}
+        <div id="our-focus">
+          <OurFocus data={cms?.ourFocus} />
+        </div>
+        <div id="refex-group">
+          {/* <RefexGroup data={cms?.refexGroup} /> */}
+        </div>
         <BackedByCompany data={cms?.backedBy} />
       </main>
       <Footer />

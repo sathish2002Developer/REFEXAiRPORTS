@@ -19,7 +19,7 @@ export async function parseApiJson(res: Response) {
 }
 
 export async function cmsGet<T>(resource: string): Promise<T> {
-  const res = await fetch(apiUrl(`/api/cms/${resource}`));
+  const res = await fetch(apiUrl(`/api/cms/${resource}`), { cache: "no-store" });
   const json = await parseApiJson(res);
   return json.data as T;
 }

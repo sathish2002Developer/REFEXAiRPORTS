@@ -1,5 +1,6 @@
 import { useState, FormEvent } from 'react';
 import CmsHtml from '@/components/feature/CmsHtml';
+import { GreenIcon } from '@/pages/partner-with-us/GreenIcon';
 
 type ContactLocation = {
   name?: string;
@@ -166,34 +167,34 @@ export default function Contact({
               <div key={`${loc.name || 'loc'}-${index}`} className="mb-10" data-aos="fade-up" data-aos-delay={String(100 + index * 50)}>
                 {(loc.name || loc.subtitle) && (
                   <>
-                    <h3 className="text-xl font-semibold mb-4 flex items-center">
-                      <i className="ri-plane-line text-[#7bbf45] mr-2 text-2xl leading-none"></i>
+                    <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+                      <GreenIcon name="plane" className="w-6 h-6" />
                       {loc.name}
                     </h3>
-                    {loc.subtitle && <p className="text-sm text-gray-500 mb-3">{loc.subtitle}</p>}
+                    {loc.subtitle && <p className="text-sm text-gray-500 mb-3 ml-8">{loc.subtitle}</p>}
                   </>
                 )}
                 <div className="space-y-3">
                   {loc.phone && (
-                    <div className="flex items-center">
-                      <i className="ri-phone-line text-[#7bbf45] text-lg w-5"></i>
-                      <a href={`tel:${loc.phone.replace(/\s/g, '')}`} className="ml-3 text-gray-700 hover:text-[#7bbf45] cursor-pointer">
+                    <div className="flex items-center gap-3">
+                      <GreenIcon name="phone" />
+                      <a href={`tel:${loc.phone.replace(/\s/g, '')}`} className="text-gray-700 hover:text-[#7bbf45] cursor-pointer">
                         {loc.phone}
                       </a>
                     </div>
                   )}
                   {loc.email && (
-                    <div className="flex items-center">
-                      <i className="ri-mail-line text-[#7bbf45] text-lg w-5"></i>
-                      <a href={`mailto:${loc.email}`} className="ml-3 text-gray-700 hover:text-[#7bbf45] cursor-pointer">
+                    <div className="flex items-center gap-3">
+                      <GreenIcon name="mail" />
+                      <a href={`mailto:${loc.email}`} className="text-gray-700 hover:text-[#7bbf45] cursor-pointer">
                         {loc.email}
                       </a>
                     </div>
                   )}
                   {loc.address && (
-                    <div className="flex items-start">
-                      <i className="ri-map-pin-line text-[#7bbf45] text-lg w-5 mt-0.5"></i>
-                      <div className="ml-3 text-gray-700 text-sm leading-relaxed">{loc.address}</div>
+                    <div className="flex items-start gap-3">
+                      <GreenIcon name="pin" className="w-5 h-5 mt-0.5" />
+                      <div className="text-gray-700 text-sm leading-relaxed">{loc.address}</div>
                     </div>
                   )}
                 </div>
@@ -239,7 +240,7 @@ export default function Contact({
             <div className="mb-6">
               <p className="text-sm text-gray-500 mb-2">Quick Connect</p>
               <h3 className="text-2xl font-bold">
-                {data?.formTitle || "Let's Elevate Your Retail Business Together"}
+                {data?.formTitle || "Let's Build the Future of Travel Infrastructure Together"}
               </h3>
             </div>
             <form id="contact-form" data-readdy-form onSubmit={handleSubmit} className="space-y-6">

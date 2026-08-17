@@ -11,9 +11,9 @@ const stats = [
 const recentPages = [
   { name: 'Home', slug: '/', updated: '2 hours ago', sections: 12, editor: '/admin/home-editor' },
   { name: 'About Us', slug: '/about', updated: '1 day ago', sections: 8, editor: '/admin/about-editor' },
+  { name: 'Partner with Us', slug: '/partner-with-us', updated: 'Today', sections: 3, editor: '/admin/partner-editor' },
   { name: 'Pune Airport', slug: '/pune-airport', updated: '3 days ago', sections: 14, editor: '/admin/travelers-editor' },
   { name: 'News & Updates', slug: '/news', updated: '5 days ago', sections: 6, editor: '/admin/news-editor' },
-  { name: 'Srinagar Airport', slug: '/srinagar-airport', updated: '1 week ago', sections: 14, editor: '/admin/travelers-editor' },
 ];
 
 export default function AdminDashboardPage() {
@@ -97,6 +97,13 @@ export default function AdminDashboardPage() {
             >
               <i className="ri-newspaper-line text-xl"></i>
               Edit News &amp; Updates Page
+            </Link>
+            <Link
+              to="/admin/partner-editor"
+              className="flex items-center gap-3 px-4 py-3 rounded-lg bg-slate-50 hover:bg-[#2879b1]/10 hover:text-[#2879b1] transition-all text-slate-700 font-medium"
+            >
+              <i className="ri-handshake-line text-xl"></i>
+              Edit Partner with Us
             </Link>
             <Link
               to="/admin/content"

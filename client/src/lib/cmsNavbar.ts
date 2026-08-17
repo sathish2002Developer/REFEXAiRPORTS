@@ -5,7 +5,7 @@ export type NavItemType = "link" | "dropdown" | "nested" | "anchor";
 
 export type NavChild = { label: string; to: string };
 
-export type NavGroup = { label: string; children: NavChild[] };
+export type NavGroup = { label: string; to?: string; children: NavChild[] };
 
 export type NavItem = {
   type: NavItemType;
@@ -31,6 +31,32 @@ const airports = [
   { key: "aurangabad", name: "Aurangabad Airport" },
   { key: "shirdi", name: "Shirdi Airport" },
 ];
+
+function travelersGroupsFromAirports(list = airports): NavGroup[] {
+  return [
+    {
+      label: "Travelers",
+      children: list.map((a) => ({ label: a.name, to: `/${a.key}-airport` })),
+    },
+    {
+      label: "Retail",
+      children: list.map((a) => ({ label: a.name, to: `/${a.key}-airport-assets` })),
+    },
+    {
+      label: "Lounge",
+      children: list.map((a) => ({ label: a.name, to: `/${a.key}-airport-lounge` })),
+    },
+  ];
+}
+
+function travelersNavItem(label = "For Travelers"): NavItem {
+  return {
+    type: "nested",
+    label,
+    to: "",
+    groups: travelersGroupsFromAirports(),
+  };
+}
 
 export const DEFAULT_NAVBAR: NavbarCms = {
   logo_url: DEFAULT_LOGO,
@@ -61,14 +87,9 @@ export const DEFAULT_NAVBAR: NavbarCms = {
         },
       ],
     },
-    {
-      type: "dropdown",
-      label: "For Travelers",
-      to: "",
-      children: airports.map((a) => ({ label: a.name, to: `/${a.key}-airport` })),
-    },
+    travelersNavItem(),
     { type: "link", label: "News & Updates", to: "/news" },
-    { type: "anchor", label: "Partner with Us", to: "#contact" },
+    { type: "link", label: "Partner with Us", to: "/partner-with-us" },
   ],
 };
 
@@ -84,7 +105,8 @@ function childOf(c: any): NavChild {
 
 export function normalizeNavbar(raw: any): NavbarCms {
   const src = raw && typeof raw === "object" ? raw : {};
-  const links = Array.isArray(src.nav_links) ? src.nav_links : [];
+  const hasLinks = Array.isArray(src.nav_links);
+  const links = hasLinks ? src.nav_links : [];
   const nav_links: NavItem[] = links
     .map((item: any) => {
       const label = str(item?.label).trim();
@@ -96,15 +118,22 @@ export function normalizeNavbar(raw: any): NavbarCms {
         else if (str(item?.to).startsWith("#")) type = "anchor";
       }
       const next: NavItem = { type, label, to: str(item?.to) };
+      if (next.to === "#contact" || next.to === "/#contact" || next.to.endsWith("#contact")) {
+        next.to = "/partner-with-us";
+        if (next.type === "anchor") next.type = "link";
+      }
       if (type === "dropdown") {
         next.children = Array.isArray(item.children) ? item.children.map(childOf) : [];
       }
       if (type === "nested") {
         next.groups = Array.isArray(item.groups)
-          ? item.groups.map((g: any) => ({
-              label: str(g?.label),
-              children: Array.isArray(g?.children) ? g.children.map(childOf) : [],
-            }))
+          ? item.groups
+              .map((g: any) => ({
+                label: str(g?.label).trim(),
+                to: str(g?.to),
+                children: Array.isArray(g?.children) ? g.children.map(childOf).filter((c: NavChild) => c.label) : [],
+              }))
+              .filter((g: NavGroup) => g.label)
           : [];
       }
       return next;
@@ -114,7 +143,7 @@ export function normalizeNavbar(raw: any): NavbarCms {
   return {
     logo_url: str(src.logo_url) || DEFAULT_NAVBAR.logo_url,
     logo_alt: str(src.logo_alt) || DEFAULT_NAVBAR.logo_alt,
-    nav_links: nav_links.length ? nav_links : DEFAULT_NAVBAR.nav_links,
+    nav_links: hasLinks ? nav_links : DEFAULT_NAVBAR.nav_links,
   };
 }
 

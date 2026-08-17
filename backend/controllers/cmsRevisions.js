@@ -11,6 +11,7 @@ const cmsAboutPageController = require("./cmsAboutPage");
 const cmsVisionPageController = require("./cmsVisionPage");
 const cmsSiteChromeController = require("./cmsSiteChrome");
 const cmsNewsPageController = require("./cmsNewsPage");
+const cmsPartnerPageController = require("./cmsPartnerPage");
 const cmsWallPageController = require("./cmsWallPage");
 
 function serializeLiveRow(resourceType, row, req) {
@@ -28,6 +29,8 @@ function serializeLiveRow(resourceType, row, req) {
       return cmsSiteChromeController.serializePayload(plain.payload || {}, req);
     case "news":
       return cmsNewsPageController.serializeRow(row);
+    case "partner":
+      return cmsPartnerPageController.serializeRow(row);
     case "wall":
       return cmsWallPageController.serializePayload(plain.payload || {}, req);
     default:

@@ -18,12 +18,13 @@ const { seedTravelersAssetsCms } = require("./seed_travelers_assets_cms");
 const { seedLoungeCms } = require("./seed_lounge_cms");
 const { seedSiteChromeCms } = require("./seed_site_chrome_cms");
 const { seedNewsCms } = require("./seed_news_cms");
+const { seedPartnerCms } = require("./seed_partner_cms");
 
 async function seedAllCms({ force = false } = {}) {
   console.log("=== Refex website CMS seed ===");
   console.log(
     force
-      ? "Mode: FORCE — reset Home, About, Assets, Travelers, Lounge, Navbar, News to website defaults"
+      ? "Mode: FORCE — reset Home, About, Assets, Travelers, Lounge, Navbar, News, Partner to website defaults"
       : "Mode: fill missing rows only (existing CMS edits are kept)"
   );
 
@@ -32,22 +33,25 @@ async function seedAllCms({ force = false } = {}) {
   await prepareUsersTableForMysqlSync(sequelize);
   await sequelize.sync();
 
-  console.log("\n[1/6] Home + About");
+  console.log("\n[1/7] Home + About");
   await seedHomeAboutCms({ force });
 
-  console.log("\n[2/6] Our Assets + For Travelers (pune, srinagar, trichy, aurangabad, shirdi)");
+  console.log("\n[2/7] Our Assets + For Travelers (pune, srinagar, trichy, aurangabad, shirdi)");
   await seedTravelersAssetsCms({ force });
 
-  console.log("\n[3/6] Lounge (all airports)");
+  console.log("\n[3/7] Lounge (all airports)");
   await seedLoungeCms({ force });
 
-  console.log("\n[4/6] Navbar");
+  console.log("\n[4/7] Navbar");
   await seedSiteChromeCms({ force });
 
-  console.log("\n[5/6] News & Updates");
+  console.log("\n[5/7] News & Updates");
   await seedNewsCms({ force });
 
-  console.log("\n[6/6] CMS admin user");
+  console.log("\n[6/7] Partner with Us");
+  await seedPartnerCms({ force });
+
+  console.log("\n[7/7] CMS admin user");
   await ensureCmsAdminFromSample();
 
   console.log("\n=== Seed complete. Public APIs: ===");
@@ -58,6 +62,7 @@ async function seedAllCms({ force = false } = {}) {
   console.log("  GET /api/cms/lounge/:airportKey");
   console.log("  GET /api/cms/site-chrome             (navbar)");
   console.log("  GET /api/cms/news");
+  console.log("  GET /api/cms/partner");
   console.log("Admin login: admin@refexairports.com / admin123");
 }
 

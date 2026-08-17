@@ -66,18 +66,23 @@ export default function AirportAssetsPage({ airportKey }: { airportKey: string }
     setActiveTab('overview');
 
     let cancelled = false;
-    cmsGet<Record<string, any>>(`assets/${airportKey}`)
-      .then((cms) => {
-        if (cancelled) return;
-        const { updated_at: _u, airport_key: _k, ...payload } = cms;
-        setData(normalizeCms(airportKey, payload));
-      })
-      .catch(() => {
-        if (!cancelled) setData(fallbackFor(airportKey));
-      });
+    const load = () => {
+      cmsGet<Record<string, any>>(`assets/${airportKey}`)
+        .then((cms) => {
+          if (cancelled) return;
+          const { updated_at: _u, airport_key: _k, ...payload } = cms;
+          setData(normalizeCms(airportKey, payload));
+        })
+        .catch(() => {
+          if (!cancelled) setData(fallbackFor(airportKey));
+        });
+    };
+    load();
+    window.addEventListener('focus', load);
 
     return () => {
       cancelled = true;
+      window.removeEventListener('focus', load);
     };
   }, [airportKey]);
 

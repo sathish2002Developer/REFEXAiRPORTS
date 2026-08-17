@@ -7,6 +7,7 @@ const {
   CmsVisionPage,
   CmsSiteChrome,
   CmsNewsPage,
+  CmsPartnerPage,
   User,
 } = require("../models");
 const { computeRevisionChanges } = require("./revisionDiff");
@@ -20,6 +21,7 @@ const RESOURCE_CONFIG = {
   vision: { model: CmsVisionPage, singletonKey: "main", payloadField: "payload" },
   "site-chrome": { model: CmsSiteChrome, singletonKey: "main", payloadField: "payload" },
   news: { model: CmsNewsPage, singletonKey: "news", payloadField: "payload" },
+  partner: { model: CmsPartnerPage, singletonKey: "partner", payloadField: "payload" },
   wall: { model: CmsWallPage, singletonKey: "main", payloadField: "payload" },
 };
 

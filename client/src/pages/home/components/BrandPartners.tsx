@@ -32,6 +32,7 @@ export default function BrandPartners({
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const brands = data?.brands?.length ? data.brands : DEFAULT_BRANDS;
+  const logos = brands.filter((brand) => Boolean(brand.image));
   const title = data?.title || 'Brand Partners';
   const subtitle = data?.subtitle || 'A portfolio of 50+ brands, united by a single vision';
 
@@ -64,15 +65,14 @@ export default function BrandPartners({
         <div className="relative" data-aos="fade-up" data-aos-delay="200">
           <div className="overflow-hidden" ref={scrollRef}>
             <div className="flex gap-6 transition-transform duration-300 ease-linear">
-              {[...brands, ...brands, ...brands].map((brand, index) => {
+              {[...logos, ...logos, ...logos].map((brand, index) => {
                 const card = (
-                  <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl shadow-sm transition-all duration-700 ease-out group-hover:shadow-xl group-hover:-translate-y-2">
+                  <div className="flex items-center justify-center w-full h-28 sm:h-32 px-5 py-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-all duration-500 ease-out group-hover:shadow-lg group-hover:-translate-y-1">
                     <img
                       alt={brand.name}
-                      className="w-full h-full object-cover object-top transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-115"
+                      className="max-h-full max-w-full w-auto h-auto object-contain"
                       src={mediaUrl(brand.image)}
                     />
-                    <div className="absolute inset-0 bg-black/0 transition-all duration-700 ease-out group-hover:bg-black/10" />
                   </div>
                 );
                 return (

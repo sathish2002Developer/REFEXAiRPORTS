@@ -18,12 +18,7 @@ function goToHash(to: string) {
   const targetPath = path.startsWith('#') || path === '' ? current : path;
 
   if (to === '#contact' || (hash === 'contact' && (targetPath === '/' || targetPath === ''))) {
-    if (current !== '/') {
-      window.REACT_APP_NAVIGATE('/');
-      setTimeout(scroll, 150);
-      return;
-    }
-    scroll();
+    window.REACT_APP_NAVIGATE('/partner-with-us');
     return;
   }
 
@@ -55,9 +50,75 @@ function itemHref(item: { to?: string }) {
   return to;
 }
 
+function NestedDesktopMenu({ item, isActive }: { item: NavItem; isActive: (path: string) => boolean }) {
+  const [openGroup, setOpenGroup] = useState<number | null>(null);
+  const groups = item.groups || [];
+  const activeGroup = openGroup != null ? groups[openGroup] : null;
+
+  return (
+    <div className="relative group" onMouseLeave={() => setOpenGroup(null)}>
+      <button
+        type="button"
+        className="text-gray-700 hover:text-[#2879b1] font-medium transition-colors flex items-center gap-1 cursor-pointer whitespace-nowrap"
+      >
+        {item.label}
+        <i className="ri-arrow-down-s-line"></i>
+      </button>
+      <div className="absolute top-full left-0 pt-2 opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto z-50">
+        <div className="flex items-start">
+          <div className="w-52 shrink-0 bg-white shadow-lg rounded-lg py-1">
+            {groups.map((group, gi) => (
+              <div
+                key={`group-${gi}`}
+                className={`px-5 py-3.5 flex items-center justify-between cursor-pointer transition-colors ${
+                  openGroup === gi
+                    ? 'bg-blue-50 text-[#2879b1]'
+                    : 'text-gray-700 hover:bg-gray-50 hover:text-[#2879b1]'
+                }`}
+                onMouseEnter={() => setOpenGroup(gi)}
+              >
+                {group.to ? (
+                  <Link to={group.to} className="font-medium text-sm whitespace-nowrap flex-1">
+                    {group.label}
+                  </Link>
+                ) : (
+                  <span className="font-medium text-sm whitespace-nowrap">{group.label}</span>
+                )}
+                <i className="ri-arrow-right-s-line text-lg"></i>
+              </div>
+            ))}
+          </div>
+          {activeGroup ? (
+            <div className="ml-1 min-w-56 max-w-xs bg-white shadow-lg rounded-lg overflow-hidden">
+              <div className="px-4 pt-3 pb-1">
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                  {activeGroup.label}
+                </span>
+              </div>
+              {(activeGroup.children || []).map((airport, ai) => (
+                <Link
+                  key={`child-${ai}-${airport.to}`}
+                  to={airport.to || '/'}
+                  className={`block px-5 py-2.5 text-sm transition-colors ${
+                    isActive(airport.to)
+                      ? 'text-[#2879b1] bg-blue-50'
+                      : 'text-gray-700 hover:bg-gray-50 hover:text-[#2879b1]'
+                  }`}
+                >
+                  {airport.label}
+                </Link>
+              ))}
+              <div className="h-2"></div>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [assetsSubmenu, setAssetsSubmenu] = useState<string | null>(null);
   const [openMobile, setOpenMobile] = useState<number | null>(null);
   const location = useLocation();
   const navbar = useNavbarCms();
@@ -86,93 +147,40 @@ const Header = () => {
             {item.label}
             <i className="ri-arrow-down-s-line"></i>
           </ParentTag>
-          <div className="absolute top-full left-0 mt-2 w-52 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
-            {(item.children || []).map((child, ci) =>
-              child.to.includes('#') ? (
-                <a
-                  key={ci}
-                  href={child.to}
-                  onClick={(e) => handleItemClick(e, { ...child, type: 'anchor' })}
-                  className="block px-5 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#2879b1] text-sm transition-colors cursor-pointer whitespace-nowrap"
-                >
-                  {child.label}
-                </a>
-              ) : (
-                <Link
-                  key={ci}
-                  to={child.to || '/'}
-                  className={`block px-5 py-3 text-sm transition-colors whitespace-nowrap ${
-                    isActive(child.to)
-                      ? 'text-[#2879b1] bg-blue-50'
-                      : 'text-gray-700 hover:bg-gray-50 hover:text-[#2879b1]'
-                  }`}
-                >
-                  {child.label}
-                </Link>
-              )
-            )}
+          <div className="absolute top-full left-0 pt-2 opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto z-50">
+            <div className="w-52 bg-white shadow-lg rounded-lg overflow-hidden">
+              {(item.children || []).map((child, ci) =>
+                child.to.includes('#') ? (
+                  <a
+                    key={ci}
+                    href={child.to}
+                    onClick={(e) => handleItemClick(e, { ...child, type: 'anchor' })}
+                    className="block px-5 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#2879b1] text-sm transition-colors cursor-pointer whitespace-nowrap"
+                  >
+                    {child.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={ci}
+                    to={child.to || '/'}
+                    className={`block px-5 py-3 text-sm transition-colors whitespace-nowrap ${
+                      isActive(child.to)
+                        ? 'text-[#2879b1] bg-blue-50'
+                        : 'text-gray-700 hover:bg-gray-50 hover:text-[#2879b1]'
+                    }`}
+                  >
+                    {child.label}
+                  </Link>
+                )
+              )}
+            </div>
           </div>
         </div>
       );
     }
 
     if (item.type === 'nested') {
-      const groups = item.groups || [];
-      return (
-        <div
-          key={index}
-          className="relative group"
-          onMouseLeave={() => setAssetsSubmenu(null)}
-        >
-          <button className="text-gray-700 hover:text-[#2879b1] font-medium transition-colors flex items-center gap-1 cursor-pointer whitespace-nowrap">
-            {item.label}
-            <i className="ri-arrow-down-s-line"></i>
-          </button>
-          <div className="absolute top-full left-0 mt-2 w-52 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
-            {groups.map((group) => (
-              <div
-                key={group.label}
-                className={`px-5 py-3.5 flex items-center justify-between cursor-pointer transition-colors ${
-                  assetsSubmenu === group.label
-                    ? 'bg-blue-50 text-[#2879b1]'
-                    : 'text-gray-700 hover:bg-gray-50 hover:text-[#2879b1]'
-                }`}
-                onMouseEnter={() => setAssetsSubmenu(group.label)}
-              >
-                <span className="font-medium text-sm">{group.label}</span>
-                <i className="ri-arrow-right-s-line text-lg"></i>
-              </div>
-            ))}
-          </div>
-          {groups.map((group, gi) =>
-            assetsSubmenu === group.label ? (
-              <div
-                key={`${group.label}-flyout`}
-                className="absolute top-full left-[216px] mt-2 w-52 bg-white shadow-lg rounded-lg z-50 overflow-hidden"
-                style={gi > 0 ? { marginTop: `${8 + gi * 44}px` } : undefined}
-                onMouseEnter={() => setAssetsSubmenu(group.label)}
-                onMouseLeave={() => setAssetsSubmenu(null)}
-              >
-                <div className="px-4 pt-3 pb-1">
-                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                    {group.label}
-                  </span>
-                </div>
-                {(group.children || []).map((airport) => (
-                  <Link
-                    key={airport.to}
-                    to={airport.to}
-                    className="block px-5 py-2.5 text-gray-700 hover:bg-gray-50 hover:text-[#2879b1] text-sm transition-colors"
-                  >
-                    {airport.label}
-                  </Link>
-                ))}
-                <div className="h-2"></div>
-              </div>
-            ) : null
-          )}
-        </div>
-      );
+      return <NestedDesktopMenu key={index} item={item} isActive={isActive} />;
     }
 
     const cls = `text-gray-700 hover:text-[#2879b1] font-medium transition-colors cursor-pointer whitespace-nowrap ${
@@ -275,13 +283,23 @@ const Header = () => {
                 return (
                   <div key={index} className="space-y-2">
                     <div className="text-gray-700 font-medium">{item.label}</div>
-                    {(item.groups || []).map((group) => (
-                      <div key={group.label}>
-                        <div className="text-xs font-semibold text-gray-400 uppercase pl-4 pt-1">{group.label}</div>
-                        {(group.children || []).map((child) => (
+                    {(item.groups || []).map((group, gi) => (
+                      <div key={`m-group-${gi}`}>
+                        {group.to ? (
                           <Link
-                            key={child.to}
-                            to={child.to}
+                            to={group.to}
+                            className="block text-sm font-medium text-gray-700 pl-4 pt-1 hover:text-[#2879b1]"
+                            onClick={closeMobile}
+                          >
+                            {group.label}
+                          </Link>
+                        ) : (
+                          <div className="text-xs font-semibold text-gray-400 uppercase pl-4 pt-1">{group.label}</div>
+                        )}
+                        {(group.children || []).map((child, ci) => (
+                          <Link
+                            key={`m-child-${ci}-${child.to}`}
+                            to={child.to || '/'}
                             className="block pl-8 text-gray-600 hover:text-[#2879b1] text-sm"
                             onClick={closeMobile}
                           >

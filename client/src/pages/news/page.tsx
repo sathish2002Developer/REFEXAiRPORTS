@@ -21,11 +21,25 @@ export default function NewsPage() {
       once: true,
       offset: 100,
     });
-    cmsGet<Record<string, any>>('news')
-      .then((data) => setCms(toNewsDraft(data)))
-      .catch(() => {
-        /* keep defaults */
-      });
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = () => {
+      cmsGet<Record<string, any>>('news')
+        .then((data) => {
+          if (!cancelled) setCms(toNewsDraft(data));
+        })
+        .catch(() => {
+          /* keep defaults */
+        });
+    };
+    load();
+    window.addEventListener('focus', load);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('focus', load);
+    };
   }, []);
 
   const tabs = cms.tabs?.length

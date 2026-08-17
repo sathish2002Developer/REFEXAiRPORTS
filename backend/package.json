@@ -34,6 +34,7 @@
     "seed:lounge": "node scripts/seed_lounge_cms.js",
     "seed:site-chrome": "node scripts/seed_site_chrome_cms.js",
     "seed:news": "node scripts/seed_news_cms.js",
+    "seed:partner": "node scripts/seed_partner_cms.js",
     "seed:cms": "node scripts/seed_all_cms.js",
     "seed:cms:force": "node scripts/seed_all_cms.js --force",
     "seed:website": "node scripts/seed_all_cms.js --force",

@@ -1,7 +1,7 @@
 const { CmsAboutPage } = require("../models");
 const { responseStatus } = require("../helpers/response");
 const { archiveCurrentRevision } = require("../helpers/cmsRevisionHelper");
-const { deepMerge } = require("../helpers/cmsJson");
+const { deepMerge, persistJsonColumn } = require("../helpers/cmsJson");
 const { defaultAboutPayload, mergeAboutPayload } = require("../helpers/cmsAboutPageDefaults");
 
 async function getOrCreateRow() {
@@ -52,8 +52,8 @@ const patchAdminAboutPage = async (req, res) => {
     }
 
     await archiveCurrentRevision("about", req);
-    row.payload = mergeAboutPayload(deepMerge(row.payload || {}, incoming));
-    await row.save();
+    const next = mergeAboutPayload(deepMerge(row.payload || {}, incoming));
+    await persistJsonColumn(row, "payload", next);
     return responseStatus(res, 200, "About page saved", serializeRow(row));
   } catch (e) {
     console.error("patchAdminAboutPage:", e);

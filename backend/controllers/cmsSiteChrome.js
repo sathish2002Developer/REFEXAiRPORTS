@@ -73,16 +73,35 @@ function defaultPayload() {
           ],
         },
         {
-          type: "dropdown",
+          type: "nested",
           label: "For Travelers",
           to: "",
-          children: airports.map((a) => ({
-            label: a.name,
-            to: `/${a.key}-airport`,
-          })),
+          groups: [
+            {
+              label: "Travelers",
+              children: airports.map((a) => ({
+                label: a.name,
+                to: `/${a.key}-airport`,
+              })),
+            },
+            {
+              label: "Retail",
+              children: airports.map((a) => ({
+                label: a.name,
+                to: `/${a.key}-airport-assets`,
+              })),
+            },
+            {
+              label: "Lounge",
+              children: airports.map((a) => ({
+                label: a.name,
+                to: `/${a.key}-airport-lounge`,
+              })),
+            },
+          ],
         },
         { type: "link", label: "News & Updates", to: "/news" },
-        { type: "anchor", label: "Partner with Us", to: "#contact" },
+        { type: "link", label: "Partner with Us", to: "/partner-with-us" },
       ],
     },
     footer: {
@@ -96,11 +115,11 @@ function defaultPayload() {
         { label: "Our Assets", to: "#" },
         { label: "For Travelers", to: "#" },
         { label: "News & Updates", to: "/news" },
-        { label: "Partner with Us", to: "#contact" },
+        { label: "Partner with Us", to: "/partner-with-us" },
       ],
       cta_title: "Let's Elevate Your Retail Business Together",
       cta_button: "Enquire now",
-      cta_to: "#contact",
+      cta_to: "/partner-with-us",
       copyright: "© 2024 Refex Airports & Transports",
       line_left: "Bringing World-Class Retail to Airports.",
       line_right: "© Refex Airports",
@@ -122,7 +141,8 @@ function sanitizeGroup(g) {
     ? g.children.map(sanitizeChild).filter(Boolean)
     : [];
   if (!label && !children.length) return null;
-  return { label, children };
+  const to = String(g.to || "").trim();
+  return to ? { label, to, children } : { label, children };
 }
 
 function inferType(item) {
@@ -133,18 +153,27 @@ function inferType(item) {
   return "link";
 }
 
+function rewritePartnerLink(to, type) {
+  const t = String(to || "").trim();
+  if (t === "#contact" || t === "/#contact" || t.endsWith("#contact")) {
+    return { to: "/partner-with-us", type: type === "anchor" ? "link" : type };
+  }
+  return { to: t, type };
+}
+
 function sanitizeNavItem(item) {
   if (!item || typeof item !== "object") return null;
   const label = String(item.label || "").trim();
   if (!label) return null;
-  const type = inferType(item);
-  const out = { type, label, to: String(item.to || "").trim() };
-  if (type === "dropdown") {
+  const inferred = inferType(item);
+  const rewritten = rewritePartnerLink(item.to, inferred);
+  const out = { type: rewritten.type, label, to: rewritten.to };
+  if (out.type === "dropdown") {
     out.children = Array.isArray(item.children)
       ? item.children.map(sanitizeChild).filter(Boolean)
       : [];
   }
-  if (type === "nested") {
+  if (out.type === "nested") {
     out.groups = Array.isArray(item.groups)
       ? item.groups.map(sanitizeGroup).filter(Boolean)
       : [];
@@ -163,11 +192,13 @@ function resolveAssetUrl(raw, req) {
 function mergePayload(dbPayload, incoming) {
   let next = deepMerge(defaultPayload(), dbPayload || {});
   next = deepMerge(next, incoming || {});
-  const source = Array.isArray(incoming?.navbar?.nav_links)
-    ? incoming.navbar.nav_links
-    : next.navbar.nav_links;
-  const n = (Array.isArray(source) ? source : []).map(sanitizeNavItem).filter(Boolean);
-  next.navbar.nav_links = n.length > 0 ? n : defaultPayload().navbar.nav_links;
+  const incomingLinks = incoming?.navbar?.nav_links;
+  if (Array.isArray(incomingLinks)) {
+    next.navbar = next.navbar || {};
+    next.navbar.nav_links = incomingLinks.map(sanitizeNavItem).filter(Boolean);
+  } else if (Array.isArray(next.navbar?.nav_links)) {
+    next.navbar.nav_links = next.navbar.nav_links.map(sanitizeNavItem).filter(Boolean);
+  }
 
   next.footer = next.footer || {};
   if (Array.isArray(incoming?.footer?.links)) {
@@ -175,6 +206,14 @@ function mergePayload(dbPayload, incoming) {
   } else if (Array.isArray(next.footer.links)) {
     next.footer.links = next.footer.links.map(sanitizeChild).filter(Boolean);
   }
+  if (Array.isArray(next.footer.links)) {
+    next.footer.links = next.footer.links.map((link) => {
+      const rewritten = rewritePartnerLink(link.to, "link");
+      return { ...link, to: rewritten.to };
+    });
+  }
+  const ctaRewritten = rewritePartnerLink(next.footer.cta_to, "link");
+  next.footer.cta_to = ctaRewritten.to;
 
   return next;
 }
@@ -234,6 +273,8 @@ const patchAdminSiteChrome = async (req, res) => {
         incoming = JSON.parse(req.body.payload);
       } else if (req.body?.payload && typeof req.body.payload === "object") {
         incoming = req.body.payload;
+      } else if (req.body?.navbar || req.body?.footer) {
+        incoming = req.body;
       }
     } catch (parseErr) {
       console.error("patchAdminSiteChrome parse:", parseErr);

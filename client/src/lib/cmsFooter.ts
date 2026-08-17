@@ -29,11 +29,11 @@ export const DEFAULT_FOOTER: FooterCms = {
     { label: "Our Assets", to: "#" },
     { label: "For Travelers", to: "#" },
     { label: "News & Updates", to: "/news" },
-    { label: "Partner with Us", to: "#contact" },
+    { label: "Partner with Us", to: "/partner-with-us" },
   ],
   cta_title: "Let's Elevate Your Retail Business Together",
   cta_button: "Enquire now",
-  cta_to: "#contact",
+  cta_to: "/partner-with-us",
   copyright: "© 2024 Refex Airports & Transports",
 };
 
@@ -55,10 +55,17 @@ export function normalizeFooter(raw: any): FooterCms {
     logo_alt: str(src.logo_alt) || DEFAULT_FOOTER.logo_alt,
     tagline: str(src.tagline) || str(src.line_left) || DEFAULT_FOOTER.tagline,
     quick_links_title: str(src.quick_links_title) || DEFAULT_FOOTER.quick_links_title,
-    links: links.length ? links : DEFAULT_FOOTER.links,
+    links: (links.length ? links : DEFAULT_FOOTER.links).map((item) =>
+      item.to === "#contact" || item.to === "/#contact" || item.to.endsWith("#contact")
+        ? { ...item, to: "/partner-with-us" }
+        : item
+    ),
     cta_title: str(src.cta_title) || DEFAULT_FOOTER.cta_title,
     cta_button: str(src.cta_button) || DEFAULT_FOOTER.cta_button,
-    cta_to: str(src.cta_to) || DEFAULT_FOOTER.cta_to,
+    cta_to:
+      str(src.cta_to) === "#contact" || str(src.cta_to).endsWith("#contact")
+        ? "/partner-with-us"
+        : str(src.cta_to) || DEFAULT_FOOTER.cta_to,
     copyright: str(src.copyright) || str(src.line_right) || DEFAULT_FOOTER.copyright,
   };
 }

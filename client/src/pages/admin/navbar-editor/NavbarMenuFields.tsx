@@ -198,7 +198,7 @@ function GroupsEditor({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold text-slate-600">Nested groups (e.g. Retail, Lounge)</p>
+        <p className="text-xs font-semibold text-slate-600">Nested groups (e.g. airport → Retail / Lounge)</p>
         <button
           type="button"
           onClick={() => {
@@ -214,6 +214,7 @@ function GroupsEditor({
         <div key={gi} className="border border-slate-100 rounded-lg p-3 space-y-2">
           <div className="flex items-center gap-2">
             <input className={inputCls} placeholder="Group name" value={group.label} onChange={(e) => updateGroup(gi, { label: e.target.value })} />
+            <input className={inputCls} placeholder="URL (optional)" value={group.to || ''} onChange={(e) => updateGroup(gi, { to: e.target.value })} />
             <button
               type="button"
               onClick={() => {

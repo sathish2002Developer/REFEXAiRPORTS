@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Header from '../../components/feature/Header';
@@ -11,11 +11,10 @@ import BrandPartners from './components/BrandPartners';
 import GreatPlaceToWork from './components/GreatPlaceToWork';
 import OurFootprints from './components/OurFootprints';
 import Stories from './components/Stories';
-import Contact from './components/Contact';
-import { cmsGet } from '@/lib/api';
+import { useCms } from '@/lib/useCms';
 
 export default function HomePage() {
-  const [cms, setCms] = useState<Record<string, any> | null>(null);
+  const cms = useCms('home');
 
   useEffect(() => {
     AOS.init({
@@ -24,14 +23,6 @@ export default function HomePage() {
       once: true,
       offset: 100,
     });
-    cmsGet<Record<string, any>>('home')
-      .then((data) => {
-        const { updated_at: _u, ...payload } = data;
-        setCms(payload);
-      })
-      .catch(() => {
-        setCms(null);
-      });
   }, []);
 
   return (
@@ -46,9 +37,9 @@ export default function HomePage() {
         <GreatPlaceToWork data={cms?.gptw} />
         <OurFootprints data={cms?.footprints} />
         <Stories data={cms?.stories} />
-        <Contact data={cms?.contact} />
       </main>
       <Footer />
     </>
   );
 }
+

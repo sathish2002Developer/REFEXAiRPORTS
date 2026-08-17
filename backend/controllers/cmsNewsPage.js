@@ -1,6 +1,7 @@
 const { CmsNewsPage } = require("../models");
 const { responseStatus } = require("../helpers/response");
 const { archiveCurrentRevision } = require("../helpers/cmsRevisionHelper");
+const { persistJsonColumn } = require("../helpers/cmsJson");
 const { defaultNewsPayload, mergeNewsPayload } = require("../helpers/cmsNewsPageDefaults");
 
 async function getOrCreateRow() {
@@ -51,8 +52,8 @@ const patchAdminNewsPage = async (req, res) => {
     }
 
     await archiveCurrentRevision("news", req);
-    row.payload = mergeNewsPayload(row.payload || {}, incoming);
-    await row.save();
+    const next = mergeNewsPayload(row.payload || {}, incoming);
+    await persistJsonColumn(row, "payload", next);
     return responseStatus(res, 200, "News page saved", serializeRow(row));
   } catch (e) {
     console.error("patchAdminNewsPage:", e);

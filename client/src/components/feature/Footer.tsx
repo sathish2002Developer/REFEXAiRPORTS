@@ -17,12 +17,7 @@ const Footer = () => {
     const targetPath = path.startsWith('#') || path === '' ? current : path;
 
     if (to === '#contact' || (hash === 'contact' && (targetPath === '/' || targetPath === ''))) {
-      if (current !== '/') {
-        window.REACT_APP_NAVIGATE('/');
-        setTimeout(scroll, 150);
-        return;
-      }
-      scroll();
+      window.REACT_APP_NAVIGATE('/partner-with-us');
       return;
     }
 

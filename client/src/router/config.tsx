@@ -4,6 +4,7 @@ import { RouteObject } from "react-router-dom";
 const HomePage = lazy(() => import("../pages/home/page"));
 const NewsPage = lazy(() => import("../pages/news/page"));
 const AboutPage = lazy(() => import("../pages/about/page"));
+const PartnerWithUsPage = lazy(() => import("../pages/partner-with-us/page"));
 const LeadershipPage = lazy(() => import("../pages/leadership/page"));
 const PuneAirportPage = lazy(() => import("../pages/pune-airport/page"));
 const PuneAirportAssets = lazy(() => import("../pages/pune-airport-assets/page"));
@@ -36,12 +37,14 @@ const AdminAssetsEditor = lazy(() => import("../pages/admin/assets-editor/page")
 const AdminTravelersEditor = lazy(() => import("../pages/admin/travelers-editor/page"));
 const AdminLoungeEditor = lazy(() => import("../pages/admin/lounge-editor/page"));
 const AdminNewsEditor = lazy(() => import("../pages/admin/news-editor/page"));
+const AdminPartnerEditor = lazy(() => import("../pages/admin/partner-editor/page"));
 const AdminNavbarEditor = lazy(() => import("../pages/admin/navbar-editor/page"));
 
 const routes: RouteObject[] = [
   { path: "/", element: <HomePage /> },
   { path: "/news", element: <NewsPage /> },
   { path: "/about", element: <AboutPage /> },
+  { path: "/partner-with-us", element: <PartnerWithUsPage /> },
   { path: "/leadership", element: <LeadershipPage /> },
   { path: "/pune-airport", element: <PuneAirportPage /> },
   { path: "/pune-airport-assets", element: <PuneAirportAssets /> },
@@ -68,6 +71,7 @@ const routes: RouteObject[] = [
   { path: "/admin/travelers-editor", element: <AdminTravelersEditor /> },
   { path: "/admin/lounge-editor", element: <AdminLoungeEditor /> },
   { path: "/admin/news-editor", element: <AdminNewsEditor /> },
+  { path: "/admin/partner-editor", element: <AdminPartnerEditor /> },
   { path: "/admin/navbar-editor", element: <AdminNavbarEditor /> },
   { path: "/admin/pages/*", element: <AdminPageEditor /> },
   { path: "/admin/content", element: <AdminContentPage /> },

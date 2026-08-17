@@ -1,6 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type TransitionEvent } from 'react';
 import CmsHtml from '@/components/feature/CmsHtml';
 import { mediaUrl } from '@/lib/api';
+
+const MODAL_MS = 2200;
+const MODAL_EASE = 'cubic-bezier(0.45, 0.05, 0.15, 1)';
+/** Start in-window on the right (~28% of viewport), then slide to center. */
+const MODAL_START_X = 'min(28vw, 18rem)';
 
 interface TeamMember {
   name: string;
@@ -22,6 +27,41 @@ const LeadershipTeam = ({
   };
 }) => {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const closingRef = useRef(false);
+
+  const openMember = (member: TeamMember) => {
+    closingRef.current = false;
+    setSelectedMember(member);
+  };
+
+  const closeMember = () => {
+    closingRef.current = true;
+    setModalOpen(false);
+  };
+
+  useLayoutEffect(() => {
+    if (!selectedMember || closingRef.current) return;
+    const frame = requestAnimationFrame(() => setModalOpen(true));
+    return () => cancelAnimationFrame(frame);
+  }, [selectedMember]);
+
+  useEffect(() => {
+    if (modalOpen || !selectedMember || !closingRef.current) return;
+    const timer = window.setTimeout(() => {
+      setSelectedMember(null);
+      closingRef.current = false;
+    }, MODAL_MS + 40);
+    return () => window.clearTimeout(timer);
+  }, [modalOpen, selectedMember]);
+
+  const handleModalTransitionEnd = (event: TransitionEvent<HTMLDivElement>) => {
+    if (event.target !== event.currentTarget) return;
+    if (event.propertyName !== 'transform') return;
+    if (!closingRef.current) return;
+    setSelectedMember(null);
+    closingRef.current = false;
+  };
 
   const defaultFounders: TeamMember[] = [
     {
@@ -81,7 +121,7 @@ const LeadershipTeam = ({
                     {member.name}
                   </h4>
                   <button
-                    onClick={() => setSelectedMember(member)}
+                    onClick={() => openMember(member)}
                     className="text-[#7bbf45] hover:text-[#5a9933] font-semibold transition-colors cursor-pointer whitespace-nowrap"
                   >
                     Know more
@@ -112,7 +152,7 @@ const LeadershipTeam = ({
                   </h4>
                   <p className="text-gray-600 mb-3">{member.position}</p>
                   <button
-                    onClick={() => setSelectedMember(member)}
+                    onClick={() => openMember(member)}
                     className="text-[#7bbf45] hover:text-[#5a9933] font-semibold transition-colors cursor-pointer whitespace-nowrap"
                   >
                     Know more
@@ -126,13 +166,25 @@ const LeadershipTeam = ({
 
       {/* Modal */}
       {selectedMember && (
-        <div
-          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-          onClick={() => setSelectedMember(null)}
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="bg-white rounded-2xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            className={`absolute inset-0 bg-black/50 transition-opacity ${
+              modalOpen ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ transitionDuration: `${MODAL_MS}ms`, transitionTimingFunction: MODAL_EASE }}
+            onClick={closeMember}
+          />
+          <div
+            className="relative bg-white rounded-2xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto transform-gpu will-change-transform"
+            style={{
+              transitionProperty: 'transform, opacity',
+              transitionDuration: `${MODAL_MS}ms`,
+              transitionTimingFunction: MODAL_EASE,
+              transform: modalOpen ? 'translate3d(0, 0, 0)' : `translate3d(${MODAL_START_X}, 0, 0)`,
+              opacity: modalOpen ? 1 : 0.45,
+            }}
             onClick={(e) => e.stopPropagation()}
+            onTransitionEnd={handleModalTransitionEnd}
           >
             <div className="flex justify-between items-start mb-6">
               <div>
@@ -142,7 +194,7 @@ const LeadershipTeam = ({
                 <p className="text-gray-600 text-lg">{selectedMember.position}</p>
               </div>
               <button
-                onClick={() => setSelectedMember(null)}
+                onClick={closeMember}
                 className="text-gray-400 hover:text-gray-600 cursor-pointer"
               >
                 <i className="ri-close-line text-3xl"></i>

@@ -7,6 +7,7 @@ const cmsTravelersPageController = require("../controllers/cmsTravelersPage");
 const cmsAssetsPageController = require("../controllers/cmsAssetsPage");
 const cmsLoungePageController = require("../controllers/cmsLoungePage");
 const cmsNewsPageController = require("../controllers/cmsNewsPage");
+const cmsPartnerPageController = require("../controllers/cmsPartnerPage");
 const cmsVisionPageController = require("../controllers/cmsVisionPage");
 const cmsWallPageController = require("../controllers/cmsWallPage");
 const cmsSiteChromeController = require("../controllers/cmsSiteChrome");
@@ -45,6 +46,8 @@ router.get("/cms/lounge/:airportKey", cmsLoungePageController.getPublicLoungePag
 router.patch("/cms/lounge/:airportKey", cmsLoungePageController.patchAdminLoungePage);
 router.get("/cms/news", cmsNewsPageController.getPublicNewsPage);
 router.patch("/cms/news", cmsNewsPageController.patchAdminNewsPage);
+router.get("/cms/partner", cmsPartnerPageController.getPublicPartnerPage);
+router.patch("/cms/partner", cmsPartnerPageController.patchAdminPartnerPage);
 
 // CMS — Home hero (singleton)
 router.patch(

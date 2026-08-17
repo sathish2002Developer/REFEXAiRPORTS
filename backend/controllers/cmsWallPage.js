@@ -2,6 +2,7 @@ const path = require("path");
 const { CmsWallPage } = require("../models");
 const { responseStatus } = require("../helpers/response");
 const { archiveCurrentRevision } = require("../helpers/cmsRevisionHelper");
+const { persistJsonColumn } = require("../helpers/cmsJson");
 
 /** Same-origin path only — browser loads from SPA host (dev proxy) instead of rewriting to API hostname. */
 const DEFAULT_HERO_BG = "/images/wall-hero.svg";
@@ -325,8 +326,8 @@ const patchAdminWallPage = async (req, res) => {
     }
 
     await archiveCurrentRevision("wall", req);
-    row.payload = mergePayload(row.payload || {}, incoming);
-    await row.save();
+    const next = mergePayload(row.payload || {}, incoming);
+    await persistJsonColumn(row, "payload", next);
 
     const out = serializePayload(row.payload, req);
     return responseStatus(res, 200, "Saved", out);

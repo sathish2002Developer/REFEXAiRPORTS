@@ -4,9 +4,11 @@ import { cmsUploadImage, mediaUrl } from '@/lib/api';
 export default function CmsImageField({
   value,
   onChange,
+  fit = 'cover',
 }: {
   value: string;
   onChange: (next: string) => void;
+  fit?: 'cover' | 'contain';
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -58,8 +60,12 @@ export default function CmsImageField({
       {value && <p className="text-xs text-slate-500 break-all font-mono">{value}</p>}
       {error && <p className="text-xs text-red-600">{error}</p>}
       {value && (
-        <div className="w-40 h-24 rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
-          <img src={mediaUrl(value)} alt="Preview" className="w-full h-full object-cover" />
+        <div className="w-40 h-24 rounded-lg overflow-hidden border border-slate-200 bg-white flex items-center justify-center p-2">
+          <img
+            src={mediaUrl(value)}
+            alt="Preview"
+            className={`max-w-full max-h-full ${fit === 'contain' ? 'object-contain' : 'w-full h-full object-cover'}`}
+          />
         </div>
       )}
     </div>

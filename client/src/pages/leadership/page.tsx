@@ -5,8 +5,11 @@ import Header from '@/components/feature/Header';
 import Footer from '@/components/feature/Footer';
 import LeadershipBanner from '@/pages/about/components/LeadershipBanner';
 import LeadershipTeam from '@/pages/about/components/LeadershipTeam';
+import { useCms } from '@/lib/useCms';
 
 export default function LeadershipPage() {
+  const cms = useCms('about');
+
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -20,9 +23,9 @@ export default function LeadershipPage() {
     <>
       <Header />
       <main>
-        <LeadershipBanner />
+        <LeadershipBanner data={cms?.leadership} />
         <div id="leadership">
-          <LeadershipTeam />
+          <LeadershipTeam data={cms?.leadership} />
         </div>
       </main>
       <Footer />

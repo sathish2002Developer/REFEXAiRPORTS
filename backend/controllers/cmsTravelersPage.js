@@ -1,6 +1,6 @@
 const { CmsTravelersPage } = require("../models");
 const { responseStatus } = require("../helpers/response");
-const { deepMerge } = require("../helpers/cmsJson");
+const { deepMerge, persistJsonColumn } = require("../helpers/cmsJson");
 const {
   isKnownAirport,
   normalizeAirportKey,
@@ -73,8 +73,8 @@ const patchAdminTravelersPage = async (req, res) => {
       return responseStatus(res, 400, "Invalid JSON payload");
     }
 
-    row.payload = mergeTravelersPayload(row.airport_key, deepMerge(row.payload || {}, incoming));
-    await row.save();
+    const next = mergeTravelersPayload(row.airport_key, deepMerge(row.payload || {}, incoming));
+    await persistJsonColumn(row, "payload", next);
     return responseStatus(res, 200, "Travelers page saved", serializeRow(row));
   } catch (e) {
     console.error("patchAdminTravelersPage:", e);

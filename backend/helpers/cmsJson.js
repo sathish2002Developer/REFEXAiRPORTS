@@ -25,4 +25,10 @@ function parseStatCount(display) {
   return { count: Number(m[1]), suffix: m[2] || "", countDisplay: raw };
 }
 
-module.exports = { isPlainObject, deepMerge, parseStatCount };
+function persistJsonColumn(row, field, value) {
+  row.set(field, JSON.parse(JSON.stringify(value)));
+  row.changed(field, true);
+  return row.save();
+}
+
+module.exports = { isPlainObject, deepMerge, parseStatCount, persistJsonColumn };

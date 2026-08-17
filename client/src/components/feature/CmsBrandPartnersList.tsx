@@ -92,6 +92,7 @@ export default function CmsBrandPartnersList({
               <CmsImageField
                 value={brand.image || ''}
                 onChange={(image) => update(index, { image })}
+                fit="contain"
               />
             </div>
           </div>
