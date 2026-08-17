@@ -1,6 +1,7 @@
 const { CmsPartnerPage } = require("../models");
 const { responseStatus } = require("../helpers/response");
 const { archiveCurrentRevision } = require("../helpers/cmsRevisionHelper");
+const { persistJsonColumn } = require("../helpers/cmsJson");
 const { defaultPartnerPayload, mergePartnerPayload } = require("../helpers/cmsPartnerPageDefaults");
 
 async function getOrCreateRow() {
@@ -24,6 +25,7 @@ function serializeRow(row) {
 
 const getPublicPartnerPage = async (req, res) => {
   try {
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate");
     const row = await getOrCreateRow();
     return responseStatus(res, 200, "OK", serializeRow(row));
   } catch (e) {
@@ -51,9 +53,8 @@ const patchAdminPartnerPage = async (req, res) => {
     }
 
     await archiveCurrentRevision("partner", req);
-    row.payload = mergePartnerPayload(row.payload || {}, incoming);
-    row.changed("payload", true);
-    await row.save();
+    const next = mergePartnerPayload(row.payload || {}, incoming);
+    await persistJsonColumn(row, "payload", next);
     return responseStatus(res, 200, "Partner page saved", serializeRow(row));
   } catch (e) {
     console.error("patchAdminPartnerPage:", e);

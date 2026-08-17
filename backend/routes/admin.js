@@ -21,6 +21,7 @@ const uploadCmsHero = require("../middlewares/uploadCmsHero");
 const uploadVisionCms = require("../middlewares/uploadVisionCms");
 const uploadSiteChromeCms = require("../middlewares/uploadSiteChromeCms");
 const uploadWallCms = require("../middlewares/uploadWallCms");
+const uploadImage = require("../middlewares/uploadImage");
 const {
   createUserSchema,
   updateUserSchema,
@@ -46,8 +47,22 @@ router.get("/cms/lounge/:airportKey", cmsLoungePageController.getPublicLoungePag
 router.patch("/cms/lounge/:airportKey", cmsLoungePageController.patchAdminLoungePage);
 router.get("/cms/news", cmsNewsPageController.getPublicNewsPage);
 router.patch("/cms/news", cmsNewsPageController.patchAdminNewsPage);
+router.post("/cms/upload", uploadImage.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: "No image file provided" });
+  }
+  const imageUrl = `/uploads/images/${req.file.filename}`;
+  return res.json({ success: true, imageUrl, filename: req.file.filename });
+});
+
 router.get("/cms/partner", cmsPartnerPageController.getPublicPartnerPage);
 router.patch("/cms/partner", cmsPartnerPageController.patchAdminPartnerPage);
+router.put("/cms/partner", cmsPartnerPageController.patchAdminPartnerPage);
+router.post("/cms/partner", cmsPartnerPageController.patchAdminPartnerPage);
+router.get("/cms/partner-with-us", cmsPartnerPageController.getPublicPartnerPage);
+router.patch("/cms/partner-with-us", cmsPartnerPageController.patchAdminPartnerPage);
+router.put("/cms/partner-with-us", cmsPartnerPageController.patchAdminPartnerPage);
+router.post("/cms/partner-with-us", cmsPartnerPageController.patchAdminPartnerPage);
 
 // CMS — Home hero (singleton)
 router.patch(

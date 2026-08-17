@@ -10,6 +10,7 @@ const cmsSiteChromeController = require("../controllers/cmsSiteChrome");
 const cmsNewsPageController = require("../controllers/cmsNewsPage");
 const cmsPartnerPageController = require("../controllers/cmsPartnerPage");
 const cmsWallPageController = require("../controllers/cmsWallPage");
+const authMiddleware = require("../middlewares/auth");
 
 router.get("/home", cmsHomePageController.getPublicHomePage);
 router.get("/about", cmsAboutPageController.getPublicAboutPage);
@@ -21,6 +22,37 @@ router.get("/vision", cmsVisionPageController.getPublicVisionPage);
 router.get("/site-chrome", cmsSiteChromeController.getPublicSiteChrome);
 router.get("/news", cmsNewsPageController.getPublicNewsPage);
 router.get("/partner", cmsPartnerPageController.getPublicPartnerPage);
+router.get("/partner-with-us", cmsPartnerPageController.getPublicPartnerPage);
+router.patch(
+  "/partner",
+  authMiddleware.requireAuth,
+  cmsPartnerPageController.patchAdminPartnerPage
+);
+router.put(
+  "/partner",
+  authMiddleware.requireAuth,
+  cmsPartnerPageController.patchAdminPartnerPage
+);
+router.post(
+  "/partner",
+  authMiddleware.requireAuth,
+  cmsPartnerPageController.patchAdminPartnerPage
+);
+router.patch(
+  "/partner-with-us",
+  authMiddleware.requireAuth,
+  cmsPartnerPageController.patchAdminPartnerPage
+);
+router.put(
+  "/partner-with-us",
+  authMiddleware.requireAuth,
+  cmsPartnerPageController.patchAdminPartnerPage
+);
+router.post(
+  "/partner-with-us",
+  authMiddleware.requireAuth,
+  cmsPartnerPageController.patchAdminPartnerPage
+);
 router.get("/wall", cmsWallPageController.getPublicWallPage);
 
 module.exports = router;

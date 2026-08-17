@@ -12,6 +12,7 @@ const { seedTravelersAssetsCms } = require("./scripts/seed_travelers_assets_cms"
 const { seedLoungeCms } = require("./scripts/seed_lounge_cms");
 const { seedSiteChromeCms } = require("./scripts/seed_site_chrome_cms");
 const { seedNewsCms } = require("./scripts/seed_news_cms");
+const { seedPartnerCms } = require("./scripts/seed_partner_cms");
 const { cleanupWallTables } = require("./helpers/wallDbCleanup");
 const { prepareLoginHistoriesForMysqlSync } = require("./helpers/loginHistoriesSyncFix");
 const { prepareUsersTableForMysqlSync } = require("./helpers/usersTableSyncFix");
@@ -244,6 +245,7 @@ async function bootDatabase() {
   await seedLoungeCms({ force: false });
   await seedSiteChromeCms({ force: false });
   await seedNewsCms({ force: false });
+  await seedPartnerCms({ force: false });
   await ensureCmsAdminFromSample();
   console.log("CMS seed finished.");
 }

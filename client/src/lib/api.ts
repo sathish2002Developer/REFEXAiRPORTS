@@ -19,21 +19,32 @@ export async function parseApiJson(res: Response) {
 }
 
 export async function cmsGet<T>(resource: string): Promise<T> {
-  const res = await fetch(apiUrl(`/api/cms/${resource}`), { cache: "no-store" });
+  const res = await fetch(apiUrl(`/api/cms/${resource}?_=${Date.now()}`), { cache: "no-store" });
   const json = await parseApiJson(res);
   return json.data as T;
 }
 
 export async function cmsAdminPatch<T>(resource: string, payload: unknown): Promise<T> {
-  const res = await fetch(apiUrl(`/api/admin/cms/${resource}`), {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${adminToken()}`,
-    },
-    body: JSON.stringify({ payload }),
-  });
-  const json = await parseApiJson(res);
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${adminToken()}`,
+  };
+  const body = JSON.stringify({ payload });
+  const urls = [
+    apiUrl(`/api/admin/cms/${resource}`),
+    apiUrl(`/api/cms/${resource}`),
+  ];
+  let res: Response | null = null;
+  let lastRes: Response | null = null;
+  for (const url of urls) {
+    for (const method of ["PATCH", "PUT", "POST"] as const) {
+      res = await fetch(url, { method, headers, body });
+      lastRes = res;
+      if (res.status !== 404) break;
+    }
+    if (res && res.status !== 404) break;
+  }
+  const json = await parseApiJson(lastRes as Response);
   return json.data as T;
 }
 
