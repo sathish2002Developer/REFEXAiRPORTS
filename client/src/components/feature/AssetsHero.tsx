@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 interface AssetsHeroStat {
   icon: string;
@@ -21,10 +21,20 @@ const AssetsHero: React.FC<AssetsHeroProps> = ({
   backgroundImage,
   stats,
 }) => {
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  const scrollToContent = () => {
+    const hero = heroRef.current;
+    const nextTop = hero
+      ? hero.getBoundingClientRect().bottom + window.scrollY - 88
+      : window.innerHeight;
+    window.scrollTo({ top: Math.max(0, nextTop), left: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="relative h-screen flex items-center justify-center overflow-hidden">
+    <div ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
@@ -32,8 +42,8 @@ const AssetsHero: React.FC<AssetsHeroProps> = ({
           backgroundRepeat: 'no-repeat',
         }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/65" />
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-background-50 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/65 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-background-50 to-transparent pointer-events-none" />
 
       <div className="relative z-10 text-center px-4 md:px-6 w-full max-w-6xl mx-auto pb-20">
         <div className="mb-4">
@@ -71,11 +81,14 @@ const AssetsHero: React.FC<AssetsHeroProps> = ({
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
-        <div className="w-6 h-6 flex items-center justify-center">
-          <i className="ri-arrow-down-line text-white/40 text-2xl"></i>
-        </div>
-      </div>
+      <button
+        type="button"
+        onClick={scrollToContent}
+        aria-label="Scroll to airport details"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 w-12 h-12 flex items-center justify-center rounded-full cursor-pointer animate-bounce hover:bg-white/10 transition-colors"
+      >
+        <i className="ri-arrow-down-line text-white/80 text-3xl"></i>
+      </button>
     </div>
   );
 };

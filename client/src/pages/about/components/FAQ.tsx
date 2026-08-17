@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 interface FAQItem {
   question: string;
@@ -85,7 +86,20 @@ export default function FAQ() {
                 >
                   <div className="px-6 pb-5 pt-2">
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      {faq.answer}
+                      {faq.answer.includes('click here') ? (
+                        <>
+                          Please{' '}
+                          <Link
+                            to="/partner-with-us#contact-form"
+                            className="text-[#2879b1] hover:underline cursor-pointer font-medium"
+                          >
+                            click here
+                          </Link>{' '}
+                          to Contact us or fill up enquiry form.
+                        </>
+                      ) : (
+                        faq.answer
+                      )}
                     </p>
                   </div>
                 </div>

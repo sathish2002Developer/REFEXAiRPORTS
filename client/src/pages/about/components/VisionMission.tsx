@@ -1,5 +1,25 @@
 import CmsHtml from '@/components/feature/CmsHtml';
 
+function visionParts(items: string[]) {
+  const parts = items.map((item) => String(item || '').trim()).filter(Boolean);
+  if (!parts.length) {
+    return {
+      lead: 'Enabling consumer journeys and creating lasting relationships at multiple transportation platforms.',
+      platforms: ['Airports', 'Railways', 'Metro', 'Bus stations', 'Heliports'],
+    };
+  }
+  const lead = parts[0];
+  const rest = parts.slice(1).join(' ');
+  const platforms = rest
+    ? rest
+        .replace(/\band\b/gi, ',')
+        .split(',')
+        .map((s) => s.replace(/[:.]/g, '').trim())
+        .filter(Boolean)
+    : [];
+  return { lead, platforms };
+}
+
 const VisionMission = ({
   data,
 }: {
@@ -12,12 +32,14 @@ const VisionMission = ({
     values?: { letter?: string; name?: string; desc?: string }[];
   };
 }) => {
-  const visionItems = data?.visionItems?.length
-    ? data.visionItems
-    : [
-        'Enabling consumer journey and creating lasting relationships at multiple transportation platform',
-        'Airports, Railways, Metro, Bus station, and Heliports',
-      ];
+  const { lead: visionLead, platforms } = visionParts(
+    data?.visionItems?.length
+      ? data.visionItems
+      : [
+          'Enabling consumer journeys and creating lasting relationships at multiple transportation platforms.',
+          'Airports, Railways, Metro, Bus stations, and Heliports',
+        ]
+  );
   const missionItems = data?.missionItems?.length
     ? data.missionItems
     : [
@@ -34,54 +56,98 @@ const VisionMission = ({
         { letter: 'E', name: 'Esteem Culture', desc: 'Fostering a workplace where respect, dignity, and belonging are everyday experiences' },
       ];
 
+  const visionTitle = data?.visionTitle || 'Our Vision';
+  const visionWords = visionTitle.trim().split(/\s+/);
+  const visionLast = visionWords.pop() || 'Vision';
+  const visionFirst = visionWords.join(' ') || 'Our';
+
   return (
-    <section className="w-full bg-gray-50 py-20">
+    <section className="w-full bg-white py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="0">
-            <div className="h-2 bg-gradient-to-r from-[#0891b2] to-[#06b6d4]"></div>
-            <div className="p-6 sm:p-8">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6">{data?.visionTitle || 'Our Vision'}</h3>
-              <ul className="space-y-4 text-gray-600">
-                {visionItems.map((item, i) => (
-                  <li key={i} className="flex items-start">
-                    <div className="w-2 h-2 bg-[#0891b2] rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                    <CmsHtml html={item} className="leading-relaxed" as="span" />
-                  </li>
-                ))}
-              </ul>
+        <div
+          className="bg-[#eaf6fc] rounded-[28px] px-6 py-10 sm:px-10 md:px-14 md:py-14 mb-10 md:mb-14 text-center"
+          data-aos="fade-up"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <span className="text-gray-900">{visionFirst} </span>
+            <span className="text-[#2879b1]">{visionLast}</span>
+          </h2>
+          <div className="w-16 h-1 bg-[#7bbf45] mx-auto mb-6 rounded-full"></div>
+          <CmsHtml
+            html={visionLead}
+            as="p"
+            className="max-w-3xl mx-auto text-gray-700 text-lg md:text-xl leading-relaxed font-medium"
+          />
+          {platforms.length > 0 && (
+            <div className="mt-8 flex flex-wrap justify-center gap-2.5">
+              {platforms.map((platform) => (
+                <span
+                  key={platform}
+                  className="px-4 py-2 rounded-full text-sm font-semibold text-[#2879b1] bg-white border border-[#2879b1]/20 shadow-sm"
+                >
+                  {platform}
+                </span>
+              ))}
             </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch">
+          <div
+            className="lg:col-span-5 bg-white rounded-[28px] border border-slate-100 shadow-sm p-6 sm:p-8 md:p-10"
+            data-aos="fade-up"
+            data-aos-delay="80"
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <span className="w-12 h-12 rounded-full bg-[#2879b1] text-white flex items-center justify-center">
+                <i className="ri-flag-2-line text-xl"></i>
+              </span>
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900">
+                {data?.missionTitle || 'Our Mission'}
+              </h3>
+            </div>
+            <ol className="space-y-3">
+              {missionItems.map((item, i) => (
+                <li key={i} className="flex items-start gap-4 bg-[#eaf6fc] rounded-[20px] px-4 py-3.5">
+                  <span className="w-9 h-9 shrink-0 rounded-full bg-[#2879b1] text-white text-sm font-bold flex items-center justify-center">
+                    {i + 1}
+                  </span>
+                  <CmsHtml html={item} className="text-gray-700 leading-relaxed pt-1.5" as="span" />
+                </li>
+              ))}
+            </ol>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 relative overflow-hidden hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="100">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#d97706]/10 to-transparent rounded-bl-full"></div>
-            <div className="relative">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6">{data?.missionTitle || 'Our Mission'}</h3>
-              <ul className="space-y-4 text-gray-600">
-                {missionItems.map((item, i) => (
-                  <li key={i} className="flex items-start">
-                    <i className="ri-checkbox-circle-fill text-[#d97706] text-xl mr-3 mt-0.5 flex-shrink-0"></i>
-                    <CmsHtml html={item} className="leading-relaxed" as="span" />
-                  </li>
-                ))}
-              </ul>
+          <div
+            className="lg:col-span-7 bg-white rounded-[28px] border border-slate-100 shadow-sm p-6 sm:p-8 md:p-10"
+            data-aos="fade-up"
+            data-aos-delay="140"
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <span className="w-12 h-12 rounded-full bg-[#7bbf45] text-white flex items-center justify-center">
+                <i className="ri-heart-line text-xl"></i>
+              </span>
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900">
+                {data?.valuesTitle || 'Our Values'}
+              </h3>
             </div>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-100 hover:border-[#e11d48] hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
-            <div className="p-6 sm:p-8 relative">
-              <div className="absolute left-0 top-8 w-1 h-20 bg-gradient-to-b from-[#e11d48] to-[#f43f5e]"></div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-6">{data?.valuesTitle || 'Our Values'}</h3>
-              <ul className="space-y-4 text-gray-600">
-                {values.map((v) => (
-                  <li key={v.name} className="flex items-start bg-gray-50 rounded-lg p-3 hover:bg-[#e11d48]/5 transition-colors duration-200">
-                    <span className="text-[#e11d48] font-bold text-lg mr-3 flex-shrink-0">{v.letter}</span>
-                    <span className="leading-relaxed">
-                      <strong className="text-gray-800">{v.name}</strong> - <CmsHtml html={v.desc || ''} className="inline" />
-                    </span>
-                  </li>
-                ))}
-              </ul>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {values.map((v, i) => (
+                <div
+                  key={v.name || v.letter || i}
+                  className="rounded-[20px] bg-[#eaf6fc] p-5"
+                >
+                  <span
+                    className={`w-11 h-11 mb-3 rounded-full text-white text-lg font-bold flex items-center justify-center ${
+                      i % 2 === 0 ? 'bg-[#2879b1]' : 'bg-[#7bbf45]'
+                    }`}
+                  >
+                    {v.letter}
+                  </span>
+                  <h4 className="text-base font-bold text-gray-900 mb-1.5">{v.name}</h4>
+                  <CmsHtml html={v.desc || ''} className="text-sm text-gray-600 leading-relaxed" />
+                </div>
+              ))}
             </div>
           </div>
         </div>

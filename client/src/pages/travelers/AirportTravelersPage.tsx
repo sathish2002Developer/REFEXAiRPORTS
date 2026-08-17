@@ -2,11 +2,19 @@ import React, { useEffect, useMemo, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Header from '../../components/feature/Header';
+import Footer from '../../components/feature/Footer';
 import TravelerHero from '../../components/feature/TravelerHero';
-import { cmsGet } from '@/lib/api';
+import { Link } from 'react-router-dom';
+import { cmsGet, mediaUrl } from '@/lib/api';
 import { travelersAirports, type AirportTravelersData } from '../admin/travelers-editor/travelersData';
 
 const CONTACT_FAQ = 'Please click here to Contact us or fill up enquiry form.';
+const PARTNER_CONTACT_HREF = '/partner-with-us#contact-form';
+
+function isContactFaq(answer: string) {
+  const t = String(answer || '').toLowerCase();
+  return t.includes('click here') && (t.includes('enquiry') || t.includes('contact us'));
+}
 
 function fallbackFor(airportKey: string): AirportTravelersData {
   return (
@@ -25,18 +33,6 @@ function normalizeCms(airportKey: string, payload: Record<string, any> | null): 
     faqs: Array.isArray(payload.faqs) ? payload.faqs : fallback.faqs,
     brands: Array.isArray(payload.brands) ? payload.brands : fallback.brands,
   };
-}
-
-function goToContact(e: React.MouseEvent) {
-  e.preventDefault();
-  if (window.location.pathname !== '/') {
-    window.REACT_APP_NAVIGATE('/');
-    setTimeout(() => {
-      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-    return;
-  }
-  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
 }
 
 export default function AirportTravelersPage({ airportKey }: { airportKey: string }) {
@@ -98,7 +94,7 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <Header />
       <TravelerHero
         airportName={data.heroAirportName}
@@ -108,15 +104,15 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
         onSearchChange={setSearchTerm}
       />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-16">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8" data-aos="fade-up">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-14">
+        <div className="bg-white rounded-xl border border-gray-200 p-5 md:p-6 mb-6" data-aos="fade-up">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm text-gray-500 mb-2">Category</label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2879b1] focus:border-transparent outline-none transition-all cursor-pointer"
+                className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-[#2879b1]/20 focus:border-[#2879b1] outline-none cursor-pointer"
               >
                 <option value="">All Categories</option>
                 {categories.map((cat) => (
@@ -126,12 +122,12 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
                 ))}
               </select>
             </div>
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+            <div>
+              <label className="block text-sm text-gray-500 mb-2">Location</label>
               <select
                 value={selectedLocation}
                 onChange={(e) => setSelectedLocation(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2879b1] focus:border-transparent outline-none transition-all cursor-pointer"
+                className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-[#2879b1]/20 focus:border-[#2879b1] outline-none cursor-pointer"
               >
                 <option value="">All Locations</option>
                 {locations.map((loc) => (
@@ -144,47 +140,47 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
           </div>
         </div>
 
-        <div className="mb-6" data-aos="fade-up" data-aos-delay="100">
-          <p className="text-sm text-gray-600">
-            Showing <strong className="text-gray-900">{filteredStores.length}</strong> of{' '}
-            <strong className="text-gray-900">{stores.length}</strong> brands
-          </p>
-        </div>
+        <p className="text-sm text-gray-500 mb-4" data-aos="fade-up">
+          Showing <strong className="text-gray-900">{filteredStores.length}</strong> of{' '}
+          <strong className="text-gray-900">{stores.length}</strong> brands
+        </p>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden" data-aos="fade-up" data-aos-delay="150">
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden" data-aos="fade-up">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px]">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Brand</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Description</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Category</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Location</th>
+                <tr className="bg-[#f8f9fa] border-b border-gray-200">
+                  <th className="px-6 py-3.5 text-left text-sm font-semibold text-gray-700">Brand</th>
+                  <th className="px-6 py-3.5 text-left text-sm font-semibold text-gray-700">Description</th>
+                  <th className="px-6 py-3.5 text-left text-sm font-semibold text-gray-700">Category</th>
+                  <th className="px-6 py-3.5 text-left text-sm font-semibold text-gray-700">Location</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-100">
                 {filteredStores.map((store, index) => (
-                  <tr key={`${store.name}-${index}`} className="transition-colors">
-                    <td className="px-6 py-6">
-                      <div className="flex items-center justify-center">
+                  <tr key={`${store.name}-${index}`} className="hover:bg-slate-50/70">
+                    <td className="px-6 py-5 align-middle">
+                      {store.logo ? (
                         <img
-                          src={store.logo}
+                          src={mediaUrl(store.logo)}
                           alt={store.name}
-                          className="w-32 h-32 sm:w-56 sm:h-56 object-contain"
+                          className="w-28 h-16 object-contain object-left"
                         />
-                      </div>
+                      ) : (
+                        <span className="text-sm font-medium text-gray-800">{store.name}</span>
+                      )}
                     </td>
-                    <td className="px-6 py-6 text-gray-600 max-w-md">{store.description}</td>
-                    <td className="px-6 py-6">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#2879b1]/10 text-[#2879b1] whitespace-nowrap">
+                    <td className="px-6 py-5 text-sm text-gray-600 max-w-xl leading-relaxed">
+                      {store.description}
+                    </td>
+                    <td className="px-6 py-5">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#2879b1]/10 text-[#2879b1] whitespace-nowrap">
                         {store.category}
                       </span>
                     </td>
-                    <td className="px-6 py-6">
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <div className="w-4 h-4 flex items-center justify-center">
-                          <i className="ri-map-pin-line"></i>
-                        </div>
+                    <td className="px-6 py-5">
+                      <div className="flex items-center gap-1.5 text-sm text-gray-600">
+                        <i className="ri-map-pin-line text-[#2879b1]"></i>
                         <span className="whitespace-nowrap">{store.location}</span>
                       </div>
                     </td>
@@ -259,16 +255,15 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
                   >
                     <div className="px-6 pb-5 pt-2">
                       <p className="text-gray-600 text-sm leading-relaxed">
-                        {faq.answer === CONTACT_FAQ ? (
+                        {isContactFaq(faq.answer) || faq.answer === CONTACT_FAQ ? (
                           <>
                             Please{' '}
-                            <a
-                              href="#contact"
-                              onClick={goToContact}
+                            <Link
+                              to={PARTNER_CONTACT_HREF}
                               className="text-[#2879b1] hover:underline cursor-pointer font-medium"
                             >
                               click here
-                            </a>{' '}
+                            </Link>{' '}
                             to Contact us or fill up enquiry form.
                           </>
                         ) : (
@@ -283,6 +278,7 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

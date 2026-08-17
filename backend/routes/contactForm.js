@@ -1,56 +1,66 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 
-const emailService = require('../services/email_service');
 const { sendToKissflowWebhook } = require('../helpers/kissflowWebhook');
 const { getRequestMeta, phoneToDigitsOnly } = require('../helpers/requestMeta');
 const { isValidInternationalPhone } = require('../helpers/phoneValidation');
+const { optionalContactAttachment } = require('../middlewares/uploadContact');
 
 const router = express.Router();
 
-// Practical email format (local@domain.tld)
 const EMAIL_REGEX =
   /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 
 router.post(
   '/contact-form',
+  optionalContactAttachment,
   [
     body('name')
       .trim()
       .notEmpty()
-      .withMessage('name is required')
+      .withMessage('is required')
       .isLength({ min: 2, max: 120 })
-      .withMessage('name must be between 2 and 120 characters')
+      .withMessage('must be between 2 and 120 characters')
       .matches(/^[\p{L}\p{M}\s'.-]+$/u)
-      .withMessage('name contains invalid characters'),
+      .withMessage('contains invalid characters'),
     body('email')
       .trim()
       .notEmpty()
-      .withMessage('email is required')
+      .withMessage('is required')
       .matches(EMAIL_REGEX)
-      .withMessage('valid email is required'),
+      .withMessage('must be a valid email'),
     body('phone')
       .trim()
       .notEmpty()
-      .withMessage('phone is required')
+      .withMessage('is required')
       .custom((value) => {
         if (!isValidInternationalPhone(value)) {
-          throw new Error('phone is invalid');
+          throw new Error('is invalid');
         }
         return true;
       }),
-    body('company').optional().isString(),
-    body('message').trim().notEmpty().withMessage('message is required'),
+    body('company')
+      .trim()
+      .notEmpty()
+      .withMessage('is required')
+      .isLength({ min: 2, max: 160 })
+      .withMessage('must be between 2 and 160 characters'),
+    body('message')
+      .trim()
+      .notEmpty()
+      .withMessage('is required')
+      .isLength({ max: 4000 })
+      .withMessage('must be 4000 characters or less'),
   ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const arr = errors.array();
       const fieldLabels = {
-        name: 'Name',
-        email: 'Email',
-        phone: 'Phone',
-        company: 'Company',
+        name: 'Full Name',
+        email: 'Email ID',
+        phone: 'Phone Number',
+        company: 'Organization Name',
         message: 'Message',
       };
       const errorMessages = arr.map((e) => {
@@ -66,56 +76,39 @@ router.post(
     }
 
     const { name, email, phone, company, message } = req.body || {};
-
     const meta = getRequestMeta(req);
     const phoneDigits = phoneToDigitsOnly(phone);
+    const attachment = req.file
+      ? {
+          originalName: req.file.originalname,
+          filename: req.file.filename,
+          url: `/uploads/contact/${req.file.filename}`,
+          size: req.file.size,
+        }
+      : null;
 
-    const websiteName = 'Refex Mobility';
+    const websiteName = 'Refex Airports';
     const webhookData = {
       name,
       email,
       phone: phoneDigits,
       Phone_Number: phoneDigits,
       company,
+      organization: company,
       message,
+      attachmentUrl: attachment?.url || '',
+      attachmentName: attachment?.originalName || '',
       ...meta,
     };
 
-    // Queue Kissflow webhook asynchronously (do not await)
     sendToKissflowWebhook(websiteName, 'Contact form', webhookData);
-
-    // let emailSent = false;
-    // try {
-    //   // Send email (existing implementation)
-    //   await emailService.sendContactFormEmail({
-    //     name,
-    //     email,
-    //     phone: phoneDigits || phone,
-    //     company,
-    //     message,
-    //     ipAddress: meta.ipAddress,
-    //   });
-    //   emailSent = true;
-
-    //   // Auto-reply is optional; don't fail the main response if it fails
-    //   try {
-    //     await emailService.sendAutoReply(email, name);
-    //   } catch (err) {
-    //     console.error('Contact form auto-reply failed', { message: err?.message });
-    //   }
-    // } catch (error) {
-    //   console.error('Contact form email failed', error);
-    // }
-
-    const emailSent = false;
 
     return res.json({
       success: true,
       message: 'Contact form submitted successfully',
-      emailSent,
+      emailSent: false,
     });
   }
 );
 
 module.exports = router;
-

@@ -34,6 +34,15 @@ const ABOUT_ICONS = [
   'ri-ancient-gate-line',
 ];
 
+function highlightIcon(title: string, cmsIcon?: string) {
+  const custom = String(cmsIcon || '').trim();
+  if (custom) return custom;
+  const t = String(title || '').toLowerCase();
+  if (t.includes('amenit')) return 'ri-hotel-line';
+  if (t.includes('cultur')) return 'ri-ancient-gate-line';
+  return 'ri-star-smile-line';
+}
+
 function fallbackFor(airportKey: string): AirportAssetsData {
   return assetsAirports.find((a) => a.id === airportKey) || assetsAirports[0];
 }
@@ -220,7 +229,12 @@ export default function AirportAssetsPage({ airportKey }: { airportKey: string }
                   >
                     <div className="flex items-start">
                       <div className="w-10 h-10 flex items-center justify-center bg-background-50 rounded-lg mr-4 flex-shrink-0 shadow-sm">
-                        <i className="ri-information-line text-xl text-accent-600"></i>
+                        <i
+                          className={`${highlightIcon(
+                            v(values, 'fac_highlight_title'),
+                            v(values, 'fac_highlight_icon')
+                          )} text-xl text-accent-600`}
+                        ></i>
                       </div>
                       <div>
                         <h4 className="font-semibold text-foreground-950 mb-2">
