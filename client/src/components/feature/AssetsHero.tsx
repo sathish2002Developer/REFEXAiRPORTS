@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { mediaUrl } from '@/lib/api';
 
 interface AssetsHeroStat {
   icon: string;
@@ -36,7 +37,7 @@ const AssetsHero: React.FC<AssetsHeroProps> = ({
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: `url(${backgroundImage})`,
+          backgroundImage: `url(${mediaUrl(backgroundImage)})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',

@@ -4,7 +4,7 @@ import 'aos/dist/aos.css';
 import Header from '../../components/feature/Header';
 import Footer from '../../components/feature/Footer';
 import AssetsHero from '../../components/feature/AssetsHero';
-import { cmsGet } from '@/lib/api';
+import { cmsGet, mediaUrl } from '@/lib/api';
 import { assetsAirports, type AirportAssetsData } from '../admin/assets-editor/assetsData';
 
 const HERO_STAT_ICONS = [
@@ -259,7 +259,7 @@ export default function AirportAssetsPage({ airportKey }: { airportKey: string }
                   {v(values, 'about_img') && (
                     <div className="mb-8" data-aos="zoom-in">
                       <img
-                        src={v(values, 'about_img')}
+                        src={mediaUrl(v(values, 'about_img'))}
                         alt={v(values, 'about_title') || data.slug}
                         className="w-full h-64 md:h-80 object-cover rounded-xl shadow-lg"
                       />

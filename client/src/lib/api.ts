@@ -111,13 +111,14 @@ export async function cmsSavePartner(draft: unknown): Promise<Record<string, any
 }
 
 export async function cmsUploadImage(file: File): Promise<string> {
-  const form = new FormData();
-  form.append("image", file);
-  const res = await fetch(apiUrl("/api/upload/image"), {
-    method: "POST",
-    headers: { Authorization: `Bearer ${adminToken()}` },
-    body: form,
-  });
+  const headers = { Authorization: `Bearer ${adminToken()}` };
+  const post = (path: string) => {
+    const form = new FormData();
+    form.append("image", file);
+    return fetch(apiUrl(path), { method: "POST", headers, body: form });
+  };
+  let res = await post("/api/admin/cms/upload");
+  if (res.status === 404) res = await post("/api/upload/image");
   const json = await parseApiJson(res);
   const url = (json.imageUrl || json.data?.imageUrl || json.url) as string;
   if (!url) throw new Error("Upload did not return an image URL");

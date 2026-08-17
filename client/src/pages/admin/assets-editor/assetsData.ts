@@ -28,7 +28,7 @@ export const assetsSections: AssetsSection[] = [
       { key: 'hero_airport_name', label: 'Airport Name', type: 'text' },
       { key: 'hero_airport_code', label: 'Airport Code', type: 'text' },
       { key: 'hero_tagline', label: 'Tagline', type: 'textarea' },
-      { key: 'hero_bg', label: 'Background Image URL', type: 'image' },
+      { key: 'hero_bg', label: 'Hero background image (upload or paste URL)', type: 'image' },
       { key: 'hero_stat1_value', label: 'Stat 1 — Value', type: 'text' },
       { key: 'hero_stat1_label', label: 'Stat 1 — Label', type: 'text' },
       { key: 'hero_stat2_value', label: 'Stat 2 — Value', type: 'text' },
@@ -84,7 +84,7 @@ export const assetsSections: AssetsSection[] = [
     icon: 'ri-map-pin-line',
     fields: [
       { key: 'about_title', label: 'Section Title', type: 'text' },
-      { key: 'about_img', label: 'City Image URL', type: 'image' },
+      { key: 'about_img', label: 'City image (upload or paste URL)', type: 'image' },
       { key: 'about_block1_title', label: 'Block 1 — Title', type: 'text' },
       { key: 'about_block1_desc', label: 'Block 1 — Description', type: 'textarea' },
       { key: 'about_block2_title', label: 'Block 2 — Title', type: 'text' },
