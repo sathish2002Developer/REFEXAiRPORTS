@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { mediaUrl } from '@/lib/api';
 import { useNavbarCms, type NavItem } from '@/lib/cmsNavbar';
+import { scrollToPageTop } from '@/lib/scrollToPageTop';
 
 function goToHash(to: string) {
   const hashIndex = to.indexOf('#');
@@ -9,7 +10,10 @@ function goToHash(to: string) {
   const hash = hashIndex === -1 ? '' : to.slice(hashIndex + 1);
 
   const scroll = () => {
-    if (!hash) return;
+    if (!hash || hash === 'intro' || hash === 'who-we-are') {
+      scrollToPageTop();
+      return;
+    }
     const el = document.getElementById(hash);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
@@ -28,6 +32,10 @@ function goToHash(to: string) {
   } else {
     scroll();
   }
+}
+
+function onPageLinkClick() {
+  scrollToPageTop();
 }
 
 function handleItemClick(e: React.MouseEvent, item: { to?: string; type?: string }) {
@@ -78,7 +86,7 @@ function NestedDesktopMenu({ item, isActive }: { item: NavItem; isActive: (path:
                 onMouseEnter={() => setOpenGroup(gi)}
               >
                 {group.to ? (
-                  <Link to={group.to} className="font-medium text-sm whitespace-nowrap flex-1">
+                  <Link to={group.to} className="font-medium text-sm whitespace-nowrap flex-1" onClick={onPageLinkClick}>
                     {group.label}
                   </Link>
                 ) : (
@@ -99,6 +107,7 @@ function NestedDesktopMenu({ item, isActive }: { item: NavItem; isActive: (path:
                 <Link
                   key={`child-${ai}-${airport.to}`}
                   to={airport.to || '/'}
+                  onClick={onPageLinkClick}
                   className={`block px-5 py-2.5 text-sm transition-colors ${
                     isActive(airport.to)
                       ? 'text-[#2879b1] bg-blue-50'
@@ -125,13 +134,17 @@ const Header = () => {
 
   const isActive = (path: string) => location.pathname === path;
   const closeMobile = () => setIsMenuOpen(false);
+  const closeMobileAndTop = () => {
+    setIsMenuOpen(false);
+    scrollToPageTop();
+  };
 
   const renderDesktopItem = (item: NavItem, index: number) => {
     if (item.type === 'dropdown') {
       const ParentTag: any = item.to && !item.to.includes('#') ? Link : 'button';
       const parentProps =
         ParentTag === Link
-          ? { to: item.to }
+          ? { to: item.to, onClick: onPageLinkClick }
           : {
               type: 'button',
               onClick: (e: React.MouseEvent) => handleItemClick(e, item),
@@ -163,6 +176,7 @@ const Header = () => {
                   <Link
                     key={ci}
                     to={child.to || '/'}
+                    onClick={onPageLinkClick}
                     className={`block px-5 py-3 text-sm transition-colors whitespace-nowrap ${
                       isActive(child.to)
                         ? 'text-[#2879b1] bg-blue-50'
@@ -196,7 +210,7 @@ const Header = () => {
     }
 
     return (
-      <Link key={index} to={item.to || '/'} className={cls}>
+      <Link key={index} to={item.to || '/'} className={cls} onClick={onPageLinkClick}>
         {item.label}
       </Link>
     );
@@ -206,7 +220,7 @@ const Header = () => {
     <header className="w-full bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex-shrink-0">
+          <Link to="/" className="flex-shrink-0" onClick={onPageLinkClick}>
             <img
               src={mediaUrl(navbar.logo_url)}
               alt={navbar.logo_alt || 'Refex Airports'}
@@ -234,7 +248,7 @@ const Header = () => {
                   <div key={index} className="space-y-2">
                     <div className="text-gray-700 font-medium flex items-center justify-between">
                       {item.to && !item.to.includes('#') ? (
-                        <Link to={item.to} onClick={closeMobile}>
+                        <Link to={item.to} onClick={closeMobileAndTop}>
                           {item.label}
                         </Link>
                       ) : (
@@ -267,7 +281,7 @@ const Header = () => {
                               key={ci}
                               to={child.to || '/'}
                               className={`block text-sm py-1 ${isActive(child.to) ? 'text-[#2879b1]' : 'text-gray-600 hover:text-[#2879b1]'}`}
-                              onClick={closeMobile}
+                              onClick={closeMobileAndTop}
                             >
                               {child.label}
                             </Link>
@@ -289,7 +303,7 @@ const Header = () => {
                           <Link
                             to={group.to}
                             className="block text-sm font-medium text-gray-700 pl-4 pt-1 hover:text-[#2879b1]"
-                            onClick={closeMobile}
+                            onClick={closeMobileAndTop}
                           >
                             {group.label}
                           </Link>
@@ -301,7 +315,7 @@ const Header = () => {
                             key={`m-child-${ci}-${child.to}`}
                             to={child.to || '/'}
                             className="block pl-8 text-gray-600 hover:text-[#2879b1] text-sm"
-                            onClick={closeMobile}
+                            onClick={closeMobileAndTop}
                           >
                             {child.label}
                           </Link>
@@ -333,7 +347,7 @@ const Header = () => {
               }
 
               return (
-                <Link key={index} to={item.to || '/'} className={cls} onClick={closeMobile}>
+                <Link key={index} to={item.to || '/'} className={cls} onClick={closeMobileAndTop}>
                   {item.label}
                 </Link>
               );

@@ -47,7 +47,7 @@ function defaultPayload() {
           label: "About Us",
           to: "/about",
           children: [
-            { label: "Who We Are", to: "/about#intro" },
+            { label: "Who We Are", to: "/about" },
             { label: "Leadership", to: "/leadership" },
           ],
         },
@@ -127,11 +127,27 @@ function defaultPayload() {
   };
 }
 
+function rewriteNavLink(to, type) {
+  const t = String(to || "").trim();
+  if (t === "#contact" || t === "/#contact" || t.endsWith("#contact")) {
+    return { to: "/partner-with-us", type: type === "anchor" ? "link" : type };
+  }
+  if (
+    t === "/about#intro" ||
+    t === "/about#who-we-are" ||
+    t === "#intro" ||
+    t === "#who-we-are"
+  ) {
+    return { to: "/about", type: type === "anchor" ? "link" : type };
+  }
+  return { to: t, type };
+}
+
 function sanitizeChild(c) {
   if (!c || typeof c !== "object") return null;
   const label = String(c.label || "").trim();
   if (!label) return null;
-  return { label, to: String(c.to || "").trim() };
+  return { label, to: rewriteNavLink(String(c.to || "").trim(), "link").to };
 }
 
 function sanitizeGroup(g) {
@@ -153,20 +169,12 @@ function inferType(item) {
   return "link";
 }
 
-function rewritePartnerLink(to, type) {
-  const t = String(to || "").trim();
-  if (t === "#contact" || t === "/#contact" || t.endsWith("#contact")) {
-    return { to: "/partner-with-us", type: type === "anchor" ? "link" : type };
-  }
-  return { to: t, type };
-}
-
 function sanitizeNavItem(item) {
   if (!item || typeof item !== "object") return null;
   const label = String(item.label || "").trim();
   if (!label) return null;
   const inferred = inferType(item);
-  const rewritten = rewritePartnerLink(item.to, inferred);
+  const rewritten = rewriteNavLink(item.to, inferred);
   const out = { type: rewritten.type, label, to: rewritten.to };
   if (out.type === "dropdown") {
     out.children = Array.isArray(item.children)
@@ -208,11 +216,11 @@ function mergePayload(dbPayload, incoming) {
   }
   if (Array.isArray(next.footer.links)) {
     next.footer.links = next.footer.links.map((link) => {
-      const rewritten = rewritePartnerLink(link.to, "link");
+      const rewritten = rewriteNavLink(link.to, "link");
       return { ...link, to: rewritten.to };
     });
   }
-  const ctaRewritten = rewritePartnerLink(next.footer.cta_to, "link");
+  const ctaRewritten = rewriteNavLink(next.footer.cta_to, "link");
   next.footer.cta_to = ctaRewritten.to;
 
   return next;

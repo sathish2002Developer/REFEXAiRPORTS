@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { cmsGet } from "@/lib/api";
+import { cmsGet, cmsGetPartner } from "@/lib/api";
 
 /** Live CMS payload. Reloads when the window is focused so admin saves show on the site. */
 export function useCms(resource: string | null) {
@@ -9,7 +9,9 @@ export function useCms(resource: string | null) {
     if (!resource) return;
     let cancelled = false;
     const load = () => {
-      cmsGet<Record<string, any>>(resource)
+      const request =
+        resource === "partner" ? cmsGetPartner() : cmsGet<Record<string, any>>(resource);
+      request
         .then((data) => {
           if (cancelled || !data || typeof data !== "object") return;
           const { updated_at: _u, airport_key: _k, ...payload } = data;

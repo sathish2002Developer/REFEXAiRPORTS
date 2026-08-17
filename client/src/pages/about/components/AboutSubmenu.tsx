@@ -8,14 +8,14 @@ interface SubmenuItem {
 }
 
 const menuItems: SubmenuItem[] = [
-  { id: 'intro', label: 'Who We Are' },
+  { id: 'who-we-are', label: 'Who We Are' },
   { id: 'vision-mission', label: 'Vision & Mission' },
   { id: 'our-focus', label: 'Our Key Focus Areas' },
   { id: 'refex-group', label: 'Refex Group' },
 ];
 
 export default function AboutSubmenu() {
-  const [activeId, setActiveId] = useState<string>('intro');
+  const [activeId, setActiveId] = useState<string>('who-we-are');
 
   const handleScroll = useCallback(() => {
     const scrollPosition = window.scrollY + 200;

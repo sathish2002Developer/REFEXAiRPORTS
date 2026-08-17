@@ -55,11 +55,12 @@ export function normalizeFooter(raw: any): FooterCms {
     logo_alt: str(src.logo_alt) || DEFAULT_FOOTER.logo_alt,
     tagline: str(src.tagline) || str(src.line_left) || DEFAULT_FOOTER.tagline,
     quick_links_title: str(src.quick_links_title) || DEFAULT_FOOTER.quick_links_title,
-    links: (links.length ? links : DEFAULT_FOOTER.links).map((item) =>
-      item.to === "#contact" || item.to === "/#contact" || item.to.endsWith("#contact")
-        ? { ...item, to: "/partner-with-us" }
-        : item
-    ),
+    links: (links.length ? links : DEFAULT_FOOTER.links).map((item) => {
+      let to = item.to;
+      if (to === "#contact" || to === "/#contact" || to.endsWith("#contact")) to = "/partner-with-us";
+      if (to === "/about#intro" || to === "/about#who-we-are") to = "/about";
+      return { ...item, to };
+    }),
     cta_title: str(src.cta_title) || DEFAULT_FOOTER.cta_title,
     cta_button: str(src.cta_button) || DEFAULT_FOOTER.cta_button,
     cta_to:

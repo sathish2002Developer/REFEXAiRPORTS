@@ -18,6 +18,16 @@ export async function parseApiJson(res: Response) {
   return json;
 }
 
+async function fetchJson(path: string, init?: RequestInit) {
+  const res = await fetch(apiUrl(path), { cache: "no-store", ...init });
+  const json = await res.json().catch(() => ({} as Record<string, unknown>));
+  return { res, json };
+}
+
+function isApiOk(res: Response, json: Record<string, any>) {
+  return res.ok && json.success !== false && json.status !== false;
+}
+
 export async function cmsGet<T>(resource: string): Promise<T> {
   const res = await fetch(apiUrl(`/api/cms/${resource}?_=${Date.now()}`), { cache: "no-store" });
   const json = await parseApiJson(res);
@@ -25,27 +35,79 @@ export async function cmsGet<T>(resource: string): Promise<T> {
 }
 
 export async function cmsAdminPatch<T>(resource: string, payload: unknown): Promise<T> {
+  const res = await fetch(apiUrl(`/api/admin/cms/${resource}`), {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${adminToken()}`,
+    },
+    body: JSON.stringify({ payload }),
+  });
+  const json = await parseApiJson(res);
+  return json.data as T;
+}
+
+function partnerFromHome(home: Record<string, any> | null | undefined) {
+  if (home?.partner && typeof home.partner === "object") return home.partner as Record<string, any>;
+  const contact = home?.contact && typeof home.contact === "object" ? home.contact : {};
+  return {
+    hero: {
+      title: contact.title || "Partner with Us",
+      subtitle:
+        contact.subtitle ||
+        "Every great partnership starts with a conversation. Reach out, and let’s explore how we can grow together.",
+      image: "https://refexairports.com/wp-content/uploads/2023/11/Pune-Airport-Refex-Airports-1.jpg",
+    },
+    connect: {
+      title: "Connect",
+      highlight: "with us",
+      subtitle:
+        contact.formTitle ||
+        contact.subtitle ||
+        "Your feedback is valuable in helping us enhance your travel experience.",
+      image: "/images/partner-connect.jpg",
+    },
+    addresses: {
+      title: "Our",
+      highlight: "Addresses",
+      intro: contact.subtitle || "Reach us at any of our airport offices. We would love to hear from you.",
+    },
+    locations: Array.isArray(contact.locations) ? contact.locations : [],
+  };
+}
+
+/** Partner CMS: use /api/cms/partner when it exists, otherwise Home CMS (UAT fallback). */
+export async function cmsGetPartner(): Promise<Record<string, any>> {
+  const partner = await fetchJson(`/api/cms/partner?_=${Date.now()}`);
+  if (isApiOk(partner.res, partner.json) && partner.json.data && typeof partner.json.data === "object") {
+    return partner.json.data as Record<string, any>;
+  }
+  const home = await cmsGet<Record<string, any>>("home");
+  return partnerFromHome(home);
+}
+
+export async function cmsSavePartner(draft: unknown): Promise<Record<string, any>> {
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${adminToken()}`,
   };
-  const body = JSON.stringify({ payload });
-  const urls = [
-    apiUrl(`/api/admin/cms/${resource}`),
-    apiUrl(`/api/cms/${resource}`),
-  ];
-  let res: Response | null = null;
-  let lastRes: Response | null = null;
-  for (const url of urls) {
-    for (const method of ["PATCH", "PUT", "POST"] as const) {
-      res = await fetch(url, { method, headers, body });
-      lastRes = res;
-      if (res.status !== 404) break;
-    }
-    if (res && res.status !== 404) break;
+  const body = JSON.stringify({ payload: draft });
+  const partner = await fetchJson("/api/admin/cms/partner", { method: "PATCH", headers, body });
+  if (isApiOk(partner.res, partner.json) && partner.json.data && typeof partner.json.data === "object") {
+    return partner.json.data as Record<string, any>;
   }
-  const json = await parseApiJson(lastRes as Response);
-  return json.data as T;
+
+  const d = draft && typeof draft === "object" ? (draft as Record<string, any>) : {};
+  const savedHome = await cmsAdminPatch<Record<string, any>>("home", {
+    partner: d,
+    contact: {
+      title: d.hero?.title,
+      subtitle: d.hero?.subtitle,
+      formTitle: d.connect?.subtitle,
+      locations: Array.isArray(d.locations) ? d.locations : [],
+    },
+  });
+  return partnerFromHome(savedHome);
 }
 
 export async function cmsUploadImage(file: File): Promise<string> {

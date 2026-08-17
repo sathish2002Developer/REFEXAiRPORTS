@@ -1,5 +1,6 @@
 import { mediaUrl } from '@/lib/api';
 import { useFooterCms } from '@/lib/cmsFooter';
+import { scrollToPageTop } from '@/lib/scrollToPageTop';
 
 const Footer = () => {
   const footer = useFooterCms();
@@ -9,7 +10,10 @@ const Footer = () => {
     const path = hashIndex === -1 ? to : to.slice(0, hashIndex) || '/';
     const hash = hashIndex === -1 ? '' : to.slice(hashIndex + 1);
     const scroll = () => {
-      if (!hash) return;
+      if (!hash || hash === 'intro' || hash === 'who-we-are') {
+        scrollToPageTop();
+        return;
+      }
       const el = document.getElementById(hash);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     };
@@ -42,6 +46,7 @@ const Footer = () => {
     if (to.startsWith('/') && !to.startsWith('//')) {
       e.preventDefault();
       window.REACT_APP_NAVIGATE(to);
+      scrollToPageTop();
     }
   };
 

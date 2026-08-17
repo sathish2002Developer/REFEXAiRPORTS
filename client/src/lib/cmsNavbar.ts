@@ -68,7 +68,7 @@ export const DEFAULT_NAVBAR: NavbarCms = {
       label: "About Us",
       to: "/about",
       children: [
-        { label: "Who We Are", to: "/about#intro" },
+        { label: "Who We Are", to: "/about" },
         { label: "Leadership", to: "/leadership" },
       ],
     },
@@ -99,8 +99,24 @@ function str(v: unknown) {
   return v === undefined || v === null ? "" : String(v);
 }
 
+function rewriteNavTo(to: string) {
+  const t = str(to).trim();
+  if (t === "#contact" || t === "/#contact" || t.endsWith("#contact")) {
+    return "/partner-with-us";
+  }
+  if (
+    t === "/about#intro" ||
+    t === "/about#who-we-are" ||
+    t === "#intro" ||
+    t === "#who-we-are"
+  ) {
+    return "/about";
+  }
+  return t;
+}
+
 function childOf(c: any): NavChild {
-  return { label: str(c?.label), to: str(c?.to) };
+  return { label: str(c?.label), to: rewriteNavTo(str(c?.to)) };
 }
 
 export function normalizeNavbar(raw: any): NavbarCms {
@@ -117,11 +133,9 @@ export function normalizeNavbar(raw: any): NavbarCms {
         else if (Array.isArray(item?.children)) type = "dropdown";
         else if (str(item?.to).startsWith("#")) type = "anchor";
       }
-      const next: NavItem = { type, label, to: str(item?.to) };
-      if (next.to === "#contact" || next.to === "/#contact" || next.to.endsWith("#contact")) {
-        next.to = "/partner-with-us";
-        if (next.type === "anchor") next.type = "link";
-      }
+      const next: NavItem = { type, label, to: rewriteNavTo(str(item?.to)) };
+      if (next.to === "/partner-with-us" && type === "anchor") next.type = "link";
+      if (next.to === "/about" && type === "anchor") next.type = "link";
       if (type === "dropdown") {
         next.children = Array.isArray(item.children) ? item.children.map(childOf) : [];
       }
@@ -130,7 +144,7 @@ export function normalizeNavbar(raw: any): NavbarCms {
           ? item.groups
               .map((g: any) => ({
                 label: str(g?.label).trim(),
-                to: str(g?.to),
+                to: rewriteNavTo(str(g?.to)),
                 children: Array.isArray(g?.children) ? g.children.map(childOf).filter((c: NavChild) => c.label) : [],
               }))
               .filter((g: NavGroup) => g.label)

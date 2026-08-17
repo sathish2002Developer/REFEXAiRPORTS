@@ -4,7 +4,7 @@ import AdminLayout from '@/components/feature/AdminLayout';
 import CmsImageField from '@/components/feature/CmsImageField';
 import CmsRichTextField from '@/components/feature/CmsRichTextField';
 import CmsContactLocationsList, { type CmsContactLocation } from '@/components/feature/CmsContactLocationsList';
-import { cmsGet, cmsAdminPatch } from '@/lib/api';
+import { cmsGetPartner, cmsSavePartner } from '@/lib/api';
 import { adminToast } from '@/lib/adminToast';
 
 const inputCls =
@@ -87,7 +87,7 @@ export default function AdminPartnerEditorPage() {
 
   useEffect(() => {
     let cancelled = false;
-    cmsGet<Record<string, any>>('partner')
+    cmsGetPartner()
       .then((data) => {
         if (!cancelled) setDraft(normalize(data));
       })
@@ -111,7 +111,7 @@ export default function AdminPartnerEditorPage() {
     setSaving(true);
     setError('');
     try {
-      const savedPayload = await cmsAdminPatch<Record<string, any>>('partner', draft);
+      const savedPayload = await cmsSavePartner(draft);
       setDraft(normalize(savedPayload));
       setSaved(true);
       adminToast.saved();

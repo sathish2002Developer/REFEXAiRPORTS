@@ -14,7 +14,7 @@ const WhoWeAreBanner = ({
     data?.subtitle ||
     'We create memorable journeys through thoughtfully curated culinary experiences for travellers every day.';
   return (
-    <section className="w-full relative overflow-hidden">
+    <section id="who-we-are" className="w-full relative overflow-hidden scroll-mt-[80px]">
       <div className="relative w-full h-[360px] md:h-[480px]">
         <img
           src={mediaUrl(image)}
