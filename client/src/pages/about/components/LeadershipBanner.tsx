@@ -1,3 +1,4 @@
+import CmsHtml from '@/components/feature/CmsHtml';
 import { mediaUrl } from '@/lib/api';
 
 const LeadershipBanner = ({
@@ -25,12 +26,10 @@ const LeadershipBanner = ({
         <div className="absolute inset-0 flex items-center">
           <div className="max-w-7xl mx-auto px-4 md:px-6 w-full">
             <div className="max-w-2xl" data-aos="fade-right">
-              <h2 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+              <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
                 {title}
-              </h2>
-              <p className="text-white/90 text-base md:text-lg leading-relaxed font-medium">
-                {subtitle}
-              </p>
+              </h1>
+              <CmsHtml html={subtitle} className="text-white/90 text-base md:text-lg leading-relaxed font-medium" />
             </div>
           </div>
         </div>

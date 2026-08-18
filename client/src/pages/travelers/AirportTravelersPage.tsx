@@ -42,6 +42,7 @@ function normalizeCms(airportKey: string, payload: Record<string, any> | null): 
 
 export default function AirportTravelersPage({ airportKey }: { airportKey: string }) {
   const [data, setData] = useState<AirportTravelersData>(() => fallbackFor(airportKey));
+  const [cmsReady, setCmsReady] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
@@ -53,7 +54,7 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
   }, []);
 
   useEffect(() => {
-    setData(fallbackFor(airportKey));
+    setCmsReady(false);
     setSearchTerm('');
     setSelectedCategory('');
     setSelectedLocation('');
@@ -66,9 +67,13 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
           if (cancelled) return;
           const { updated_at: _u, airport_key: _k, ...payload } = cms;
           setData(normalizeCms(airportKey, payload));
+          setCmsReady(true);
         })
         .catch(() => {
-          if (!cancelled) setData(fallbackFor(airportKey));
+          if (!cancelled) {
+            setData(fallbackFor(airportKey));
+            setCmsReady(true);
+          }
         });
       cmsGet<Record<string, any>>('news')
         .then((news) => {
@@ -116,7 +121,9 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      {data.comingSoon ? (
+      {!cmsReady ? (
+        <div className="min-h-[calc(100vh-80px)] bg-white" />
+      ) : data.comingSoon ? (
         <TravelersComingSoon
           airportName={data.heroAirportName || data.name}
           backgroundImage={data.heroBackground}

@@ -14,7 +14,16 @@ const labelCls = 'block text-sm font-semibold text-slate-700 mb-2';
 type PartnerCms = {
   hero: { title: string; subtitle: string; image: string };
   connect: { title: string; highlight: string; subtitle: string; image: string };
-  addresses: { title: string; highlight: string; intro: string };
+  addresses: {
+    title: string;
+    highlight: string;
+    intro: string;
+    email: string;
+    emailLabel: string;
+    officeLabel: string;
+    officeAddress: string;
+    locationsHeading: string;
+  };
   locations: CmsContactLocation[];
 };
 
@@ -32,11 +41,17 @@ const DEFAULT_CMS: PartnerCms = {
       "Your feedback is valuable in helping us enhance your travel experience. Whether you have a question, suggestion, or simply want to share your thoughts, we're here to listen.",
     image: '/images/partner-connect.jpg',
   },
-  addresses: {
-    title: 'Our',
-    highlight: 'Addresses',
-    intro: 'Reach us at any of our airport offices. We would love to hear from you.',
-  },
+    addresses: {
+      title: 'Our',
+      highlight: 'Addresses',
+      intro: 'Reach us at any of our airport offices. We would love to hear from you.',
+      email: 'info@refexairports.com',
+      emailLabel: 'Email',
+      officeLabel: 'Registered & Corporate Office',
+      officeAddress:
+        'Unit no.304, UrbanWrk, 3rd Floor, Aeromall, 333, Domestic, Airport Road, Pune International Airport Area, Lohegaon, Pune - 411032, Maharashtra.',
+      locationsHeading: 'Airport Office Address',
+    },
   locations: [],
 };
 
@@ -58,6 +73,11 @@ function normalize(raw: any): PartnerCms {
       title: String(src.addresses?.title ?? DEFAULT_CMS.addresses.title),
       highlight: String(src.addresses?.highlight ?? DEFAULT_CMS.addresses.highlight),
       intro: String(src.addresses?.intro ?? DEFAULT_CMS.addresses.intro),
+      email: String(src.addresses?.email ?? DEFAULT_CMS.addresses.email),
+      emailLabel: String(src.addresses?.emailLabel ?? DEFAULT_CMS.addresses.emailLabel),
+      officeLabel: String(src.addresses?.officeLabel ?? DEFAULT_CMS.addresses.officeLabel),
+      officeAddress: String(src.addresses?.officeAddress ?? DEFAULT_CMS.addresses.officeAddress),
+      locationsHeading: String(src.addresses?.locationsHeading ?? DEFAULT_CMS.addresses.locationsHeading),
     },
     locations: Array.isArray(src.locations)
       ? src.locations.map((loc: any) => ({
@@ -335,13 +355,81 @@ export default function AdminPartnerEditorPage() {
                     }}
                   />
                 </div>
-                <CmsContactLocationsList
-                  locations={draft.locations}
-                  onChange={(locations) => {
-                    setDraft((p) => ({ ...p, locations }));
-                    dirty();
-                  }}
-                />
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
+                  <div className="rounded-xl border border-slate-200 p-4 space-y-4 bg-[#eaf6fc]/40">
+                    <p className="text-sm font-semibold text-slate-800">Left column — Corporate</p>
+                    <div>
+                      <label className={labelCls}>Heading</label>
+                      <input
+                        className={inputCls}
+                        value={draft.addresses.officeLabel}
+                        onChange={(e) => {
+                          setDraft((p) => ({ ...p, addresses: { ...p.addresses, officeLabel: e.target.value } }));
+                          dirty();
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label className={labelCls}>Email label</label>
+                      <input
+                        className={inputCls}
+                        value={draft.addresses.emailLabel}
+                        onChange={(e) => {
+                          setDraft((p) => ({ ...p, addresses: { ...p.addresses, emailLabel: e.target.value } }));
+                          dirty();
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label className={labelCls}>Email</label>
+                      <input
+                        className={inputCls}
+                        value={draft.addresses.email}
+                        onChange={(e) => {
+                          setDraft((p) => ({ ...p, addresses: { ...p.addresses, email: e.target.value } }));
+                          dirty();
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label className={labelCls}>Address</label>
+                      <textarea
+                        className={`${inputCls} min-h-[90px]`}
+                        value={draft.addresses.officeAddress}
+                        onChange={(e) => {
+                          setDraft((p) => ({ ...p, addresses: { ...p.addresses, officeAddress: e.target.value } }));
+                          dirty();
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-slate-200 p-4 space-y-4 bg-[#eaf6fc]/40">
+                    <p className="text-sm font-semibold text-slate-800">Right column — Airport offices</p>
+                    <div>
+                      <label className={labelCls}>Heading</label>
+                      <input
+                        className={inputCls}
+                        value={draft.addresses.locationsHeading}
+                        onChange={(e) => {
+                          setDraft((p) => ({
+                            ...p,
+                            addresses: { ...p.addresses, locationsHeading: e.target.value },
+                          }));
+                          dirty();
+                        }}
+                      />
+                    </div>
+                    <CmsContactLocationsList
+                      locations={draft.locations}
+                      onChange={(locations) => {
+                        setDraft((p) => ({ ...p, locations }));
+                        dirty();
+                      }}
+                    />
+                  </div>
+                </div>
               </>
             )}
           </div>

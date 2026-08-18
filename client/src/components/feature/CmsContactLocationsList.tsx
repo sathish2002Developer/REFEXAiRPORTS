@@ -26,7 +26,7 @@ export default function CmsContactLocationsList({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-sm font-semibold text-slate-700">
-          Locations
+          Airport office cards
           <span className="ml-2 text-xs font-normal text-slate-400">{locations.length} items</span>
         </p>
         <button
@@ -38,7 +38,7 @@ export default function CmsContactLocationsList({
           className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-[#2879b1] bg-[#2879b1]/10 hover:bg-[#2879b1]/20 rounded-lg cursor-pointer"
         >
           <i className="ri-add-line"></i>
-          Add location
+            Add card
         </button>
       </div>
 
@@ -67,54 +67,22 @@ export default function CmsContactLocationsList({
             </button>
           </div>
           <div className="p-4 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Airport name</label>
-                <input
-                  type="text"
-                  value={loc.name || ''}
-                  placeholder="e.g. Pune International Airport (PNQ)"
-                  onChange={(e) => update(index, { name: e.target.value })}
-                  className={inputCls}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Subtitle</label>
-                <input
-                  type="text"
-                  value={loc.subtitle || ''}
-                  placeholder="e.g. Lohegaon, Pune, Maharashtra"
-                  onChange={(e) => update(index, { subtitle: e.target.value })}
-                  className={inputCls}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Phone</label>
-                <input
-                  type="text"
-                  value={loc.phone || ''}
-                  placeholder="+91 ..."
-                  onChange={(e) => update(index, { phone: e.target.value })}
-                  className={inputCls}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Email</label>
-                <input
-                  type="text"
-                  value={loc.email || ''}
-                  placeholder="name@refex.co.in"
-                  onChange={(e) => update(index, { email: e.target.value })}
-                  className={inputCls}
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Airport name</label>
+              <input
+                type="text"
+                value={loc.name || ''}
+                placeholder="e.g. Pune International Airport (PNQ)"
+                onChange={(e) => update(index, { name: e.target.value })}
+                className={inputCls}
+              />
             </div>
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">Address</label>
               <textarea
                 rows={3}
                 value={loc.address || ''}
-                placeholder="Full address"
+                placeholder="Full address shown on the card"
                 onChange={(e) => update(index, { address: e.target.value })}
                 className={`${inputCls} resize-none`}
               />

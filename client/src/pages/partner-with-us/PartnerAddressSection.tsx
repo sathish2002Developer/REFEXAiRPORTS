@@ -78,16 +78,15 @@ function PinIcon() {
   );
 }
 
-function PhoneIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-      <path
-        d="M6.5 3.5l3 2.2-1.6 2.4a15 15 0 007 7l2.4-1.6 2.2 3-1.3 1.3C16.4 19.6 4.4 16.2 3 8.8L4.3 7.5 6.5 3.5z"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+const DEFAULT_EMAIL = 'info@refexairports.com';
+const DEFAULT_OFFICE_HEADING = 'Registered & Corporate Office';
+const DEFAULT_LOCATIONS_HEADING = 'Airport Office Address';
+const DEFAULT_OFFICE_ADDRESS =
+  'Unit no.304, UrbanWrk, 3rd Floor, Aeromall, 333, Domestic, Airport Road, Pune International Airport Area, Lohegaon, Pune - 411032, Maharashtra.';
+
+const cardCls =
+  'flex items-start gap-4 bg-white rounded-[28px] px-3 py-3 sm:px-4 sm:py-4 border border-gray-100 shadow-sm';
+const headingCls = 'text-gray-600 font-medium px-1 min-h-7 flex items-end';
 
 export default function PartnerAddressSection({
   data,
@@ -96,11 +95,22 @@ export default function PartnerAddressSection({
     title?: string;
     highlight?: string;
     intro?: string;
+    email?: string;
+    emailLabel?: string;
+    officeLabel?: string;
+    officeAddress?: string;
+    locationsHeading?: string;
     locations?: ContactLocation[];
   };
 }) {
   const incoming = (Array.isArray(data?.locations) ? data.locations : []).filter(hasLocationContent);
   const locations = incoming.length ? incoming : DEFAULT_LOCATIONS;
+  const email = String(data?.email || DEFAULT_EMAIL).trim();
+  const emailLabel = String(data?.emailLabel || 'Email').trim() || 'Email';
+  const officeHeading = String(data?.officeLabel || DEFAULT_OFFICE_HEADING).trim() || DEFAULT_OFFICE_HEADING;
+  const officeAddress = String(data?.officeAddress || DEFAULT_OFFICE_ADDRESS).trim();
+  const locationsHeading =
+    String(data?.locationsHeading || DEFAULT_LOCATIONS_HEADING).trim() || DEFAULT_LOCATIONS_HEADING;
 
   return (
     <section className="py-16 md:py-20 bg-white">
@@ -115,64 +125,57 @@ export default function PartnerAddressSection({
             className="text-gray-600 text-base md:text-lg max-w-3xl mb-10"
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-            <div className="space-y-4">
-              {locations.map((loc, index) => (
-                <div key={`contact-${loc.name || index}`} className="space-y-3">
-                  {loc.phone && (
-                    <a
-                      href={`tel:${loc.phone.replace(/\s/g, '')}`}
-                      className="flex items-center gap-4 bg-white rounded-full px-3 py-2.5 sm:px-4 sm:py-3 border border-gray-100 shadow-sm hover:shadow-md hover:border-[#2879b1]/20 transition-all"
-                    >
-                      <span className="w-11 h-11 shrink-0 rounded-full border-2 border-[#2879b1] text-[#2879b1] flex items-center justify-center bg-white">
-                        <PhoneIcon />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+            <div className="flex flex-col gap-4">
+              <p className={headingCls}>{officeHeading}</p>
+              <div className="flex flex-col gap-4 flex-1">
+                {email && (
+                  <a
+                    href={`mailto:${email}`}
+                    className={`${cardCls} shrink-0 hover:shadow-md hover:border-[#2879b1]/20 transition-all`}
+                  >
+                    <IconCircle>
+                      <MailIcon />
+                    </IconCircle>
+                    <span className="min-w-0 pr-2 self-center">
+                      <span className="block text-xs text-gray-500 mb-0.5">{emailLabel}</span>
+                      <span className="block text-sm sm:text-base font-semibold text-gray-800 break-all">{email}</span>
+                    </span>
+                  </a>
+                )}
+                {officeAddress && (
+                  <div className={`${cardCls} flex-1 min-h-[220px]`}>
+                    <IconCircle>
+                      <PinIcon />
+                    </IconCircle>
+                    <span className="min-w-0 pr-2">
+                      <span className="block text-xs text-gray-500 mb-0.5">Address</span>
+                      <span className="block text-sm sm:text-base font-semibold text-gray-800 leading-relaxed">
+                        {officeAddress}
                       </span>
-                      <span className="min-w-0 pr-2">
-                        <span className="block text-xs text-gray-500">
-                          {loc.name ? loc.name.replace(/\s*\([^)]*\)\s*$/, '').trim() : 'Phone'}
-                        </span>
-                        <span className="block text-sm sm:text-base font-semibold text-gray-800">{loc.phone}</span>
-                      </span>
-                    </a>
-                  )}
-                  {loc.email && (
-                    <a
-                      href={`mailto:${loc.email}`}
-                      className="flex items-center gap-4 bg-white rounded-full px-3 py-2.5 sm:px-4 sm:py-3 border border-gray-100 shadow-sm hover:shadow-md hover:border-[#2879b1]/20 transition-all"
-                    >
-                      <IconCircle>
-                        <MailIcon />
-                      </IconCircle>
-                      <span className="min-w-0 pr-2">
-                        <span className="block text-xs text-gray-500">
-                          {loc.name ? `For ${loc.name.replace(/\s*\([^)]*\)\s*$/, '').trim()}` : 'Email'}
-                        </span>
-                        <span className="block text-sm sm:text-base font-semibold text-gray-800 truncate">{loc.email}</span>
-                      </span>
-                    </a>
-                  )}
-                </div>
-              ))}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="space-y-4">
-              <p className="text-gray-600 font-medium px-1">Registered & Corporate Office Address</p>
-              {locations.map((loc, index) => (
-                <div
-                  key={`${loc.name || 'loc'}-${index}`}
-                  className="flex items-start gap-4 bg-white rounded-[28px] px-3 py-3 sm:px-4 sm:py-4 border border-gray-100 shadow-sm"
-                >
-                  <IconCircle>
-                    <PinIcon />
-                  </IconCircle>
-                  <span className="min-w-0 pr-2 pt-0.5">
-                    <span className="block text-xs text-gray-500 mb-0.5">{loc.name || loc.subtitle || 'Office'}</span>
-                    <span className="block text-sm sm:text-base font-semibold text-gray-800 leading-relaxed">
-                      {loc.address || loc.subtitle}
+            <div className="flex flex-col gap-4">
+              <p className={headingCls}>{locationsHeading}</p>
+              <div className="flex flex-col gap-4 flex-1">
+                {locations.map((loc, index) => (
+                  <div key={`${loc.name || 'loc'}-${index}`} className={cardCls}>
+                    <IconCircle>
+                      <PinIcon />
+                    </IconCircle>
+                    <span className="min-w-0 pr-2">
+                      <span className="block text-xs text-gray-500 mb-0.5">{loc.name || loc.subtitle || 'Office'}</span>
+                      <span className="block text-sm sm:text-base font-semibold text-gray-800 leading-relaxed">
+                        {loc.address || loc.subtitle}
+                      </span>
                     </span>
-                  </span>
-                </div>
-              ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

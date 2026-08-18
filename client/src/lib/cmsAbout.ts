@@ -41,6 +41,9 @@ export function flattenAbout(payload: Record<string, any> = {}): Record<string, 
   fields.of_key_title = str(of.keyTitle);
 
   const lt = payload.leadership || {};
+  fields.lt_hero_title = str(lt.title);
+  fields.lt_hero_subtitle = str(lt.subtitle);
+  fields.lt_hero_img = str(lt.image);
   fields.lt_founders_title = str(lt.foundersTitle);
   fields.lt_mgmt_title = str(lt.mgmtTitle);
 
@@ -130,6 +133,9 @@ export function applyAboutFields(payload: Record<string, any>, fields: Record<st
   }
 
   next.leadership = next.leadership || { founders: [], management: [] };
+  next.leadership.title = fields.lt_hero_title ?? next.leadership.title;
+  next.leadership.subtitle = fields.lt_hero_subtitle ?? next.leadership.subtitle;
+  next.leadership.image = fields.lt_hero_img ?? next.leadership.image;
   next.leadership.foundersTitle = fields.lt_founders_title ?? next.leadership.foundersTitle;
   next.leadership.mgmtTitle = fields.lt_mgmt_title ?? next.leadership.mgmtTitle;
   if (Array.isArray(payload.leadership?.founders)) {

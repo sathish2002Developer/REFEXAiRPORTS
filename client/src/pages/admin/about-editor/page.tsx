@@ -103,6 +103,27 @@ const aboutSections: ContentSection[] = [
     fields: [{ key: 'of_key_title', label: 'Section Title', type: 'text', value: 'Our Key Focus Areas' }],
   },
   {
+    id: 'leadership_hero',
+    title: 'Leadership Page Hero',
+    icon: 'ri-image-line',
+    fields: [
+      { key: 'lt_hero_title', label: 'Hero Title', type: 'text', value: 'Leadership Team' },
+      {
+        key: 'lt_hero_subtitle',
+        label: 'Hero Subtitle',
+        type: 'richtext',
+        value: 'Conceptualized and created by two industry leaders guiding our vision with decades of expertise.',
+      },
+      {
+        key: 'lt_hero_img',
+        label: 'Hero Image',
+        type: 'image',
+        value:
+          'https://readdy.ai/api/search-image?query=Professional%20corporate%20team%20meeting%20in%20modern%20glass%20office%20with%20city%20skyline%20view%2C%20diverse%20business%20leaders%20collaborating%20around%20conference%20table%2C%20warm%20natural%20lighting%2C%20executive%20boardroom%20atmosphere%2C%20leadership%20and%20teamwork%20concept%2C%20editorial%20photography%20style%2C%20clean%20contemporary%20interior&width=1600&height=500&seq=leadership-hero-banner&orientation=landscape',
+      },
+    ],
+  },
+  {
     id: 'leadership',
     title: 'Leadership Team',
     icon: 'ri-team-line',
@@ -280,6 +301,13 @@ export default function AdminAboutEditorPage() {
             <span className="text-slate-800 font-medium">About Us Page Editor</span>
           </div>
           <div className="flex items-center gap-3">
+            <Link
+              to={activeSection.startsWith('leadership') ? '/leadership' : '/about'}
+              target="_blank"
+              className="px-4 py-2.5 text-sm font-medium text-[#2879b1] bg-[#2879b1]/10 rounded-lg hover:bg-[#2879b1]/20 transition-colors"
+            >
+              View Page
+            </Link>
             {error && <span className="flex items-center gap-1.5 text-sm text-red-600 font-medium"><i className="ri-error-warning-line"></i>{error}</span>}
             {loading && <span className="text-sm text-slate-500">Loading CMS...</span>}
             {saved && <span className="flex items-center gap-1.5 text-sm text-emerald-600 font-medium"><i className="ri-check-line"></i>Saved</span>}
@@ -295,8 +323,8 @@ export default function AdminAboutEditorPage() {
               <i className="ri-information-line text-[#2879b1] text-xl"></i>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">About Us Page</h1>
-              <p className="text-sm text-slate-500">Only the sections that appear on /about</p>
+              <h1 className="text-xl font-bold text-slate-900">About Us & Leadership</h1>
+              <p className="text-sm text-slate-500">/about and /leadership</p>
             </div>
           </div>
         </div>

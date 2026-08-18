@@ -68,9 +68,15 @@ function partnerFromHome(home: Record<string, any> | null | undefined) {
       image: "/images/partner-connect.jpg",
     },
     addresses: {
-      title: "Our",
+      title: contact.title || "Our",
       highlight: "Addresses",
       intro: contact.subtitle || "Reach us at any of our airport offices. We would love to hear from you.",
+      email: "info@refexairports.com",
+      emailLabel: "Email",
+      officeLabel: "Registered & Corporate Office",
+      officeAddress:
+        "Unit no.304, UrbanWrk, 3rd Floor, Aeromall, 333, Domestic, Airport Road, Pune International Airport Area, Lohegaon, Pune - 411032, Maharashtra.",
+      locationsHeading: "Airport Office Address",
     },
     locations: Array.isArray(contact.locations) ? contact.locations : [],
   };

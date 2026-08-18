@@ -146,7 +146,9 @@ function defaultAboutPayload() {
     },
     leadership: {
       title: "Leadership Team",
-      subtitle: "Conceptualized and created by two industry leaders",
+      subtitle: "Conceptualized and created by two industry leaders guiding our vision with decades of expertise.",
+      image:
+        "https://readdy.ai/api/search-image?query=Professional%20corporate%20team%20meeting%20in%20modern%20glass%20office%20with%20city%20skyline%20view%2C%20diverse%20business%20leaders%20collaborating%20around%20conference%20table%2C%20warm%20natural%20lighting%2C%20executive%20boardroom%20atmosphere%2C%20leadership%20and%20teamwork%20concept%2C%20editorial%20photography%20style%2C%20clean%20contemporary%20interior&width=1600&height=500&seq=leadership-hero-banner&orientation=landscape",
       foundersTitle: "Founders and Board Members",
       founders: [
         {

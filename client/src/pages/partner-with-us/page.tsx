@@ -31,7 +31,12 @@ export default function PartnerWithUsPage() {
             title: cms?.addresses?.title,
             highlight: cms?.addresses?.highlight,
             intro: cms?.addresses?.intro,
+            email: cms?.addresses?.email,
+            emailLabel: cms?.addresses?.emailLabel,
+            officeLabel: cms?.addresses?.officeLabel,
+            officeAddress: cms?.addresses?.officeAddress,
             locations: cms?.locations,
+            locationsHeading: cms?.addresses?.locationsHeading,
           }}
         />
       </main>

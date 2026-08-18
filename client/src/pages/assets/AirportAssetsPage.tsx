@@ -67,6 +67,7 @@ function v(values: Record<string, string>, key: string) {
 
 export default function AirportAssetsPage({ airportKey }: { airportKey: string }) {
   const [data, setData] = useState<AirportAssetsData>(() => fallbackFor(airportKey));
+  const [cmsReady, setCmsReady] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'facilities' | 'about'>('overview');
 
   useEffect(() => {
@@ -74,7 +75,7 @@ export default function AirportAssetsPage({ airportKey }: { airportKey: string }
   }, []);
 
   useEffect(() => {
-    setData(fallbackFor(airportKey));
+    setCmsReady(false);
     setActiveTab('overview');
 
     let cancelled = false;
@@ -84,9 +85,13 @@ export default function AirportAssetsPage({ airportKey }: { airportKey: string }
           if (cancelled) return;
           const { updated_at: _u, airport_key: _k, ...payload } = cms;
           setData(normalizeCms(airportKey, payload));
+          setCmsReady(true);
         })
         .catch(() => {
-          if (!cancelled) setData(fallbackFor(airportKey));
+          if (!cancelled) {
+            setData(fallbackFor(airportKey));
+            setCmsReady(true);
+          }
         });
     };
     load();
@@ -145,7 +150,9 @@ export default function AirportAssetsPage({ airportKey }: { airportKey: string }
   return (
     <>
       <Header />
-      {data.comingSoon ? (
+      {!cmsReady ? (
+        <div className="min-h-[calc(100vh-80px)] bg-white" />
+      ) : data.comingSoon ? (
         <AirportComingSoon
           airportName={v(values, 'hero_airport_name') || data.name}
           backgroundImage={v(values, 'hero_bg')}

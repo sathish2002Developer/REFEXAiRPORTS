@@ -64,6 +64,12 @@ function defaultPartnerPayload() {
       title: "Our",
       highlight: "Addresses",
       intro: "Reach us at any of our airport offices. We would love to hear from you.",
+      email: "info@refexairports.com",
+      emailLabel: "Email",
+      officeLabel: "Registered & Corporate Office",
+      officeAddress:
+        "Unit no.304, UrbanWrk, 3rd Floor, Aeromall, 333, Domestic, Airport Road, Pune International Airport Area, Lohegaon, Pune - 411032, Maharashtra.",
+      locationsHeading: "Airport Office Address",
     },
     locations: defaultLocations(),
   };
@@ -91,6 +97,12 @@ function mergePartnerPayload(current, incoming) {
   next.hero = next.hero || {};
   next.connect = next.connect || {};
   next.addresses = next.addresses || {};
+  const addressDefaults = defaultPartnerPayload().addresses;
+  next.addresses.email = str(next.addresses.email, addressDefaults.email);
+  next.addresses.emailLabel = str(next.addresses.emailLabel, addressDefaults.emailLabel);
+  next.addresses.officeLabel = str(next.addresses.officeLabel, addressDefaults.officeLabel);
+  next.addresses.officeAddress = str(next.addresses.officeAddress, addressDefaults.officeAddress);
+  next.addresses.locationsHeading = str(next.addresses.locationsHeading, addressDefaults.locationsHeading);
   return next;
 }
 
