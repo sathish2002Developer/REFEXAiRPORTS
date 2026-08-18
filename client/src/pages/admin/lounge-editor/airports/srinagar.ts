@@ -5,6 +5,7 @@ const srinagar: AirportLoungeData = {
   name: 'Srinagar Airport Lounge',
   slug: 'Srinagar',
   route: '/srinagar-airport-lounge',
+  comingSoon: false,
   heroTitle: 'Srinagar Airport Lounge',
   heroSubtitle: 'Srinagar International Airport (SXR)',
   heroTagline: 'Experience Kashmiri hospitality in a serene and luxurious setting',

@@ -27,6 +27,16 @@ export interface HighlightItem {
   icon: string;
 }
 
+export interface SocialPost {
+  platform: 'linkedin' | 'instagram';
+  url: string;
+  title: string;
+  caption: string;
+  image: string;
+  date: string;
+  airport: string;
+}
+
 export interface NewsPageData {
   id: string;
   pageTitle: string;
@@ -35,6 +45,7 @@ export interface NewsPageData {
   newsItems: NewsItem[];
   stories: StoryItem[];
   highlights: HighlightItem[];
+  socialPosts: SocialPost[];
 }
 
 export const newsPageData: NewsPageData = {
@@ -46,6 +57,7 @@ export const newsPageData: NewsPageData = {
     { id: 'news', label: 'News', icon: 'ri-newspaper-line' },
     { id: 'stories', label: 'Stories', icon: 'ri-book-open-line' },
     { id: 'highlights', label: 'Highlights', icon: 'ri-star-line' },
+    { id: 'social', label: 'Social', icon: 'ri-share-line' },
   ],
   newsItems: [
     {
@@ -111,6 +123,30 @@ export const newsPageData: NewsPageData = {
         'https://readdy.ai/api/search-image?query=Airport%20retail%20competition%20event%20with%20brand%20displays%20and%20awards%2C%20retail%20partners%20celebrating%20achievements%2C%20modern%20airport%20terminal%20with%20competitive%20retail%20environment%2C%20professional%20business%20event%20photography%20with%20trophies%20and%20recognition%20ceremony&width=900&height=550&seq=brand-wars-highlight&orientation=landscape',
       date: 'Q3 2024',
       icon: 'ri-trophy-line',
+    },
+  ],
+  socialPosts: [
+    {
+      platform: 'linkedin',
+      url: 'https://www.linkedin.com/posts/refex-group_puneairport-retailrevolution-beyondtravel-activity-7369963220855554048-5xLE',
+      title: 'Shop at city prices from Pune Airport',
+      caption:
+        'Bappa boards his flight back, but blessings and great deals stay on — shop at city prices and fly happy from Pune Airport! Stores inside our terminals bring festive offers and a luxury shopping experience beyond travel.',
+      image:
+        'https://readdy.ai/api/search-image?query=Festive%20Ganesh%20Chaturthi%20retail%20displays%20inside%20a%20modern%20Pune%20airport%20terminal%20with%20luxury%20shopping%20stores%2C%20travelers%20walking%20past%20bright%20storefronts%2C%20warm%20celebration%20lighting%2C%20professional%20airport%20retail%20photography&width=900&height=560&seq=pune-linkedin-ganesh-retail&orientation=landscape',
+      date: 'September 2025',
+      airport: 'pune',
+    },
+    {
+      platform: 'instagram',
+      url: 'https://www.instagram.com/refexgroup/',
+      title: 'Stores inside our terminals',
+      caption:
+        'Discover brands and festive shopping inside Refex airport terminals. Follow us on Instagram for the latest store moments from Pune, Srinagar and more.',
+      image:
+        'https://readdy.ai/api/search-image?query=Bright%20airport%20terminal%20retail%20street%20with%20fashion%20and%20lifestyle%20stores%2C%20travelers%20shopping%20with%20luggage%2C%20Instagram-style%20lifestyle%20photography%2C%20modern%20glass%20architecture&width=900&height=560&seq=refex-instagram-terminal-stores&orientation=landscape',
+      date: '2025',
+      airport: '',
     },
   ],
 };

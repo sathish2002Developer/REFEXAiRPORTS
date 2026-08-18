@@ -5,6 +5,7 @@ import Header from '../../components/feature/Header';
 import NewsSection from './components/NewsSection';
 import StoriesSection from './components/StoriesSection';
 import HighlightsSection from './components/HighlightsSection';
+import SocialPostsSection from './components/SocialPostsSection';
 import Footer from '../../components/feature/Footer';
 import CmsHtml from '@/components/feature/CmsHtml';
 import { cmsGet } from '@/lib/api';
@@ -48,6 +49,7 @@ export default function NewsPage() {
         { id: 'news', label: 'News', icon: 'ri-newspaper-line' },
         { id: 'stories', label: 'Stories', icon: 'ri-book-open-line' },
         { id: 'highlights', label: 'Highlights', icon: 'ri-star-line' },
+        { id: 'social', label: 'Social', icon: 'ri-share-line' },
       ];
 
   return (
@@ -95,6 +97,7 @@ export default function NewsPage() {
             {activeTab === 'news' && <NewsSection items={cms.newsItems} />}
             {activeTab === 'stories' && <StoriesSection items={cms.stories} />}
             {activeTab === 'highlights' && <HighlightsSection items={cms.highlights} />}
+            {activeTab === 'social' && <SocialPostsSection items={cms.socialPosts} />}
           </div>
         </div>
       </main>

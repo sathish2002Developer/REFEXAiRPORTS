@@ -5,6 +5,7 @@ const trichy: AirportLoungeData = {
   name: 'Trichy Airport Lounge',
   slug: 'Trichy',
   route: '/trichy-airport-lounge',
+  comingSoon: true,
   heroTitle: 'Trichy Airport Lounge',
   heroSubtitle: 'Tiruchirappalli International Airport (TRZ)',
   heroTagline: 'Relax in comfort with authentic Tamil hospitality before your journey',

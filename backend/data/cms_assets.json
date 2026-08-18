@@ -4,6 +4,7 @@
     "name": "Pune International Airport",
     "slug": "Pune",
     "route": "/pune-airport-assets",
+    "comingSoon": false,
     "values": {
       "hero_airport_name": "Pune International Airport",
       "hero_airport_code": "PNQ",
@@ -65,6 +66,7 @@
     "name": "Srinagar International Airport",
     "slug": "Srinagar",
     "route": "/srinagar-airport-assets",
+    "comingSoon": false,
     "values": {
       "hero_airport_name": "Srinagar International Airport",
       "hero_airport_code": "SXR",
@@ -126,6 +128,7 @@
     "name": "Tiruchirappalli International Airport",
     "slug": "Trichy",
     "route": "/trichy-airport-assets",
+    "comingSoon": true,
     "values": {
       "hero_airport_name": "Tiruchirappalli International Airport",
       "hero_airport_code": "TRZ",
@@ -186,6 +189,7 @@
     "name": "Aurangabad Airport",
     "slug": "Aurangabad",
     "route": "/aurangabad-airport-assets",
+    "comingSoon": true,
     "values": {
       "hero_airport_name": "Aurangabad Airport",
       "hero_airport_code": "IXU",
@@ -246,6 +250,7 @@
     "name": "Shirdi International Airport",
     "slug": "Shirdi",
     "route": "/shirdi-airport-assets",
+    "comingSoon": true,
     "values": {
       "hero_airport_name": "Shirdi International Airport",
       "hero_airport_code": "SAG",

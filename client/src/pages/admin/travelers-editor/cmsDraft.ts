@@ -1,3 +1,4 @@
+import { resolveComingSoon } from '@/lib/comingSoon';
 import type { AirportTravelersData } from './travelersData';
 import { travelersAirports } from './travelersData';
 
@@ -13,6 +14,7 @@ export type TravelersDraft = Pick<
   | 'terminals'
   | 'faqs'
   | 'brands'
+  | 'comingSoon'
 >;
 
 export function toTravelersDraft(a: Partial<AirportTravelersData> & Record<string, any>): TravelersDraft {
@@ -28,6 +30,7 @@ export function toTravelersDraft(a: Partial<AirportTravelersData> & Record<strin
     terminals: JSON.parse(JSON.stringify(a.terminals ?? f.terminals)),
     faqs: JSON.parse(JSON.stringify(a.faqs ?? f.faqs)),
     brands: JSON.parse(JSON.stringify(a.brands ?? f.brands)),
+    comingSoon: resolveComingSoon(a, f.comingSoon),
   };
 }
 

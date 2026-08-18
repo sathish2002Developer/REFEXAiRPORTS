@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { cmsUploadImage, mediaUrl } from '@/lib/api';
+import { isSocialPostUrl, socialPlatform } from '@/lib/socialPost';
 
 export default function CmsImageField({
   value,
@@ -13,6 +14,7 @@ export default function CmsImageField({
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const social = socialPlatform(value);
 
   const handleUpload = async (file?: File) => {
     if (!file) return;
@@ -59,7 +61,15 @@ export default function CmsImageField({
       </div>
       {value && <p className="text-xs text-slate-500 break-all font-mono">{value}</p>}
       {error && <p className="text-xs text-red-600">{error}</p>}
-      {value && (
+      {social ? (
+        <div className="flex items-start gap-2 px-3 py-3 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-700">
+          <i className={social === 'instagram' ? 'ri-instagram-line text-pink-600 text-lg' : 'ri-linkedin-fill text-[#0a66c2] text-lg'}></i>
+          <span>
+            {social === 'instagram' ? 'Instagram post link' : 'LinkedIn post link'} — this is not an image.
+            Paste it in the Post URL field, or upload a cover photo here.
+          </span>
+        </div>
+      ) : value && !isSocialPostUrl(value) ? (
         <div className="w-40 h-24 rounded-lg overflow-hidden border border-slate-200 bg-white flex items-center justify-center p-2">
           <img
             src={mediaUrl(value)}
@@ -67,7 +77,7 @@ export default function CmsImageField({
             className={`max-w-full max-h-full ${fit === 'contain' ? 'object-contain' : 'w-full h-full object-cover'}`}
           />
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

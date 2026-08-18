@@ -259,12 +259,18 @@ function sanitizeStoryItems(list) {
   if (!Array.isArray(list)) return null;
   return list
     .filter((item) => item && typeof item === "object")
-    .map((item) => ({
-      tag: str(item.tag),
-      title: str(item.title),
-      description: str(item.description),
-      image: str(item.image),
-    }));
+    .map((item) => {
+      const image = str(item.image);
+      const socialLink = str(item.socialLink);
+      const isSocial = (u) => /linkedin\.com|instagram\.com/i.test(u);
+      return {
+        tag: str(item.tag),
+        title: str(item.title),
+        description: str(item.description),
+        image: isSocial(image) ? "" : image,
+        socialLink: isSocial(socialLink) ? socialLink : isSocial(image) ? image : socialLink,
+      };
+    });
 }
 
 function sanitizeStatItems(list) {

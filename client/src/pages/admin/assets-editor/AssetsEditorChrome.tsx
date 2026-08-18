@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { assetsAirports, assetsSections } from './assetsData';
 
 export default function AssetsEditorChrome({
-  airportId, setAirportId, currentAirport, values, saving, saved, loading, error, handleSave, activeSection, setActiveSection, children,
+  airportId, setAirportId, currentAirport, values, comingSoon, setComingSoon, saving, saved, loading, error, handleSave, activeSection, setActiveSection, children,
 }: any) {
   const totalFields = assetsSections.reduce((acc, s) => acc + s.fields.length, 0);
   return (
@@ -34,6 +34,15 @@ export default function AssetsEditorChrome({
       <div className="bg-white rounded-xl border p-5 mb-6 flex items-center gap-4 flex-wrap">
         <div className="flex-1"><h2 className="text-lg font-bold">{currentAirport.name}</h2><p className="text-sm text-slate-500 font-mono">{currentAirport.route}</p></div>
         <div className="text-xl font-bold text-[#2879b1]">{values.hero_airport_code}</div>
+        <label className="flex items-center gap-2 text-sm font-medium text-slate-700 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={Boolean(comingSoon)}
+            onChange={(e) => setComingSoon(e.target.checked)}
+            className="w-4 h-4 accent-[#2879b1] cursor-pointer"
+          />
+          Coming Soon page (saves now)
+        </label>
         <Link to={currentAirport.route} target="_blank" className="px-4 py-2 text-sm text-[#2879b1] bg-[#2879b1]/10 rounded-lg">View Page</Link>
       </div>
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2">

@@ -4,9 +4,13 @@ import 'aos/dist/aos.css';
 import Header from '../../components/feature/Header';
 import Footer from '../../components/feature/Footer';
 import TravelerHero from '../../components/feature/TravelerHero';
+import TravelersComingSoon from './TravelersComingSoon';
 import { Link } from 'react-router-dom';
 import { cmsGet, mediaUrl } from '@/lib/api';
+import { resolveComingSoon } from '@/lib/comingSoon';
 import { travelersAirports, type AirportTravelersData } from '../admin/travelers-editor/travelersData';
+import SocialPostsSection from '../news/components/SocialPostsSection';
+import type { SocialPost } from '../admin/news-editor/newsData';
 
 const CONTACT_FAQ = 'Please click here to Contact us or fill up enquiry form.';
 const PARTNER_CONTACT_HREF = '/partner-with-us#contact-form';
@@ -32,6 +36,7 @@ function normalizeCms(airportKey: string, payload: Record<string, any> | null): 
     terminals: Array.isArray(payload.terminals) ? payload.terminals : fallback.terminals,
     faqs: Array.isArray(payload.faqs) ? payload.faqs : fallback.faqs,
     brands: Array.isArray(payload.brands) ? payload.brands : fallback.brands,
+    comingSoon: resolveComingSoon(payload, fallback.comingSoon),
   };
 }
 
@@ -41,6 +46,7 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
   const [openFAQIndex, setOpenFAQIndex] = useState(0);
+  const [socialPosts, setSocialPosts] = useState<SocialPost[]>([]);
 
   useEffect(() => {
     AOS.init({ duration: 800, easing: 'ease-in-out', once: true, offset: 100 });
@@ -63,6 +69,20 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
         })
         .catch(() => {
           if (!cancelled) setData(fallbackFor(airportKey));
+        });
+      cmsGet<Record<string, any>>('news')
+        .then((news) => {
+          if (cancelled) return;
+          const posts = Array.isArray(news.socialPosts) ? news.socialPosts : [];
+          setSocialPosts(
+            posts.filter((p: SocialPost) => {
+              const a = String(p?.airport || '').toLowerCase();
+              return !a || a === airportKey;
+            })
+          );
+        })
+        .catch(() => {
+          if (!cancelled) setSocialPosts([]);
         });
     };
     load();
@@ -96,6 +116,13 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
   return (
     <div className="min-h-screen bg-white">
       <Header />
+      {data.comingSoon ? (
+        <TravelersComingSoon
+          airportName={data.heroAirportName || data.name}
+          backgroundImage={data.heroBackground}
+        />
+      ) : (
+      <>
       <TravelerHero
         airportName={data.heroAirportName}
         tagline={data.heroTagline}
@@ -220,6 +247,18 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
           </div>
         </div>
 
+        {socialPosts.length > 0 && (
+          <div className="mt-12" data-aos="fade-up">
+            <div className="text-center mb-8">
+              <p className="text-[#2879b1] text-sm font-semibold tracking-wider uppercase mb-2">
+                Stores in our terminals
+              </p>
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900">From LinkedIn & Instagram</h3>
+            </div>
+            <SocialPostsSection items={socialPosts} />
+          </div>
+        )}
+
         <div className="mt-12 bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8" data-aos="fade-up">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
@@ -278,6 +317,8 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
           </div>
         </div>
       </div>
+      </>
+      )}
       <Footer />
     </div>
   );

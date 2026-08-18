@@ -6,10 +6,11 @@ import NewsHeaderFields from './NewsHeaderFields';
 import NewsItemsFields from './NewsItemsFields';
 import NewsStoriesFields from './NewsStoriesFields';
 import NewsHighlightsFields from './NewsHighlightsFields';
+import NewsSocialFields from './NewsSocialFields';
 
 export default function AdminNewsEditorPage() {
   const cms = useNewsCms();
-  const [activeSection, setActiveSection] = useState<'header' | 'news' | 'stories' | 'highlights'>('header');
+  const [activeSection, setActiveSection] = useState<'header' | 'news' | 'stories' | 'highlights' | 'social'>('header');
   return (
     <AdminLayout>
       <NewsEditorChrome {...cms} activeSection={activeSection} setActiveSection={setActiveSection}>
@@ -28,6 +29,15 @@ export default function AdminNewsEditorPage() {
             updateHighlight={cms.updateHighlight}
             addHighlight={cms.addHighlight}
             removeHighlight={cms.removeHighlight}
+          />
+        )}
+        {activeSection === 'social' && (
+          <NewsSocialFields
+            draft={cms.draft}
+            updateSocial={cms.updateSocial}
+            patchSocial={cms.patchSocial}
+            addSocial={cms.addSocial}
+            removeSocial={cms.removeSocial}
           />
         )}
       </NewsEditorChrome>

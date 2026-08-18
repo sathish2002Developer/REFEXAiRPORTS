@@ -165,6 +165,7 @@ export function applyHomeFields(payload: Record<string, any>, fields: Record<str
       title: str(s?.title),
       description: str(s?.description),
       image: str(s?.image),
+      socialLink: str(s?.socialLink),
     }));
   }
 

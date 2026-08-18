@@ -4,7 +4,9 @@ import 'aos/dist/aos.css';
 import Header from '../../components/feature/Header';
 import Footer from '../../components/feature/Footer';
 import AssetsHero from '../../components/feature/AssetsHero';
+import AirportComingSoon from '../../components/feature/AirportComingSoon';
 import { cmsGet, mediaUrl } from '@/lib/api';
+import { resolveComingSoon } from '@/lib/comingSoon';
 import { assetsAirports, type AirportAssetsData } from '../admin/assets-editor/assetsData';
 
 const HERO_STAT_ICONS = [
@@ -55,6 +57,7 @@ function normalizeCms(airportKey: string, payload: Record<string, any> | null): 
     ...payload,
     id: airportKey,
     values: { ...fallback.values, ...(payload.values || {}) },
+    comingSoon: resolveComingSoon(payload, fallback.comingSoon),
   };
 }
 
@@ -142,6 +145,12 @@ export default function AirportAssetsPage({ airportKey }: { airportKey: string }
   return (
     <>
       <Header />
+      {data.comingSoon ? (
+        <AirportComingSoon
+          airportName={v(values, 'hero_airport_name') || data.name}
+          backgroundImage={v(values, 'hero_bg')}
+        />
+      ) : (
       <div className="min-h-screen bg-background-50">
         <AssetsHero
           airportName={v(values, 'hero_airport_name') || data.name}
@@ -312,6 +321,7 @@ export default function AirportAssetsPage({ airportKey }: { airportKey: string }
           </div>
         </div>
       </div>
+      )}
       <Footer />
     </>
   );

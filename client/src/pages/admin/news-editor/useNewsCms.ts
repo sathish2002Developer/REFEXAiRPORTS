@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { cmsAdminPatch, cmsGet } from '@/lib/api';
 import { toNewsDraft, type NewsDraft } from './cmsDraft';
-import type { HighlightItem, NewsItem, StoryItem } from './newsData';
+import type { HighlightItem, NewsItem, StoryItem, SocialPost } from './newsData';
 import { adminToast } from '@/lib/adminToast';
 
 const clone = (obj: NewsDraft): NewsDraft => JSON.parse(JSON.stringify(obj));
@@ -112,6 +112,39 @@ export function useNewsCms() {
     adminToast.deleted();
   };
 
+  const updateSocial = (i: number, field: keyof SocialPost, value: string) => {
+    setDraft((p) => {
+      const socialPosts = clone(p).socialPosts || [];
+      socialPosts[i] = { ...socialPosts[i], [field]: value };
+      return { ...p, socialPosts };
+    });
+    mark();
+  };
+  const patchSocial = (i: number, patch: Partial<SocialPost>) => {
+    setDraft((p) => {
+      const socialPosts = clone(p).socialPosts || [];
+      socialPosts[i] = { ...socialPosts[i], ...patch };
+      return { ...p, socialPosts };
+    });
+    mark();
+  };
+  const addSocial = () => {
+    setDraft((p) => ({
+      ...p,
+      socialPosts: [
+        ...(p.socialPosts || []),
+        { platform: 'linkedin', url: '', title: '', caption: '', image: '', date: '', airport: '' },
+      ],
+    }));
+    mark();
+    adminToast.added();
+  };
+  const removeSocial = (i: number) => {
+    setDraft((p) => ({ ...p, socialPosts: (p.socialPosts || []).filter((_, n) => n !== i) }));
+    mark();
+    adminToast.deleted();
+  };
+
   const handleSave = async () => {
     setSaving(true);
     setError('');
@@ -147,5 +180,9 @@ export function useNewsCms() {
     updateHighlight,
     addHighlight,
     removeHighlight,
+    updateSocial,
+    patchSocial,
+    addSocial,
+    removeSocial,
   };
 }

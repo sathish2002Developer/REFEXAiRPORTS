@@ -1,12 +1,14 @@
 import CmsImageField from '@/components/feature/CmsImageField';
 import CmsRichTextField from '@/components/feature/CmsRichTextField';
 import { adminToast } from '@/lib/adminToast';
+import { isSocialPostUrl, splitStoryMedia } from '@/lib/socialPost';
 
 export type CmsStoryItem = {
   tag: string;
   title: string;
   description: string;
   image: string;
+  socialLink?: string;
 };
 
 export default function CmsStoriesList({
@@ -21,7 +23,7 @@ export default function CmsStoriesList({
   };
 
   const addStory = () => {
-    onChange([...stories, { tag: '', title: '', description: '', image: '' }]);
+    onChange([...stories, { tag: '', title: '', description: '', image: '', socialLink: '' }]);
     adminToast.added();
   };
 
@@ -53,61 +55,89 @@ export default function CmsStoriesList({
         </p>
       )}
 
-      {stories.map((story, index) => (
-        <div key={index} className="border border-slate-200 rounded-xl overflow-hidden">
-          <div className="px-4 py-3 bg-slate-50 flex items-center justify-between gap-3">
-            <span className="text-sm font-semibold text-slate-800 truncate">
-              Story {index + 1}
-              {story.title ? ` — ${story.title}` : ''}
-            </span>
-            <button
-              type="button"
-              onClick={() => removeStory(index)}
-              className="text-xs font-medium text-red-600 hover:text-red-700 cursor-pointer whitespace-nowrap"
-            >
-              Delete
-            </button>
-          </div>
-          <div className="p-4 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {stories.map((story, index) => {
+        const media = splitStoryMedia(story.image, story.socialLink);
+        return (
+          <div key={index} className="border border-slate-200 rounded-xl overflow-hidden">
+            <div className="px-4 py-3 bg-slate-50 flex items-center justify-between gap-3">
+              <span className="text-sm font-semibold text-slate-800 truncate">
+                Story {index + 1}
+                {story.title ? ` — ${story.title}` : ''}
+              </span>
+              <button
+                type="button"
+                onClick={() => removeStory(index)}
+                className="text-xs font-medium text-red-600 hover:text-red-700 cursor-pointer whitespace-nowrap"
+              >
+                Delete
+              </button>
+            </div>
+            <div className="p-4 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Tag</label>
+                  <input
+                    type="text"
+                    value={story.tag || ''}
+                    onChange={(e) => update(index, { tag: e.target.value })}
+                    placeholder="e.g. Milestone"
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2879b1]/20 focus:border-[#2879b1]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Title</label>
+                  <input
+                    type="text"
+                    value={story.title || ''}
+                    onChange={(e) => update(index, { title: e.target.value })}
+                    placeholder="Story title"
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2879b1]/20 focus:border-[#2879b1]"
+                  />
+                </div>
+              </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Tag</label>
-                <input
-                  type="text"
-                  value={story.tag || ''}
-                  onChange={(e) => update(index, { tag: e.target.value })}
-                  placeholder="e.g. Milestone"
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2879b1]/20 focus:border-[#2879b1]"
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Description</label>
+                <CmsRichTextField
+                  value={story.description || ''}
+                  onChange={(description) => update(index, { description })}
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Title</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  LinkedIn / Instagram post URL
+                </label>
                 <input
-                  type="text"
-                  value={story.title || ''}
-                  onChange={(e) => update(index, { title: e.target.value })}
-                  placeholder="Story title"
+                  type="url"
+                  value={media.socialLink}
+                  onChange={(e) => update(index, { socialLink: e.target.value, image: media.image })}
+                  placeholder="https://www.linkedin.com/posts/... or Instagram post URL"
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2879b1]/20 focus:border-[#2879b1]"
+                />
+                {media.socialLink ? (
+                  <p className="mt-2 text-xs text-emerald-700">
+                    Post link saved. It will embed on the website. Upload a cover image only if you also want a photo.
+                  </p>
+                ) : null}
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Cover image (upload a photo, not a LinkedIn link)
+                </label>
+                <CmsImageField
+                  value={media.image}
+                  onChange={(image) => {
+                    if (isSocialPostUrl(image)) {
+                      update(index, { socialLink: image, image: '' });
+                      return;
+                    }
+                    update(index, { image });
+                  }}
                 />
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Description</label>
-              <CmsRichTextField
-                value={story.description || ''}
-                onChange={(description) => update(index, { description })}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Image (upload or paste URL)</label>
-              <CmsImageField
-                value={story.image || ''}
-                onChange={(image) => update(index, { image })}
-              />
-            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

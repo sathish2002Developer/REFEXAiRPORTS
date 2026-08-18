@@ -1,24 +1,31 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import CmsHtml from '@/components/feature/CmsHtml';
+import SocialEmbed from '@/components/feature/SocialEmbed';
 import { mediaUrl } from '@/lib/api';
+import { isSocialPostUrl, splitStoryMedia } from '@/lib/socialPost';
 
 interface Story {
   tag?: string;
   title: string;
   description: string;
   image: string;
+  socialLink?: string;
 }
 
 function StoryCard({ story, isEntering }: { story: Story; isEntering: boolean }) {
   if (!story) return null;
+  const media = splitStoryMedia(story.image, story.socialLink);
+  const postUrl = media.socialLink;
 
   return (
     <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12 bg-gray-50 rounded-3xl overflow-hidden w-full">
       <div className="w-full lg:w-1/2 shrink-0">
         <div className="relative overflow-hidden h-64 sm:h-72 md:h-80 lg:h-[480px] bg-gray-100">
-          {story.image ? (
+          {postUrl ? (
+            <SocialEmbed url={postUrl} title={story.title} image={media.image} />
+          ) : media.image ? (
             <img
-              src={mediaUrl(story.image)}
+              src={mediaUrl(media.image)}
               alt={story.title}
               className={`w-full h-full object-cover ${isEntering ? 'animate-story-image-settle' : ''}`}
             />
@@ -39,6 +46,17 @@ function StoryCard({ story, isEntering }: { story: Story; isEntering: boolean })
           html={story.description}
           className="text-base md:text-lg text-gray-600 leading-relaxed"
         />
+        {postUrl ? (
+          <a
+            href={postUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 text-[#2879b1] font-semibold hover:underline"
+          >
+            <i className={isSocialPostUrl(postUrl) && postUrl.includes('instagram') ? 'ri-instagram-line' : 'ri-linkedin-fill'}></i>
+            {postUrl.includes('instagram') ? 'View on Instagram' : 'View on LinkedIn'}
+          </a>
+        ) : null}
       </div>
     </div>
   );
@@ -107,6 +125,7 @@ export default function Stories({
         title: item?.title || '',
         description: item?.description || '',
         image: item?.image || '',
+        socialLink: (item as Story)?.socialLink || '',
       }))
     : defaultStories;
   const storiesTitle = data?.title || 'Stories from our Terminals';

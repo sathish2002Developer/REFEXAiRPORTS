@@ -162,12 +162,23 @@ function normalizeBrands(list: unknown): CmsBrandPartner[] {
 
 function normalizeStories(list: unknown): CmsStoryItem[] {
   if (!Array.isArray(list)) return [];
-  return list.map((item: any) => ({
-    tag: String(item?.tag || ''),
-    title: String(item?.title || ''),
-    description: String(item?.description || ''),
-    image: String(item?.image || ''),
-  }));
+  return list.map((item: any) => {
+    const rawImage = String(item?.image || '');
+    const rawSocial = String(item?.socialLink || '');
+    const socialLink = /linkedin\.com|instagram\.com/i.test(rawSocial)
+      ? rawSocial
+      : /linkedin\.com|instagram\.com/i.test(rawImage)
+        ? rawImage
+        : '';
+    const image = /linkedin\.com|instagram\.com/i.test(rawImage) ? '' : rawImage;
+    return {
+      tag: String(item?.tag || ''),
+      title: String(item?.title || ''),
+      description: String(item?.description || ''),
+      image,
+      socialLink,
+    };
+  });
 }
 
 function normalizeLocations(list: unknown): CmsContactLocation[] {

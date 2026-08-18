@@ -16,6 +16,7 @@ export interface AirportAssetsData {
   name: string;
   slug: string;
   route: string;
+  comingSoon: boolean;
   values: Record<string, string>;
 }
 
@@ -109,6 +110,7 @@ export const assetsAirports: AirportAssetsData[] = [
     name: 'Pune International Airport',
     slug: 'Pune',
     route: '/pune-airport-assets',
+    comingSoon: false,
     values: {
       hero_airport_name: 'Pune International Airport',
       hero_airport_code: 'PNQ',
@@ -170,6 +172,7 @@ export const assetsAirports: AirportAssetsData[] = [
     name: 'Srinagar International Airport',
     slug: 'Srinagar',
     route: '/srinagar-airport-assets',
+    comingSoon: false,
     values: {
       hero_airport_name: 'Srinagar International Airport',
       hero_airport_code: 'SXR',
@@ -231,6 +234,7 @@ export const assetsAirports: AirportAssetsData[] = [
     name: 'Tiruchirappalli International Airport',
     slug: 'Trichy',
     route: '/trichy-airport-assets',
+    comingSoon: true,
     values: {
       hero_airport_name: 'Tiruchirappalli International Airport',
       hero_airport_code: 'TRZ',
@@ -291,6 +295,7 @@ export const assetsAirports: AirportAssetsData[] = [
     name: 'Aurangabad Airport',
     slug: 'Aurangabad',
     route: '/aurangabad-airport-assets',
+    comingSoon: true,
     values: {
       hero_airport_name: 'Aurangabad Airport',
       hero_airport_code: 'IXU',
@@ -351,6 +356,7 @@ export const assetsAirports: AirportAssetsData[] = [
     name: 'Shirdi International Airport',
     slug: 'Shirdi',
     route: '/shirdi-airport-assets',
+    comingSoon: true,
     values: {
       hero_airport_name: 'Shirdi International Airport',
       hero_airport_code: 'SAG',

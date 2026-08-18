@@ -11,6 +11,7 @@ export function toNewsDraft(raw: Partial<NewsPageData> & Record<string, any> = {
     newsItems: JSON.parse(JSON.stringify(Array.isArray(raw.newsItems) ? raw.newsItems : f.newsItems)),
     stories: JSON.parse(JSON.stringify(Array.isArray(raw.stories) ? raw.stories : f.stories)),
     highlights: JSON.parse(JSON.stringify(Array.isArray(raw.highlights) ? raw.highlights : f.highlights)),
+    socialPosts: JSON.parse(JSON.stringify(Array.isArray(raw.socialPosts) ? raw.socialPosts : f.socialPosts)),
   };
 }
 

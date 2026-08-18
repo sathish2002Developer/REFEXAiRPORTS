@@ -27,6 +27,30 @@ export function useTravelersCms() {
     return () => { cancelled = true; };
   }, [airportId]);
 
+  const setComingSoon = async (comingSoon: boolean) => {
+    const prev = draft.comingSoon;
+    setDraft((p) => ({ ...p, comingSoon }));
+    setSaved(false);
+    setSaving(true);
+    setError('');
+    try {
+      const data = await cmsAdminPatch<Record<string, any>>(`travelers/${airportId}`, {
+        ...currentAirport,
+        ...draft,
+        comingSoon,
+      });
+      setDraft(toTravelersDraft(data));
+      setSaved(true);
+      adminToast.saved();
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err: any) {
+      setDraft((p) => ({ ...p, comingSoon: prev }));
+      setError(err.message || 'Failed to save');
+      adminToast.error(err.message || 'Failed to save');
+    } finally {
+      setSaving(false);
+    }
+  };
   const setField = (key: keyof TravelersDraft, value: string) => {
     setDraft((prev) => ({ ...prev, [key]: value })); setSaved(false);
   };
@@ -55,5 +79,5 @@ export function useTravelersCms() {
     finally { setSaving(false); }
   };
 
-  return { airportId, setAirportId, draft, currentAirport, saving, saved, loading, error, handleSave, setField, updateBrand, addBrand, removeBrand, updateTerminal, addTerminal, removeTerminal, updateFaq, addFaq, removeFaq };
+  return { airportId, setAirportId, draft, currentAirport, saving, saved, loading, error, handleSave, setField, setComingSoon, updateBrand, addBrand, removeBrand, updateTerminal, addTerminal, removeTerminal, updateFaq, addFaq, removeFaq };
 }

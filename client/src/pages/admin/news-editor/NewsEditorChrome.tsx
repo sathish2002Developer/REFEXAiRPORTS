@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 
-type SectionId = 'header' | 'news' | 'stories' | 'highlights';
+type SectionId = 'header' | 'news' | 'stories' | 'highlights' | 'social';
 
 const sections: { id: SectionId; title: string; icon: string }[] = [
   { id: 'header', title: 'Page Header', icon: 'ri-layout-top-line' },
   { id: 'news', title: 'News Articles', icon: 'ri-newspaper-line' },
   { id: 'stories', title: 'Stories', icon: 'ri-book-open-line' },
   { id: 'highlights', title: 'Highlights', icon: 'ri-star-line' },
+  { id: 'social', title: 'LinkedIn & Instagram', icon: 'ri-share-line' },
 ];
 
 export default function NewsEditorChrome({

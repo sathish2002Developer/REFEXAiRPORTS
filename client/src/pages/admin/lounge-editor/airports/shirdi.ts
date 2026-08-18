@@ -5,6 +5,7 @@ const shirdi: AirportLoungeData = {
   name: 'Shirdi Airport Lounge',
   slug: 'Shirdi',
   route: '/shirdi-airport-lounge',
+  comingSoon: true,
   heroTitle: 'Shirdi Airport Lounge',
   heroSubtitle: 'Shirdi International Airport (SAG)',
   heroTagline: 'A serene sanctuary for pilgrims and travelers before their journey',

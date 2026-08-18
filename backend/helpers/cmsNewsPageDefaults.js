@@ -9,6 +9,7 @@ function defaultNewsPayload() {
       { id: "news", label: "News", icon: "ri-newspaper-line" },
       { id: "stories", label: "Stories", icon: "ri-book-open-line" },
       { id: "highlights", label: "Highlights", icon: "ri-star-line" },
+      { id: "social", label: "Social", icon: "ri-share-line" },
     ],
     newsItems: [
       {
@@ -76,6 +77,30 @@ function defaultNewsPayload() {
         icon: "ri-trophy-line",
       },
     ],
+    socialPosts: [
+      {
+        platform: "linkedin",
+        url: "https://www.linkedin.com/posts/refex-group_puneairport-retailrevolution-beyondtravel-activity-7369963220855554048-5xLE",
+        title: "Shop at city prices from Pune Airport",
+        caption:
+          "Bappa boards his flight back, but blessings and great deals stay on — shop at city prices and fly happy from Pune Airport! Stores inside our terminals bring festive offers and a luxury shopping experience beyond travel.",
+        image:
+          "https://readdy.ai/api/search-image?query=Festive%20Ganesh%20Chaturthi%20retail%20displays%20inside%20a%20modern%20Pune%20airport%20terminal%20with%20luxury%20shopping%20stores%2C%20travelers%20walking%20past%20bright%20storefronts%2C%20warm%20celebration%20lighting%2C%20professional%20airport%20retail%20photography&width=900&height=560&seq=pune-linkedin-ganesh-retail&orientation=landscape",
+        date: "September 2025",
+        airport: "pune",
+      },
+      {
+        platform: "instagram",
+        url: "https://www.instagram.com/refexgroup/",
+        title: "Stores inside our terminals",
+        caption:
+          "Discover brands and festive shopping inside Refex airport terminals. Follow us on Instagram for the latest store moments from Pune, Srinagar and more.",
+        image:
+          "https://readdy.ai/api/search-image?query=Bright%20airport%20terminal%20retail%20street%20with%20fashion%20and%20lifestyle%20stores%2C%20travelers%20shopping%20with%20luggage%2C%20Instagram-style%20lifestyle%20photography%2C%20modern%20glass%20architecture&width=900&height=560&seq=refex-instagram-terminal-stores&orientation=landscape",
+        date: "2025",
+        airport: "",
+      },
+    ],
   };
 }
 
@@ -121,6 +146,32 @@ function sanitizeHighlights(list) {
     }));
 }
 
+function sanitizeSocialPosts(list) {
+  if (!Array.isArray(list)) return [];
+  return list
+    .filter((item) => item && typeof item === "object")
+    .map((item) => {
+      const urlRaw = str(item.url);
+      const imageRaw = str(item.image);
+      const isSocial = (u) => /linkedin\.com|instagram\.com/i.test(u);
+      const url = isSocial(urlRaw) ? urlRaw : isSocial(imageRaw) ? imageRaw : urlRaw;
+      const image = isSocial(imageRaw) ? "" : imageRaw;
+      const platform =
+        str(item.platform).toLowerCase() === "instagram" || /instagram\.com/i.test(url)
+          ? "instagram"
+          : "linkedin";
+      return {
+        platform,
+        url,
+        title: str(item.title),
+        caption: str(item.caption),
+        image,
+        date: str(item.date),
+        airport: str(item.airport).toLowerCase().replace(/[^a-z]/g, ""),
+      };
+    });
+}
+
 function sanitizeTabs(list) {
   const fallback = defaultNewsPayload().tabs;
   if (!Array.isArray(list) || !list.length) return fallback;
@@ -143,6 +194,12 @@ function mergeNewsPayload(current, incoming) {
   next.highlights = sanitizeHighlights(
     Array.isArray(src.highlights) ? src.highlights : next.highlights
   );
+  next.socialPosts = sanitizeSocialPosts(
+    Array.isArray(src.socialPosts) ? src.socialPosts : next.socialPosts
+  );
+  if (!next.tabs.some((t) => t.id === "social")) {
+    next.tabs.push({ id: "social", label: "Social", icon: "ri-share-line" });
+  }
   next.pageTitle = str(next.pageTitle) || defaultNewsPayload().pageTitle;
   next.pageSubtitle = str(next.pageSubtitle);
   return next;

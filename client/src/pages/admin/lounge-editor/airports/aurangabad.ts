@@ -5,6 +5,7 @@ const aurangabad: AirportLoungeData = {
   name: 'Aurangabad Airport Lounge',
   slug: 'Aurangabad',
   route: '/aurangabad-airport-lounge',
+  comingSoon: true,
   heroTitle: 'Aurangabad Airport Lounge',
   heroSubtitle: 'Aurangabad Airport (IXU)',
   heroTagline: "Unwind in comfort before exploring Maharashtra's heritage treasures",

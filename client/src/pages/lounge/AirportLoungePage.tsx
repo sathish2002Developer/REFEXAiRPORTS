@@ -3,7 +3,9 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Header from '../../components/feature/Header';
 import Footer from '../../components/feature/Footer';
+import AirportComingSoon from '../../components/feature/AirportComingSoon';
 import { cmsGet } from '@/lib/api';
+import { resolveComingSoon } from '@/lib/comingSoon';
 import { loungeAirports, type AirportLoungeData } from '../admin/lounge-editor/loungeData';
 
 function fallbackFor(airportKey: string): AirportLoungeData {
@@ -19,6 +21,7 @@ function normalizeCms(airportKey: string, payload: Record<string, any> | null): 
     id: airportKey,
     amenities: Array.isArray(payload.amenities) ? payload.amenities : fallback.amenities,
     accessOptions: Array.isArray(payload.accessOptions) ? payload.accessOptions : fallback.accessOptions,
+    comingSoon: resolveComingSoon(payload, fallback.comingSoon),
   };
 }
 
@@ -61,6 +64,12 @@ export default function AirportLoungePage({ airportKey }: { airportKey: string }
   return (
     <>
       <Header />
+      {data.comingSoon ? (
+        <AirportComingSoon
+          airportName={data.heroTitle || data.name}
+          backgroundImage={data.heroBackground}
+        />
+      ) : (
       <div className="min-h-screen bg-gray-50">
         <div className="relative h-[400px] overflow-hidden">
           <div
@@ -180,6 +189,7 @@ export default function AirportLoungePage({ airportKey }: { airportKey: string }
           </div>
         </div>
       </div>
+      )}
       <Footer />
     </>
   );

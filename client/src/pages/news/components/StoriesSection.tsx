@@ -1,5 +1,7 @@
 import CmsHtml from '@/components/feature/CmsHtml';
+import SocialEmbed from '@/components/feature/SocialEmbed';
 import { mediaUrl } from '@/lib/api';
+import { isSocialPostUrl } from '@/lib/socialPost';
 import type { StoryItem } from '@/pages/admin/news-editor/newsData';
 
 export default function StoriesSection({ items }: { items?: StoryItem[] }) {
@@ -14,12 +16,16 @@ export default function StoriesSection({ items }: { items?: StoryItem[] }) {
           data-aos="fade-up"
           data-aos-delay={index * 150}
         >
-          <div className="relative h-64 overflow-hidden">
-            <img
-              alt={story.title}
-              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-115"
-              src={mediaUrl(story.image)}
-            />
+          <div className="relative h-64 overflow-hidden bg-gray-100">
+            {isSocialPostUrl(story.image) ? (
+              <SocialEmbed url={story.image} title={story.title} />
+            ) : (
+              <img
+                alt={story.title}
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-115"
+                src={mediaUrl(story.image)}
+              />
+            )}
             {story.subtitle && (
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out flex items-end p-4">
                 <span className="text-white text-sm font-semibold">{story.subtitle}</span>

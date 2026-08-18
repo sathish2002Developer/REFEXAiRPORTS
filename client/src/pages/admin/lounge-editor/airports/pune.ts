@@ -5,6 +5,7 @@ const pune: AirportLoungeData = {
   name: 'Pune Airport Lounge',
   slug: 'Pune',
   route: '/pune-airport-lounge',
+  comingSoon: false,
   heroTitle: 'Pune Airport Lounge',
   heroSubtitle: 'Pune International Airport (PNQ)',
   heroTagline: 'Experience premium comfort and exceptional hospitality before your flight',

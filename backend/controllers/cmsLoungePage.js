@@ -22,7 +22,14 @@ function parseIncoming(body) {
 
 function mergeLoungePayload(airportKey, incoming) {
   const defaults = defaultLoungePayload(airportKey) || {};
-  return deepMerge(defaults, incoming || {});
+  const next = deepMerge(defaults, incoming || {});
+  const src = incoming && typeof incoming === "object" ? incoming : {};
+  if (src.comingSoon !== undefined) {
+    next.comingSoon = src.comingSoon === true || src.comingSoon === "true" || src.comingSoon === 1;
+  } else {
+    next.comingSoon = next.comingSoon === true || next.comingSoon === "true" || next.comingSoon === 1;
+  }
+  return next;
 }
 
 function serializeRow(row) {
