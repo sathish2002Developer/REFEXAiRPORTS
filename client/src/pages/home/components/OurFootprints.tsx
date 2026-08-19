@@ -88,10 +88,7 @@ export default function OurFootprints({
                 onClick={() => handleLearnMore(airport.link)}
                 aria-label={airport.name}
               >
-                {/* Pulse ring */}
-                <span className="absolute inset-0 rounded-full bg-[#d93025]/30 animate-ping" />
-                {/* Marker dot */}
-                <span className="relative flex items-center justify-center w-5 h-5 md:w-6 md:h-6 rounded-full bg-[#d93025] border-2 border-white shadow-lg transition-transform duration-200 group-hover:scale-140" />
+                <span className="relative flex items-center justify-center w-5 h-5 md:w-6 md:h-6 rounded-full bg-[#d93025] border-2 border-white shadow-lg transition-transform duration-200 group-hover:scale-110" />
                 {/* Tooltip */}
                 <span
                   className={`absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 rounded-lg bg-gray-900 text-white text-xs font-semibold whitespace-nowrap transition-all duration-200 pointer-events-none shadow-lg ${

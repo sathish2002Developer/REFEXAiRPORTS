@@ -151,10 +151,11 @@ const aboutSections: ContentSection[] = [
     icon: 'ri-shield-star-line',
     fields: [
       { key: 'bb_title_before', label: 'Title before highlight', type: 'text', value: 'Backed by' },
-      { key: 'bb_title_emphasis', label: 'Title highlight', type: 'text', value: 'Leading Companies' },
-      { key: 'bb_logo', label: 'Logo', type: 'image', value: 'https://refexairports.com/wp-content/uploads/2023/08/Refex-Airports-Logo.png' },
+      { key: 'bb_title_emphasis', label: 'Title highlight', type: 'text', value: 'Refex Group' },
+      { key: 'bb_logo', label: 'Logo', type: 'image', value: 'https://refexairports.com/wp-content/uploads/2023/08/REFEX-Logo@2x-8-1.png' },
       { key: 'bb_label', label: 'Logo label', type: 'text', value: 'Refex Group' },
-      { key: 'bb_desc', label: 'Description', type: 'richtext', value: 'Refex Group is a diversified business conglomerate with deep expertise across energy, aviation, and infrastructure sectors.' },
+      { key: 'bb_link', label: 'Link (opens refexgroup.com)', type: 'text', value: 'https://refexgroup.com/' },
+      { key: 'bb_desc', label: 'Description', type: 'richtext', value: "Refex Group is a 23-year old diversified Indian conglomerate with deep expertise across energy, mobility, healthcare, and infrastructure sectors. Over the past two decades, the Group has grown into one of India's fastest-evolving business groups, championing innovation and sustainability across its operations." },
     ],
   },
 ];

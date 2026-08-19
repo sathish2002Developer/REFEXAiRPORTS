@@ -61,6 +61,7 @@ export function flattenAbout(payload: Record<string, any> = {}): Record<string, 
   fields.bb_logo = str(bb.logo);
   fields.bb_label = str(bb.label);
   fields.bb_desc = str(bb.desc);
+  fields.bb_link = str(bb.link);
 
   return fields;
 }
@@ -172,6 +173,7 @@ export function applyAboutFields(payload: Record<string, any>, fields: Record<st
   next.backedBy.logo = fields.bb_logo ?? next.backedBy.logo;
   next.backedBy.label = fields.bb_label ?? next.backedBy.label;
   next.backedBy.desc = fields.bb_desc ?? next.backedBy.desc;
+  next.backedBy.link = fields.bb_link ?? next.backedBy.link;
 
   return next;
 }

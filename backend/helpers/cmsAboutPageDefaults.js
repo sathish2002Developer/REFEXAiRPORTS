@@ -195,10 +195,11 @@ function defaultAboutPayload() {
     },
     backedBy: {
       titleBefore: "Backed by",
-      titleEmphasis: "Leading Companies",
-      logo: "https://refexairports.com/wp-content/uploads/2023/08/Refex-Airports-Logo.png",
+      titleEmphasis: "Refex Group",
+      logo: "https://refexairports.com/wp-content/uploads/2023/08/REFEX-Logo@2x-8-1.png",
       label: "Refex Group",
-      desc: "Refex Group is a diversified business conglomerate with deep expertise across energy, aviation, and infrastructure sectors. With decades of operational excellence and a strong commitment to innovation, the group empowers Refex Airports & Transportation to deliver world-class airport commercial services and redefine passenger experiences across India and beyond.",
+      link: "https://refexgroup.com/",
+      desc: "Refex Group is a 23-year old diversified Indian conglomerate with deep expertise across energy, mobility, healthcare, and infrastructure sectors. Over the past two decades, the Group has grown into one of India's fastest-evolving business groups, championing innovation and sustainability across its operations.",
     },
   };
 }
