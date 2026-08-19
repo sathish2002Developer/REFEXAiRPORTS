@@ -97,6 +97,10 @@ app.use("/api", require("./routes/contactForm"));
 app.use("/api/wall", require("./routes/wall"));
 app.use("/uploads/wall", express.static(path.join(__dirname, "uploads/wall")));
 app.use("/uploads/cms", express.static(path.join(__dirname, "uploads/cms")));
+app.use(
+  '/wp-content/uploads',
+  express.static(path.join(__dirname, 'uploads'))
+);
 
 
 
