@@ -126,7 +126,10 @@ export default function AirportTravelersPage({ airportKey }: { airportKey: strin
       ) : data.comingSoon ? (
         <TravelersComingSoon
           airportName={data.heroAirportName || data.name}
-          backgroundImage={data.heroBackground}
+          backgroundImage={data.comingSoonImage || data.heroBackground}
+          title={data.comingSoonTitle}
+          message={data.comingSoonMessage}
+          footer={data.comingSoonFooter}
         />
       ) : (
       <>

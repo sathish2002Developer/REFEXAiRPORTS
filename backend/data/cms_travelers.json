@@ -178,7 +178,11 @@
         "location": "Arrival",
         "category": "Fashion & Accessories"
       }
-    ]
+    ],
+    "comingSoonTitle": "Coming Soon!",
+    "comingSoonMessage": "We are preparing something exceptional for you.\nOur new airport experience is taking off soon.",
+    "comingSoonFooter": "Stay tuned for a world-class journey.",
+    "comingSoonImage": ""
   },
   {
     "id": "srinagar",
@@ -351,7 +355,11 @@
         "category": "Beauty & Personal Care",
         "logo": "https://readdy.ai/api/search-image?query=Forest%20Essentials%20brand%20logo%20ayurvedic%20beauty%20company%20emblem%20with%20natural%20herbs%20and%20botanical%20elements%20organic%20wellness%20design%20on%20white%20background&width=200&height=200&seq=forest-essentials-logo&orientation=squarish"
       }
-    ]
+    ],
+    "comingSoonTitle": "Coming Soon!",
+    "comingSoonMessage": "We are preparing something exceptional for you.\nOur new airport experience is taking off soon.",
+    "comingSoonFooter": "Stay tuned for a world-class journey.",
+    "comingSoonImage": ""
   },
   {
     "id": "trichy",
@@ -460,7 +468,11 @@
         "category": "Fashion & Accessories",
         "logo": "https://readdy.ai/api/search-image?query=Silk%20Route%20traditional%20Indian%20silk%20brand%20logo%20with%20elegant%20saree%20motifs%2C%20luxury%20textile%20branding%20on%20white%20background&width=200&height=200&seq=silk-route-logo&orientation=squarish"
       }
-    ]
+    ],
+    "comingSoonTitle": "Coming Soon!",
+    "comingSoonMessage": "We are preparing something exceptional for you.\nOur new airport experience is taking off soon.",
+    "comingSoonFooter": "Stay tuned for a world-class journey.",
+    "comingSoonImage": ""
   },
   {
     "id": "aurangabad",
@@ -558,7 +570,11 @@
         "category": "Books & Stationery",
         "logo": "https://readdy.ai/api/search-image?query=Relay%20travel%20retail%20brand%20logo%20on%20white%20background%2C%20airport%20convenience%20store%20branding%2C%20modern%20retail%20identity&width=200&height=200&seq=relay-aurangabad-logo&orientation=squarish"
       }
-    ]
+    ],
+    "comingSoonTitle": "Coming Soon!",
+    "comingSoonMessage": "We are preparing something exceptional for you.\nOur new airport experience is taking off soon.",
+    "comingSoonFooter": "Stay tuned for a world-class journey.",
+    "comingSoonImage": ""
   },
   {
     "id": "shirdi",
@@ -656,6 +672,10 @@
         "category": "Books & Stationery",
         "logo": "https://readdy.ai/api/search-image?query=Relay%20travel%20retail%20brand%20logo%20on%20white%20background%2C%20airport%20convenience%20store%20branding%2C%20modern%20retail%20identity&width=200&height=200&seq=relay-shirdi-logo&orientation=squarish"
       }
-    ]
+    ],
+    "comingSoonTitle": "Coming Soon!",
+    "comingSoonMessage": "We are preparing something exceptional for you.\nOur new airport experience is taking off soon.",
+    "comingSoonFooter": "Stay tuned for a world-class journey.",
+    "comingSoonImage": ""
   }
 ]

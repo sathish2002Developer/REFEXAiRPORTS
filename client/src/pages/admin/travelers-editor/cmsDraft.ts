@@ -15,6 +15,10 @@ export type TravelersDraft = Pick<
   | 'faqs'
   | 'brands'
   | 'comingSoon'
+  | 'comingSoonTitle'
+  | 'comingSoonMessage'
+  | 'comingSoonFooter'
+  | 'comingSoonImage'
 >;
 
 export function toTravelersDraft(a: Partial<AirportTravelersData> & Record<string, any>): TravelersDraft {
@@ -31,6 +35,10 @@ export function toTravelersDraft(a: Partial<AirportTravelersData> & Record<strin
     faqs: JSON.parse(JSON.stringify(a.faqs ?? f.faqs)),
     brands: JSON.parse(JSON.stringify(a.brands ?? f.brands)),
     comingSoon: resolveComingSoon(a, f.comingSoon),
+    comingSoonTitle: a.comingSoonTitle ?? f.comingSoonTitle,
+    comingSoonMessage: a.comingSoonMessage ?? f.comingSoonMessage,
+    comingSoonFooter: a.comingSoonFooter ?? f.comingSoonFooter,
+    comingSoonImage: a.comingSoonImage ?? f.comingSoonImage,
   };
 }
 

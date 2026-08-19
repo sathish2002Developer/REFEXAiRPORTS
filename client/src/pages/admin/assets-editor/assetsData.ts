@@ -20,6 +20,13 @@ export interface AirportAssetsData {
   values: Record<string, string>;
 }
 
+export const DEFAULT_COMING_SOON_VALUES = {
+  cs_title: 'Coming Soon!',
+  cs_message: 'We are preparing something exceptional for you.\nOur new airport experience is taking off soon.',
+  cs_footer: 'Stay tuned for a world-class journey.',
+  cs_image: '',
+};
+
 export const assetsSections: AssetsSection[] = [
   {
     id: 'hero',
@@ -38,6 +45,17 @@ export const assetsSections: AssetsSection[] = [
       { key: 'hero_stat3_label', label: 'Stat 3 — Label', type: 'text' },
       { key: 'hero_stat4_value', label: 'Stat 4 — Value', type: 'text' },
       { key: 'hero_stat4_label', label: 'Stat 4 — Label', type: 'text' },
+    ],
+  },
+  {
+    id: 'comingsoon',
+    title: 'Coming Soon Page',
+    icon: 'ri-flight-takeoff-line',
+    fields: [
+      { key: 'cs_title', label: 'Headline', type: 'text' },
+      { key: 'cs_message', label: 'Message', type: 'textarea' },
+      { key: 'cs_footer', label: 'Footer line', type: 'text' },
+      { key: 'cs_image', label: 'Background image (optional — leave empty to use hero image)', type: 'image' },
     ],
   },
   {
@@ -112,6 +130,7 @@ export const assetsAirports: AirportAssetsData[] = [
     route: '/pune-airport-assets',
     comingSoon: false,
     values: {
+      ...DEFAULT_COMING_SOON_VALUES,
       hero_airport_name: 'Pune International Airport',
       hero_airport_code: 'PNQ',
       hero_tagline: 'Gateway to the Oxford of the East — Commercial & Retail Opportunities',
@@ -174,6 +193,7 @@ export const assetsAirports: AirportAssetsData[] = [
     route: '/srinagar-airport-assets',
     comingSoon: false,
     values: {
+      ...DEFAULT_COMING_SOON_VALUES,
       hero_airport_name: 'Srinagar International Airport',
       hero_airport_code: 'SXR',
       hero_tagline: 'Gateway to the Paradise on Earth — Commercial & Retail Opportunities',
@@ -236,6 +256,7 @@ export const assetsAirports: AirportAssetsData[] = [
     route: '/trichy-airport-assets',
     comingSoon: true,
     values: {
+      ...DEFAULT_COMING_SOON_VALUES,
       hero_airport_name: 'Tiruchirappalli International Airport',
       hero_airport_code: 'TRZ',
       hero_tagline: "Gateway to Tamil Nadu's Cultural & Industrial Heartland — Retail & Commercial Hub",
@@ -297,6 +318,7 @@ export const assetsAirports: AirportAssetsData[] = [
     route: '/aurangabad-airport-assets',
     comingSoon: true,
     values: {
+      ...DEFAULT_COMING_SOON_VALUES,
       hero_airport_name: 'Aurangabad Airport',
       hero_airport_code: 'IXU',
       hero_tagline: "Gateway to Ajanta & Ellora — Maharashtra's Heritage Tourism & Retail Hub",
@@ -358,6 +380,7 @@ export const assetsAirports: AirportAssetsData[] = [
     route: '/shirdi-airport-assets',
     comingSoon: true,
     values: {
+      ...DEFAULT_COMING_SOON_VALUES,
       hero_airport_name: 'Shirdi International Airport',
       hero_airport_code: 'SAG',
       hero_tagline: 'Gateway to the Sacred Land of Sai Baba — Spiritual Tourism & Retail Hub',

@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { travelersAirports } from './travelersData';
 
-type SectionId = 'hero' | 'brands' | 'terminals' | 'faq';
+type SectionId = 'hero' | 'comingsoon' | 'brands' | 'terminals' | 'faq';
 const sections: { id: SectionId; title: string; icon: string }[] = [
   { id: 'hero', title: 'Hero Section', icon: 'ri-image-line' },
+  { id: 'comingsoon', title: 'Coming Soon Page', icon: 'ri-flight-takeoff-line' },
   { id: 'brands', title: 'Brands & Stores', icon: 'ri-store-2-line' },
   { id: 'terminals', title: 'Terminal Locations', icon: 'ri-map-pin-line' },
   { id: 'faq', title: 'FAQ Section', icon: 'ri-question-answer-line' },

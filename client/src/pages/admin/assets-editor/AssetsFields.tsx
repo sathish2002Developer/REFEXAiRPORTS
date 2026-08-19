@@ -18,6 +18,11 @@ export default function AssetsFields({
         </h3>
       </div>
       <div className="p-6 space-y-4">
+        {activeSection === 'comingsoon' && (
+          <p className="text-sm text-slate-500">
+            Shown on the public airport page when Coming Soon is turned on. Leave the image empty to reuse the hero background.
+          </p>
+        )}
         {fields.map((field) => (
           <div key={field.key} className="border border-slate-100 rounded-lg p-4">
             <div className="flex justify-between mb-2">

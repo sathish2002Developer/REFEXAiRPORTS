@@ -3,6 +3,7 @@ import { loungeAirports } from './loungeData';
 
 const sections = [
   { id: 'hero', title: 'Hero Section', icon: 'ri-image-line' },
+  { id: 'comingsoon', title: 'Coming Soon Page', icon: 'ri-flight-takeoff-line' },
   { id: 'overview', title: 'Overview', icon: 'ri-file-list-3-line' },
   { id: 'amenities', title: 'Amenities', icon: 'ri-service-line' },
   { id: 'access', title: 'Access & Pricing', icon: 'ri-ticket-2-line' },

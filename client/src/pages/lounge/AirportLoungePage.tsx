@@ -25,8 +25,22 @@ function normalizeCms(airportKey: string, payload: Record<string, any> | null): 
   };
 }
 
+function firstText(...values: Array<string | undefined>) {
+  for (const value of values) {
+    const text = String(value || '').trim();
+    if (text) return text;
+  }
+  return '';
+}
+
 export default function AirportLoungePage({ airportKey }: { airportKey: string }) {
   const [data, setData] = useState<AirportLoungeData>(() => fallbackFor(airportKey));
+  const [assetsComingSoon, setAssetsComingSoon] = useState({
+    title: '',
+    message: '',
+    footer: '',
+    image: '',
+  });
   const [cmsReady, setCmsReady] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'amenities' | 'access'>('overview');
 
@@ -39,11 +53,21 @@ export default function AirportLoungePage({ airportKey }: { airportKey: string }
     setActiveTab('overview');
     let cancelled = false;
     const load = () => {
-      cmsGet<Record<string, any>>(`lounge/${airportKey}`)
-        .then((cms) => {
+      Promise.all([
+        cmsGet<Record<string, any>>(`lounge/${airportKey}`),
+        cmsGet<Record<string, any>>(`assets/${airportKey}`).catch(() => null),
+      ])
+        .then(([cms, assets]) => {
           if (cancelled) return;
           const { updated_at: _u, airport_key: _k, ...payload } = cms;
           setData(normalizeCms(airportKey, payload));
+          const values = assets?.values && typeof assets.values === 'object' ? assets.values : {};
+          setAssetsComingSoon({
+            title: String(values.cs_title || ''),
+            message: String(values.cs_message || ''),
+            footer: String(values.cs_footer || ''),
+            image: String(values.cs_image || ''),
+          });
           setCmsReady(true);
         })
         .catch(() => {
@@ -74,7 +98,10 @@ export default function AirportLoungePage({ airportKey }: { airportKey: string }
       ) : data.comingSoon ? (
         <AirportComingSoon
           airportName={data.heroTitle || data.name}
-          backgroundImage={data.heroBackground}
+          backgroundImage={firstText(data.comingSoonImage, assetsComingSoon.image, data.heroBackground)}
+          title={firstText(data.comingSoonTitle, assetsComingSoon.title)}
+          message={firstText(data.comingSoonMessage, assetsComingSoon.message)}
+          footer={firstText(data.comingSoonFooter, assetsComingSoon.footer)}
         />
       ) : (
       <div className="min-h-screen bg-gray-50">

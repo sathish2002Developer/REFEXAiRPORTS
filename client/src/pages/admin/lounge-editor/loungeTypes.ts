@@ -16,6 +16,10 @@ export interface AirportLoungeData {
   slug: string;
   route: string;
   comingSoon: boolean;
+  comingSoonTitle: string;
+  comingSoonMessage: string;
+  comingSoonFooter: string;
+  comingSoonImage: string;
   heroTitle: string;
   heroSubtitle: string;
   heroTagline: string;

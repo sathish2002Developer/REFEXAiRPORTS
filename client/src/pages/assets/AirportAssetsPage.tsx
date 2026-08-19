@@ -155,7 +155,10 @@ export default function AirportAssetsPage({ airportKey }: { airportKey: string }
       ) : data.comingSoon ? (
         <AirportComingSoon
           airportName={v(values, 'hero_airport_name') || data.name}
-          backgroundImage={v(values, 'hero_bg')}
+          backgroundImage={v(values, 'cs_image') || v(values, 'hero_bg')}
+          title={v(values, 'cs_title')}
+          message={v(values, 'cs_message')}
+          footer={v(values, 'cs_footer')}
         />
       ) : (
       <div className="min-h-screen bg-background-50">

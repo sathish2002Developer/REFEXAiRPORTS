@@ -43,7 +43,7 @@ export default function AssetsEditorChrome({
           />
           Coming Soon page (saves now)
         </label>
-        <Link to={currentAirport.route} target="_blank" className="px-4 py-2 text-sm text-[#2879b1] bg-[#2879b1]/10 rounded-lg">View Page</Link>
+        <Link to={currentAirport.route} target="_blank" className="px-4 py-2 text-sm text-[#2879b1] bg-[#2879b1]/10 rounded-lg">View Retail Page</Link>
       </div>
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
         {assetsSections.map((s) => (

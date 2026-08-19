@@ -1,12 +1,28 @@
 import { mediaUrl } from '@/lib/api';
 
+export const DEFAULT_COMING_SOON = {
+  title: 'Coming Soon!',
+  message: 'We are preparing something exceptional for you.\nOur new airport experience is taking off soon.',
+  footer: 'Stay tuned for a world-class journey.',
+};
+
 export default function AirportComingSoon({
   airportName,
   backgroundImage,
+  title,
+  message,
+  footer,
 }: {
   airportName: string;
   backgroundImage: string;
+  title?: string;
+  message?: string;
+  footer?: string;
 }) {
+  const heading = title?.trim() || DEFAULT_COMING_SOON.title;
+  const body = message?.trim() || DEFAULT_COMING_SOON.message;
+  const closing = footer?.trim() || DEFAULT_COMING_SOON.footer;
+
   return (
     <main className="relative min-h-[calc(100vh-80px)] overflow-hidden">
       <img
@@ -26,12 +42,11 @@ export default function AirportComingSoon({
           <p className="text-white text-[17px] sm:text-xl font-medium mb-4">{airportName}</p>
 
           <h1 className="text-white text-[42px] sm:text-6xl md:text-[72px] font-bold tracking-tight leading-none mb-6">
-            Coming Soon!
+            {heading}
           </h1>
 
-          <p className="text-white text-[16px] sm:text-[19px] md:text-[21px] font-normal leading-relaxed max-w-2xl mx-auto">
-            We are preparing something exceptional for you.
-            <br className="hidden sm:block" /> Our new airport experience is taking off soon.
+          <p className="text-white text-[16px] sm:text-[19px] md:text-[21px] font-normal leading-relaxed max-w-2xl mx-auto whitespace-pre-line">
+            {body}
           </p>
 
           <div className="flex items-center justify-center gap-3 my-8 max-w-lg mx-auto">
@@ -40,7 +55,7 @@ export default function AirportComingSoon({
             <span className="h-[1.5px] flex-1 bg-white" />
           </div>
 
-          <p className="text-white text-[17px] sm:text-xl font-bold">Stay tuned for a world-class journey.</p>
+          <p className="text-white text-[17px] sm:text-xl font-bold">{closing}</p>
         </div>
       </div>
     </main>
