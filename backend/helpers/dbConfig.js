@@ -10,7 +10,7 @@ function getDbConfig() {
     username: process.env.DB_USER || cfg.username,
     password: process.env.DB_PASSWORD !== undefined ? process.env.DB_PASSWORD : cfg.password,
     database: process.env.DB_NAME || cfg.database,
-    host: process.env.DB_HOST || (cfg.host === "mysql" ? "127.0.0.1" : cfg.host) || "127.0.0.1",
+    host: process.env.DB_HOST || cfg.host || "127.0.0.1",
     port: Number(process.env.DB_PORT || cfg.port || 3306),
     dialect: cfg.dialect || "mysql",
   };
