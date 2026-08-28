@@ -5,6 +5,7 @@ const { sendToKissflowWebhook } = require('../helpers/kissflowWebhook');
 const { getRequestMeta, phoneToDigitsOnly } = require('../helpers/requestMeta');
 const { isValidInternationalPhone } = require('../helpers/phoneValidation');
 const { optionalContactAttachment } = require('../middlewares/uploadContact');
+const emailService = require('../services/email_service');
 
 const router = express.Router();
 
@@ -82,6 +83,7 @@ router.post(
       ? {
           originalName: req.file.originalname,
           filename: req.file.filename,
+          path: req.file.path,
           url: `/uploads/contact/${req.file.filename}`,
           size: req.file.size,
         }
@@ -103,10 +105,28 @@ router.post(
 
     sendToKissflowWebhook(websiteName, 'Contact form', webhookData);
 
+    try {
+      await emailService.sendContactFormEmail({
+        name,
+        email,
+        phone: phoneDigits || phone,
+        company,
+        message,
+        attachment,
+        ipAddress: meta.ip || meta.ipAddress,
+      });
+    } catch (err) {
+      console.error('Contact form email failed:', err);
+      return res.status(500).json({
+        success: false,
+        message: 'We could not send your enquiry email. Please try again.',
+      });
+    }
+
     return res.json({
       success: true,
       message: 'Contact form submitted successfully',
-      emailSent: false,
+      emailSent: true,
     });
   }
 );

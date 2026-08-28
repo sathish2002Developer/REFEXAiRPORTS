@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
 import CmsHtml from '@/components/feature/CmsHtml';
 import { GreenIcon } from '@/pages/partner-with-us/GreenIcon';
+import { apiUrl } from '@/lib/api';
 
 type ContactLocation = {
   name?: string;
@@ -115,20 +116,20 @@ export default function Contact({
     setIsSubmitting(true);
     
     try {
-      const submitData = new URLSearchParams();
-      submitData.append('businessName', formData.businessName);
-      submitData.append('contactPerson', formData.contactPerson);
-      submitData.append('email', formData.email);
-      submitData.append('phone', formData.phone);
-      submitData.append('location', formData.locations.join(', '));
-      submitData.append('message', formData.message);
+      const locationsLine = formData.locations.length
+        ? `Airports of interest: ${formData.locations.join(', ')}`
+        : '';
+      const message = [locationsLine, formData.message].filter(Boolean).join('\n\n');
+      const body = new FormData();
+      body.append('name', formData.contactPerson);
+      body.append('company', formData.businessName);
+      body.append('email', formData.email);
+      body.append('phone', formData.phone);
+      body.append('message', message || 'No message provided.');
 
-      const response = await fetch('https://readdy.ai/api/form/d4fvkns65ccm3ui4r200', {
+      const response = await fetch(apiUrl('/api/contact-form'), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: submitData.toString(),
+        body,
       });
 
       if (response.ok) {

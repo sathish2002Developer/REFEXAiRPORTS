@@ -1,38 +1,43 @@
 const nodemailer = require('nodemailer');
+const path = require('path');
 
-function smtpPort() {
-  return parseInt(process.env.SMTP_PORT || '587', 10);
-}
-
-function smtpSecure() {
-  const raw = String(process.env.SMTP_SECURE ?? '').trim().toLowerCase();
-  if (raw === 'true' || raw === '1') return true;
-  if (raw === 'false' || raw === '0') return false;
-  return smtpPort() === 465;
-}
+const MAIL = {
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  user: 'tech@helpdesksupport.co.in',
+  pass: 'qwhgiwyidqrktgqw',
+  from: 'tech@helpdesksupport.co.in',
+  contactTo: 'bdrefexairport@refex.co.in',
+};
 
 function smtpFromAddress() {
-  return (
-    process.env.SMTP_FROM_EMAIL ||
-    process.env.SMTP_FROM ||
-    process.env.SMTP_USER ||
-    ''
-  );
+  return MAIL.from;
+}
+
+function contactFormToAddress() {
+  return MAIL.contactTo;
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function buildSmtpTransportOptions() {
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASSWORD || process.env.SMTP_PASS;
-  if (!user || !pass) {
-    console.warn(
-      'SMTP_USER and SMTP_PASSWORD (or SMTP_PASS) are not set — email sending will fail.'
-    );
-  }
   return {
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: smtpPort(),
-    secure: smtpSecure(),
-    auth: user && pass ? { user, pass } : undefined,
+    host: MAIL.host,
+    port: MAIL.port,
+    secure: MAIL.secure,
+    requireTLS: MAIL.port === 587,
+    auth: {
+      user: MAIL.user,
+      pass: MAIL.pass,
+    },
     tls: {
       rejectUnauthorized: false,
     },
@@ -47,106 +52,69 @@ class EmailService {
   // Send contact form email
   async sendContactFormEmail(formData) {
     try {
-      const { name, email, phone, company, message, recaptchaToken } = formData;
+      const { name, email, phone, company, message, attachment } = formData;
+      const submittedAt = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+      const from = smtpFromAddress();
+      const to = contactFormToAddress();
+      const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
+      const attachmentName = attachment?.originalName || '';
 
-      // Email content
       const mailOptions = {
-        from: smtpFromAddress(),
-        to: 'sathku007@gmail.com',
-        subject: `New Contact Form Submission from ${name}`,
+        from: from ? `"Refex Airports" <${from}>` : '"Refex Airports"',
+        to,
+        replyTo: email,
+        subject: `New contact enquiry from ${name}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-            <div style="background: linear-gradient(135deg, #2879b6, #7dc244); color: white; padding: 20px; border-radius: 10px 10px 0 0; text-align: center;">
+            <div style="background: linear-gradient(135deg, #2879b1, #7bbf45); color: white; padding: 20px; border-radius: 10px 10px 0 0; text-align: center;">
               <h2 style="margin: 0; font-size: 24px;">New Contact Form Submission</h2>
-              <p style="margin: 10px 0 0 0; opacity: 0.9;">Refex Life Sciences Website</p>
+              <p style="margin: 10px 0 0 0; opacity: 0.9;">Refex Airports website</p>
             </div>
-            
             <div style="padding: 30px; background: #f9f9f9;">
-              <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                <h3 style="color: #2879b6; margin-top: 0; border-bottom: 2px solid #2879b6; padding-bottom: 10px;">Contact Details</h3>
-                
-                <div style="margin-bottom: 20px;">
-                  <strong style="color: #333; display: inline-block; width: 120px;">Name:</strong>
-                  <span style="color: #666;">${name}</span>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                  <strong style="color: #333; display: inline-block; width: 120px;">Email:</strong>
-                  <span style="color: #666;">${email}</span>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                  <strong style="color: #333; display: inline-block; width: 120px;">Phone:</strong>
-                  <span style="color: #666;">${phone || 'Not provided'}</span>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                  <strong style="color: #333; display: inline-block; width: 120px;">Company:</strong>
-                  <span style="color: #666;">${company || 'Not provided'}</span>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                  <strong style="color: #333; display: block; margin-bottom: 10px;">Message:</strong>
-                  <div style="background: #f8f8f8; padding: 15px; border-radius: 5px; border-left: 4px solid #2879b6; color: #555; line-height: 1.6;">
-                    ${message.replace(/\n/g, '<br>')}
-                  </div>
+              <div style="background: white; padding: 25px; border-radius: 8px;">
+                <h3 style="color: #2879b1; margin-top: 0; border-bottom: 2px solid #2879b1; padding-bottom: 10px;">Contact Details</h3>
+                <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+                <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+                <p><strong>Phone:</strong> ${escapeHtml(phone || 'Not provided')}</p>
+                <p><strong>Organization:</strong> ${escapeHtml(company || 'Not provided')}</p>
+                ${attachmentName ? `<p><strong>Attachment:</strong> ${escapeHtml(attachmentName)}</p>` : ''}
+                <p><strong>Message:</strong></p>
+                <div style="background: #f8f8f8; padding: 15px; border-radius: 5px; border-left: 4px solid #2879b1; color: #555; line-height: 1.6;">
+                  ${safeMessage}
                 </div>
               </div>
-              
-              <div style="margin-top: 25px; padding: 20px; background: #e8f4fd; border-radius: 8px; border-left: 4px solid #2879b6;">
-                <h4 style="color: #2879b6; margin-top: 0;">Submission Details</h4>
-                <p style="margin: 5px 0; color: #666;">
-                  <strong>Submitted:</strong> ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
-                </p>
-                <p style="margin: 5px 0; color: #666;">
-                  <strong>IP Address:</strong> ${formData.ipAddress || 'Not available'}
-                </p>
-                <p style="margin: 5px 0; color: #666;">
-                  <strong>reCAPTCHA:</strong> ${recaptchaToken ? 'Verified' : 'Not verified'}
-                </p>
-              </div>
-            </div>
-            
-            <div style="text-align: center; padding: 20px; background: #f0f0f0; border-radius: 0 0 10px 10px;">
-              <p style="margin: 0; color: #666; font-size: 14px;">
-                This email was sent from the Refex Life Sciences contact form.
-              </p>
-              <p style="margin: 5px 0 0 0; color: #999; font-size: 12px;">
-                Please respond to the customer's inquiry promptly.
-              </p>
+              <p style="margin-top: 20px; color: #666; font-size: 13px;">Submitted: ${escapeHtml(submittedAt)}</p>
             </div>
           </div>
         `,
-        text: `
-          New Contact Form Submission from Refex Life Sciences Website
-          
-          Contact Details:
-          Name: ${name}
-          Email: ${email}
-          Phone: ${phone || 'Not provided'}
-          Company: ${company || 'Not provided'}
-          
-          Message:
-          ${message}
-          
-          Submitted: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
-          IP Address: ${formData.ipAddress || 'Not available'}
-          reCAPTCHA: ${recaptchaToken ? 'Verified' : 'Not verified'}
-        `
+        text: `New contact enquiry from the Refex Airports website
+
+Name: ${name}
+Email: ${email}
+Phone: ${phone || 'Not provided'}
+Organization: ${company || 'Not provided'}
+${attachmentName ? `Attachment: ${attachmentName}\n` : ''}
+Message:
+${message}
+
+Submitted: ${submittedAt}
+`,
       };
 
-      // Send email
+      if (attachment?.path) {
+        mailOptions.attachments = [
+          {
+            filename: attachment.originalName || path.basename(attachment.path),
+            path: attachment.path,
+          },
+        ];
+      }
+
       const result = await this.transporter.sendMail(mailOptions);
-      console.log('Email sent successfully:', result.messageId);
-      
-      return {
-        success: true,
-        messageId: result.messageId,
-        message: 'Email sent successfully'
-      };
-
+      console.log('Contact form email sent:', result.messageId, 'to', to);
+      return { success: true, messageId: result.messageId };
     } catch (error) {
-      console.error('Error sending email:', error);
+      console.error('Error sending contact form email:', error);
       throw new Error(`Failed to send email: ${error.message}`);
     }
   }
