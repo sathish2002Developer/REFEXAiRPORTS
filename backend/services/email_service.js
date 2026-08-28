@@ -8,7 +8,7 @@ const MAIL = {
   user: 'tech@helpdesksupport.co.in',
   pass: 'qwhgiwyidqrktgqw',
   from: 'tech@helpdesksupport.co.in',
-  contactTo: 'bdrefexairport@refex.co.in',
+  contactTo: 'bdrefexairports@refex.co.in',
   contactCc: 'sathishkumar.r@refex.co.in',
 };
 
