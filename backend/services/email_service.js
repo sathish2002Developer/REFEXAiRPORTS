@@ -9,6 +9,7 @@ const MAIL = {
   pass: 'qwhgiwyidqrktgqw',
   from: 'tech@helpdesksupport.co.in',
   contactTo: 'bdrefexairport@refex.co.in',
+  contactCc: 'sathishkumar.r@refex.co.in',
 };
 
 function smtpFromAddress() {
@@ -45,8 +46,8 @@ function buildSmtpTransportOptions() {
 }
 
 class EmailService {
-  constructor() {
-    this.transporter = nodemailer.createTransport(buildSmtpTransportOptions());
+  getTransporter() {
+    return nodemailer.createTransport(buildSmtpTransportOptions());
   }
 
   // Send contact form email
@@ -62,6 +63,7 @@ class EmailService {
       const mailOptions = {
         from: from ? `"Refex Airports" <${from}>` : '"Refex Airports"',
         to,
+        cc: MAIL.contactCc,
         replyTo: email,
         subject: `New contact enquiry from ${name}`,
         html: `
@@ -110,8 +112,8 @@ Submitted: ${submittedAt}
         ];
       }
 
-      const result = await this.transporter.sendMail(mailOptions);
-      console.log('Contact form email sent:', result.messageId, 'to', to);
+      const result = await this.getTransporter().sendMail(mailOptions);
+      console.log('Contact form email sent:', result.messageId, 'to', to, 'cc', MAIL.contactCc);
       return { success: true, messageId: result.messageId };
     } catch (error) {
       console.error('Error sending contact form email:', error);
@@ -181,7 +183,7 @@ Submitted: ${submittedAt}
         `
       };
 
-      const result = await this.transporter.sendMail(mailOptions);
+      const result = await this.getTransporter().sendMail(mailOptions);
       console.log('Auto-reply sent successfully:', result.messageId);
       
       return {
@@ -234,7 +236,7 @@ Submitted: ${submittedAt}
         `
       };
 
-      await this.transporter.sendMail(mailOptions);
+      await this.getTransporter().sendMail(mailOptions);
       return { success: true };
     } catch (error) {
       console.error('Business commute email error:', error);
@@ -273,7 +275,7 @@ Submitted: ${submittedAt}
         text: `Hi ${displayName},\n\nYour Refex Wall password: ${password}\n\nSign in at The Wall with your work email and this password.\n`,
       };
 
-      const result = await this.transporter.sendMail(mailOptions);
+      const result = await this.getTransporter().sendMail(mailOptions);
       console.log("Wall forgot-password email sent:", result.messageId);
       return { success: true, messageId: result.messageId };
     } catch (error) {
@@ -285,7 +287,7 @@ Submitted: ${submittedAt}
   // Test email configuration
   async testConnection() {
     try {
-      await this.transporter.verify();
+      await this.getTransporter().verify();
       console.log('Email service connection verified successfully');
       return true;
     } catch (error) {

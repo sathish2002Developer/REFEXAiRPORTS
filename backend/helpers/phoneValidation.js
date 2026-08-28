@@ -41,7 +41,14 @@ function isValidInternationalPhone(value, defaultCountry = DEFAULT_COUNTRY) {
         return false;
       }
     }
-    return false; // enforce India 10-digit national number if no '+'
+    if (digits.length >= 10) {
+      try {
+        return isValidPhoneNumber(digits.slice(-10), 'IN');
+      } catch {
+        return false;
+      }
+    }
+    return false;
   }
 
   try {

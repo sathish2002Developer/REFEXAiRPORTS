@@ -22,7 +22,7 @@ router.post(
       .withMessage('is required')
       .isLength({ min: 2, max: 120 })
       .withMessage('must be between 2 and 120 characters')
-      .matches(/^[\p{L}\p{M}\s'.-]+$/u)
+      .matches(/^[\p{L}\p{M}\s'.\-]+$/u)
       .withMessage('contains invalid characters'),
     body('email')
       .trim()
